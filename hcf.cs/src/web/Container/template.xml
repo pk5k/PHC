@@ -1,0 +1,43 @@
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+		<title>{{property:title}}</title>
+		<link rel="icon" type="{{property:fav_mimetype}}" href="{{property:fav_path}}"/>
+		<meta charset="{{property:encoding}}"/>
+
+		<loop.foreach var="{{property:meta_http_equiv}}" key="metaname" value="typearr">
+			<loop.foreach var="{{local:typearr}}" value="val">
+				<meta http-equiv="{{local:metaname}}" content="{{local:val}}"/>
+			</loop.foreach>
+		</loop.foreach>
+
+		<loop.foreach var="{{property:meta_name}}" key="metaname" value="typearr">
+			<loop.foreach var="{{local:typearr}}" value="val">
+				<meta name="{{local:metaname}}" content="{{local:val}}"/>
+			</loop.foreach>
+		</loop.foreach>
+
+		<loop.foreach var="{{property:ext_js}}" value="src">
+			<script type="text/javascript" src="{{local:src}}"></script>
+		</loop.foreach>
+
+		<loop.foreach var="{{property:ext_css}}" key="href" value="media">
+			<link rel="stylesheet" type="text/css" href="{{local:href}}" media="{{local:media}}"/>
+		</loop.foreach>
+
+		<script language="javascript">{{method:client}}</script>
+		
+		<loop.foreach var="{{property:emb_js}}" value="emb_js_str">
+			<script language="javascript">{{local:emb_js_str}}</script>
+		</loop.foreach>
+
+		<loop.foreach var="{{property:emb_css}}" value="emb_css_str">
+			<style>{{local:emb_css_str}}</style>
+		</loop.foreach>
+
+		<style>body { font-family:'{{property:font_family}}'!important; font-size:{{property:font_size}}!important;}</style>
+
+		<dummy.container>{{method:autoloader}}</dummy.container>
+	</head>
+	<body>{{property:content}}</body>
+</html>

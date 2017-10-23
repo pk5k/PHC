@@ -1,0 +1,4 @@
+#~buildClientMethod:
+\$js = "{{arg:0}}";
+
+return \$js;

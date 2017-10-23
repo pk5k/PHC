@@ -1,0 +1,5 @@
+#~methodRow:
+- {{arg:0}}: {{arg:1}}
+
+#~propertyRow:
+- {{arg:0}} = {{arg:1}}

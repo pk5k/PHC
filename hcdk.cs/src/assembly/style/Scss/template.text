@@ -1,0 +1,7 @@
+#~tplBuildStyle:
+if(\$as_array)
+{
+	return self::makeStylesheetArray();
+}
+
+{{method:buildMethodBody}}

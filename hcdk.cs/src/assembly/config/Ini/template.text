@@ -1,0 +1,5 @@
+#~buildLoadConfigMethod:
+\$content = self::_attachment(__FILE__, __COMPILER_HALT_OFFSET__, '{{method:getName}}', '{{method:getType}}');
+
+\$parser = new \IniParser();
+self::\$config = \$parser->process(\$content);

@@ -1,0 +1,13 @@
+<configuration xmlns="http://logging.apache.org/log4php/">
+    <appender name="hcf.core.log.Internal" class="LoggerAppenderRollingFile">
+        <layout class="LoggerLayoutPattern">
+            <param name="conversionPattern" value="%date %logger %-5level %msg%n"/>
+        </layout>
+        <param name="file" value="hcf.log" />
+        <param name="maxFileSize" value="1MB" />
+        <param name="maxBackupIndex" value="5" />
+    </appender>
+    <root>
+        <appender_ref ref="hcf.core.log.Internal" />
+    </root>
+</configuration>

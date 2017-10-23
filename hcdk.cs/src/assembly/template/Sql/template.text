@@ -1,0 +1,4 @@
+#~buildTemplateMethod:
+\$sql = "{{arg:0}}";
+
+return \$sql;

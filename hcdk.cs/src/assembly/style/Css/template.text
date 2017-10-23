@@ -1,0 +1,7 @@
+#~tplBuildStyle:
+if(\$as_array)
+{
+	return self::makeStylesheetArray();
+}
+
+return self::_attachment(__FILE__, __COMPILER_HALT_OFFSET__, '{{method:getName}}', '{{method:getType}}');

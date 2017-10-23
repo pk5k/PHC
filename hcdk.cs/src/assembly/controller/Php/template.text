@@ -1,0 +1,13 @@
+#~constructorDelegation:
+if (method_exists(\$this, '{{arg:0}}'))
+{
+	call_user_func_array([\$this, '{{arg:0}}'], func_get_args());
+}
+
+#+defaultInput:
+<?php
+trait Controller
+{
+
+}
+?>

@@ -1,0 +1,13 @@
+<configuration xmlns="http://logging.apache.org/log4php/">
+    <appender name="hcf.core.log.Internal" class="LoggerAppenderEcho">
+        <layout class="LoggerLayoutPattern">
+            <param name="conversionPattern" value="%-5level %msg%n"/>
+        </layout>
+    </appender>
+    <root>
+    	<!-- add verbose-flag in the cli to use the more verbose level INFO-->
+        <!-- if you want to see the hcf + hcdk init logs too, set the info level below -->
+        <level value="warn"/>
+    	<appender_ref ref="hcf.core.log.Internal" />
+    </root>
+</configuration>

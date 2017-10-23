@@ -1,0 +1,17 @@
+hcf\cli\Colors=build/hcf.cli.Colors.hc
+hcf\cli\exec=build/hcf.cli.exec.hc
+hcf\core\Utils=build/hcf.core.Utils.hc
+hcf\core\log\Internal=build/hcf.core.log.Internal.hc
+hcf\core\remote\Invoker=build/hcf.core.remote.Invoker.hc
+hcf\db\Connection=build/hcf.db.Connection.hc
+hcf\db\Dict=build/hcf.db.Dict.hc
+hcf\web\Bridge=build/hcf.web.Bridge.hc
+hcf\web\Container=build/hcf.web.Container.hc
+hcf\web\Cookie=build/hcf.web.Cookie.hc
+hcf\web\Download=build/hcf.web.Download.hc
+hcf\web\Router=build/hcf.web.Router.hc
+hcf\web\Upload=build/hcf.web.Upload.hc
+hcf\web\Container\Autoloader=build/hcf.web.Container.Autoloader.hc
+hcf\web\Container\Autoloader\provider=build/hcf.web.Container.Autoloader.provider.hc
+hcf\web\Container\Autoloader\provider\Script=build/hcf.web.Container.Autoloader.provider.Script.hc
+hcf\web\Container\Autoloader\provider\Style=build/hcf.web.Container.Autoloader.provider.Style.hc

@@ -1,0 +1,32 @@
+{
+  "assemblies":{
+    "output":{
+			"embed": true,
+			"hypercells": []
+		},
+    "style":{
+			"embed": true,
+			"hypercells": []
+		},
+    "client":{
+			"embed": {
+				"from": "?!=-script"
+			},
+			"hypercells": ["hcf.web.Bridge"]
+		}
+  },
+  "shared":{
+    "javascript":{
+      "extension":["js"],
+      "directory": ["js"],
+      "embed": false,
+      "processor": "javascript"
+    },
+    "stylesheet":{
+      "extension":["css"],
+      "directory": ["css"],
+      "embed": false,
+      "processor": "stylesheet"
+    }
+  }
+}

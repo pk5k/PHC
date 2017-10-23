@@ -1,0 +1,1 @@
+{{method:makeModifierString}} function {{method:getName}}({{method:makeArgumentString}}){{method:makeBodyString}}

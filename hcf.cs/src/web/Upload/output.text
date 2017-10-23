@@ -1,0 +1,4 @@
+{
+	"state": "{{property:state_indicator}}",
+	"data": {{method:getMessage}}
+}
