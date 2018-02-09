@@ -105,7 +105,6 @@ class PHP_Beautifier_Filter_Lowercase extends PHP_Beautifier_Filter
     public function __construct(PHP_Beautifier $oBeaut, $aSettings = array()) 
     {
         parent::__construct($oBeaut, $aSettings);
-        $this->oLog = PHP_Beautifier_Common::getLog();
     }
     public function t_string($sTag) {
         if($sTag=='TRUE' or $sTag=='FALSE') {
@@ -119,7 +118,6 @@ class PHP_Beautifier_Filter_Lowercase extends PHP_Beautifier_Filter
         $iToken = $this->aToken[0];
         $sContent = $this->aToken[1];
         if (in_array($iToken, $this->aControlSeq)) {
-            $this->oLog->log("Lowercase:" . $sContent, PEAR_LOG_DEBUG);
             $this->oBeaut->aCurrentToken[1]=strtolower($sContent);
             
         }

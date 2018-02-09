@@ -1,0 +1,3 @@
+#~buildTemplateMethod:
+\$output = "{{arg:0}}";
+return \$output;

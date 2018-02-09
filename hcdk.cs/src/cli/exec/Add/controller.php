@@ -42,7 +42,7 @@ trait Controller
 		}
 		catch(\Exception $e)
 		{
-			InternalLogger::log()->error('Unable to create Cellspace at "'.$__arg_dir.'" due following exception:');
+			InternalLogger::log()->error('Unable to add Hypercell "'.$__arg_hcfqn.'" to Cellspace "'.$__arg_dir.'" due following exception:');
 			InternalLogger::log()->error($e);
 		}
 	}

@@ -64,13 +64,13 @@ $ls = implode(',', $lib_dirs);
 
 InternalLogger::log()->info(' - LIBS = ['.$ls.']');
 
-foreach ($lib_dirs as $dir) 
+foreach ($lib_dirs as $dir)
 {
 	if (trim($dir) == '')
 	{
 		continue;
 	}
-	
+
 	new LibLoader($dir);
 }
 
@@ -83,27 +83,16 @@ $hh = implode(',', $http_hooks);
 InternalLogger::log()->info(' - HTTP-HOOKS = ['.$hh.']');
 
 // read the http-hooks section inside _hcf.core/surface.ini
-if ((isset($_GET['!']) && isset($_SERVER['REQUEST_METHOD'])) || 
+if ((isset($_GET['!']) && isset($_SERVER['REQUEST_METHOD'])) ||
 	(is_array($http_hooks) && isset($_SERVER['REQUEST_METHOD']) && in_array($_SERVER['REQUEST_METHOD'], $http_hooks)))
 {
 	$method = $_SERVER['REQUEST_METHOD'];
 	$output = '';
 
 	InternalLogger::log()->info('Using '.$method.'-HOOK...');
-
-	try 
-	{
-		$output = Router::route();
-	}
-	catch (\Exception $e)
-	{
-		InternalLogger::log()->error($e);
-
-		throw $e;
-	}
-
+	$output = Router::route();
 	InternalLogger::log()->info('...'.$method.'-HOOK finished - sending output: '.$output);
-	
+
 	echo $output;
 	exit;
 }

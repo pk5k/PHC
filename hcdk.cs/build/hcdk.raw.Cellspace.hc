@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.raw.Cellspace - BUILD 17.10.13#156
+<?php #HYPERCELL hcdk.raw.Cellspace - BUILD 17.10.13#157
 namespace hcdk\raw;
 class Cellspace {
     use \hcf\core\dryver\Config, Cellspace\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -134,7 +134,7 @@ trait Controller {
         foreach ($dirs as $dir) {
             $offset = Utils::getOffset($dir, $source_dir);
             $hypercell = null;
-            if (!is_string($offset) || $offset == '.' || $offset == '..') {
+            if (!is_string($offset) || !strlen($offset) || $offset == '.' || $offset == '..') {
                 continue;
             }
             try {

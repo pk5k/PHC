@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.cli.exec.Inspect - BUILD 17.10.16#41
+<?php #HYPERCELL hcdk.cli.exec.Inspect - BUILD 17.10.16#42
 namespace hcdk\cli\exec;
 class Inspect extends \hcf\cli\exec {
     use \hcf\core\dryver\Base, Inspect\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
@@ -86,7 +86,7 @@ trait Controller {
         } else if ($assembly->isExecutable()) {
             $type = 'executable';
         }
-        echo Utils::newLine() . '-- ASSEMBLY ' . $assembly::FQN . '[' . $type . ']:' . Utils::newLine();
+        echo Utils::newLine() . '>' . $assembly::FQN . '[' . $type . ']:' . Utils::newLine();
         echo 'Current raw-input: ' . Utils::newLine() . $assembly->rawInput() . Utils::newLine();
         $mods = $assembly->getClassModifiers();
         $constructor = $assembly->getConstructor();

@@ -21,6 +21,7 @@ hcdk\assembly\output\Text=build/hcdk.assembly.output.Text.hc
 hcdk\assembly\output\Xml=build/hcdk.assembly.output.Xml.hc
 hcdk\assembly\style\Css=build/hcdk.assembly.style.Css.hc
 hcdk\assembly\style\Scss=build/hcdk.assembly.style.Scss.hc
+hcdk\assembly\template\Raw=build/hcdk.assembly.template.Raw.hc
 hcdk\assembly\template\Sql=build/hcdk.assembly.template.Sql.hc
 hcdk\assembly\template\Text=build/hcdk.assembly.template.Text.hc
 hcdk\assembly\template\Xml=build/hcdk.assembly.template.Xml.hc

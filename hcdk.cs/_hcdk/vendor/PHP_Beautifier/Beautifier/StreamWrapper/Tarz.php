@@ -23,7 +23,7 @@
 /**
 * Require Archive_Tar
 */
-require_once 'Archive/Tar.php';
+//require_once 'Archive/Tar.php';
 /**
 * Custom stream to handle Tar files (compressed and uncompressed)
 * Use URL tarz://myfile.tgz#myfile.php

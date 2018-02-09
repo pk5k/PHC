@@ -8,6 +8,8 @@ namespace hcf\core\dryver
   // possible naming conflicts with other, non-internal assemblys
   trait Internal
   {
+    private static $_attachment_cache = [];
+
     // To decide, if placeholder-processors like "method" or "property" have to access static or non-static values.
   	// These placeholder will be translated to executable fragments of php-script, which will use this methods on execution of the specific assembly-methods
 		private function _constant($name, $scope)
@@ -108,14 +110,23 @@ namespace hcf\core\dryver
 		{
 			$assembly = strtolower($assembly);
 			$type = strtolower($type);
+      $cache_target = $assembly.'.'.$type;
+
+      if (isset(self::$_attachment_cache[$cache_target]))
+      {
+        return self::$_attachment_cache[$cache_target]; 
+      }
 
 			if (defined('HCF_ATT_OVERRIDE'))
 			{
-				$path = HCF_ATT_OVERRIDE.self::FQN.'.'.$assembly.'.'.$type;//explicit use our own FQN
+				$path = HCF_ATT_OVERRIDE.self::FQN.'@'.$assembly.'.'.$type;//explicit use our own FQN
 
 				if (file_exists($path))
 				{
-					return file_get_contents($path);
+          $data = @file_get_contents($path);
+          self::$_attachment_cache[$cache_target] = $data;
+
+					return $data;
 				}
 			}
 
@@ -152,6 +163,8 @@ namespace hcf\core\dryver
 			{
 				throw new \RuntimeException('Unable to read attachment "'.$assembly.'.'.$type.'" of hypercell '.self::FQN.' - unable to read from '.$bs.' to '.$es.' in "'.$__FILE__.'"');
 			}
+
+      self::$_attachment_cache[$cache_target] = $attachment_data;
 
 			return $attachment_data;
 		}

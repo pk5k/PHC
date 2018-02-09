@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.core.log.Internal - BUILD 17.10.11#150
+<?php #HYPERCELL hcf.core.log.Internal - BUILD 17.10.11#151
 namespace hcf\core\log;
 class Internal {
     use Internal\__EO__\Controller, \hcf\core\dryver\Log, \hcf\core\dryver\Internal;
@@ -32,7 +32,8 @@ trait Controller {
     public static function exceptionHandler($e) {
         $ex_str = self::exStr($e);
         self::log()->error($ex_str);
-        if (!headers_sent()) {
+        if (!headers_sent() && http_response_code() == 200) {
+            // this shouldn't be a 200
             header(Utils::getHTTPHeader(500));
         }
         if (ini_get('display_errors') && isset($_SERVER['REQUEST_METHOD'])) {
@@ -55,7 +56,8 @@ trait Controller {
         chdir($cwd);
         self::log()->error($err_str);
         chdir($now);
-        if (!headers_sent()) {
+        if (!headers_sent() && http_response_code() == 200) {
+            // this shouldn't be a 200
             header(Utils::getHTTPHeader(500));
         }
         if (ini_get('display_errors') && isset($_SERVER['REQUEST_METHOD'])) {

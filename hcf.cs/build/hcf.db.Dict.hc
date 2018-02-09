@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.db.Dict - BUILD 17.10.11#53
+<?php #HYPERCELL hcf.db.Dict - BUILD 17.11.23#57
 namespace hcf\db;
 class Dict {
     use \hcf\core\dryver\Config, \hcf\core\dryver\Constant, Dict\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
@@ -202,15 +202,46 @@ trait Controller {
     public static function locale($locale) {
         self::$locale = $locale;
     }
+    private static function resolveLanguageCookie() {
+        $resolved_lang = self::config()->locale->default;
+        $name = self::config()->locale->cookie;
+        $offset = null;
+        if (is_object($name)) {
+            if (isset($name->offset)) {
+                $offset = $name->offset;
+            }
+            $name = $name->name;
+        }
+        if (Cookie::exists($name)) {
+            $data = Cookie::get($name);
+            if (is_null($offset)) {
+                $resolved_lang = $data;
+            } else {
+                // implies that cookies content is a JSON
+                $data = json_decode($data);
+                if (strpos($offset, '.') !== false) {
+                    $scope = $data;
+                    $split = explode('.', $offset);
+                    foreach ($split as $part) {
+                        if (isset($scope->$part)) {
+                            $scope = $scope->$part;
+                        } else {
+                            // setting does not exist
+                            return $resolved_lang;
+                        }
+                    }
+                    $resolved_lang = $scope;
+                } else if (isset($data->$offset)) {
+                    $resolved_lang = $data->$offset;
+                }
+            }
+        }
+        return $resolved_lang;
+    }
     public static function get($key, $locale = null) {
         if (!isset(self::$locale)) {
             if (!isset($locale)) {
-                $locale_cookie = self::config()->locale->cookie;
-                if (Cookie::exists($locale_cookie)) {
-                    self::$locale = Cookie::get($locale_cookie);
-                } else {
-                    self::$locale = self::config()->locale->default;
-                }
+                self::$locale = self::resolveLanguageCookie();
             } else {
                 self::$locale = $locale;
             }
@@ -320,7 +351,8 @@ BEGIN[CONFIG.INI]
 
 [locale]
 default = "de_DE"; default locale which will be used, if no other value was specified at runtime; if no value for the target-locale was found, the default locale will be used as fallback
-cookie = "language"; lookup for a cookie with this name, that contains the locale
+cookie.name = "page-settings"; lookup for a cookie with this name, that contains the locale
+cookie.offset = "lang"; inside the cookie above, this key points to the locale, implied that the cookie-content is a JSON -> page-settings = {"lang": "de_DE", "other-settings": {...}}
 
 [connection]
 emulate = false; emulate the connection below - good for "offline" development - the key will be used as value

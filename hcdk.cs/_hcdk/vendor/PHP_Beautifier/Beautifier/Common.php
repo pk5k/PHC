@@ -80,7 +80,7 @@ class PHP_Beautifier_Common {
             }
         }
         if (!$matches) {
-            PHP_Beautifier_Common::getLog()->log("$sDir/$sFilePattern pattern don't match any file", PEAR_LOG_DEBUG);
+//            PHP_Beautifier_Common::getLog()->log("$sDir/$sFilePattern pattern don't match any file", PEAR_LOG_DEBUG);
         }
         return $matches;
     }

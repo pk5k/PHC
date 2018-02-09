@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.web.Container - BUILD 17.10.11#3120
+<?php #HYPERCELL hcf.web.Container - BUILD 17.10.11#3121
 namespace hcf\web;
 class Container {
     use \hcf\core\dryver\Client, \hcf\core\dryver\Config, Container\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
@@ -197,12 +197,12 @@ if(typeof define==='function'&&define.amd){define(function(){return md5})}else i
     # BEGIN ASSEMBLY FRAME TEMPLATE.XML
     public function stdTpl() {
         $output = '';
-        $output.= "<html>";
+        $output.= "<html lang=\"{$this->_property('content_language') }\">";
         $output.= "<head>";
         $output.= "<meta http-equiv=\"X-UA-Compatible\" content=\"IE=Edge\"/>";
+        $output.= "<meta charset=\"{$this->_property('encoding') }\"/>";
         $output.= "<title>{$this->_property('title') }</title>";
         $output.= "<link rel=\"icon\" type=\"{$this->_property('fav_mimetype') }\" href=\"{$this->_property('fav_path') }\"/>";
-        $output.= "<meta charset=\"{$this->_property('encoding') }\"/>";
         foreach ($this->_property('meta_http_equiv') as $metaname => $typearr) {
             foreach ($typearr as $val) {
                 $output.= "<meta http-equiv=\"$metaname\" content=\"$val\"/>";
@@ -250,6 +250,7 @@ use \hcf\core\Utils as Utils;
  */
 trait Controller {
     private $title = self::FQN;
+    private $content_language = 'en';
     private $content = 'No content set.';
     private $ext_js = [];
     private $emb_js = [];
@@ -400,6 +401,23 @@ trait Controller {
             throw new \RuntimeException('Argument $css_data for "' . self::FQN . '::embedScript($css_data)" is not a valid string.');
         }
         $this->emb_css[] = $css_data;
+    }
+    /**
+     * contentLanguage
+     *
+     *
+     * @param $lang - string - the value that will be used as lang-attribute on the HTML-element
+     *
+     * @return
+     */
+    public function contentLanguage($lang = null) {
+        if (is_null($lang)) {
+            return $this->content_language;
+        }
+        if (!is_string($lang)) {
+            throw new \RuntimeException(self::FQN . ' - invalid content-language value passed; not a string');
+        }
+        $this->content_language = $lang;
     }
     /**
      * meta

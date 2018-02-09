@@ -1,9 +1,9 @@
-<html>
+<html lang="{{property:content_language}}">
 	<head>
 		<meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+		<meta charset="{{property:encoding}}"/>
 		<title>{{property:title}}</title>
 		<link rel="icon" type="{{property:fav_mimetype}}" href="{{property:fav_path}}"/>
-		<meta charset="{{property:encoding}}"/>
 
 		<loop.foreach var="{{property:meta_http_equiv}}" key="metaname" value="typearr">
 			<loop.foreach var="{{local:typearr}}" value="val">
@@ -26,7 +26,7 @@
 		</loop.foreach>
 
 		<script language="javascript">{{method:client}}</script>
-		
+
 		<loop.foreach var="{{property:emb_js}}" value="emb_js_str">
 			<script language="javascript">{{local:emb_js_str}}</script>
 		</loop.foreach>
