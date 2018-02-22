@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.web.Bridge - BUILD 17.10.11#3141
+<?php #HYPERCELL hcf.web.Bridge - BUILD 18.02.22#3143
 namespace hcf\web;
 class Bridge {
     use \hcf\core\dryver\Client, \hcf\core\dryver\Config, Bridge\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Internal;
@@ -178,7 +178,9 @@ return self;}";
     # END ASSEMBLY FRAME CONFIG.INI
     # BEGIN ASSEMBLY FRAME OUTPUT.TEXT
     public function __toString() {
-        $output = "{$this->_property('output') }";
+        $__CLASS__ = __CLASS__;
+        $_this = (isset($this)) ? $this : null;
+        $output = "{$__CLASS__::_property('output', $__CLASS__, $_this) }";
         return $output;
     }
     # END ASSEMBLY FRAME OUTPUT.TEXT

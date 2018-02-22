@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.template - BUILD 17.10.11#227
+<?php #HYPERCELL hcdk.assembly.template - BUILD 18.02.22#232
 namespace hcdk\assembly;
 abstract class template extends \hcdk\assembly {
     use \hcf\core\dryver\Base, template\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -28,9 +28,6 @@ trait Controller {
         $sections = Sectionizer::toArray($this->rawInput());
         $methods = [];
         foreach ($sections as $name => $data) {
-            if ($data['content'] != $this->processPlaceholders($data['content']) && in_array('static', $data['mod'])) {
-                throw new \Exception(static ::FQN . ' - placeholders in static template "' . $name . '" detected. Using placeholders inside static templates is not possible.');
-            }
             $methods[$name] = $this->buildTemplate($name, $data);
         }
         return $methods;

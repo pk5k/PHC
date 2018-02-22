@@ -1,7 +1,7 @@
-<?php #HYPERCELL hcdk.assembly - BUILD 17.10.11#110
+<?php #HYPERCELL hcdk.assembly - BUILD 18.02.22#114
 namespace hcdk;
 abstract class assembly {
-    use assembly\__EO__\Controller, \hcf\core\dryver\Internal;
+    use assembly\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
     const FQN = 'hcdk.assembly';
     const NAME = 'assembly';
     public function __construct() {
@@ -9,6 +9,16 @@ abstract class assembly {
             call_user_func_array([$this, 'onConstruct'], func_get_args());
         }
     }
+    # BEGIN ASSEMBLY FRAME TEMPLATE.RAW
+    static protected function controlSymbols() {
+        $output = "
+\$__CLASS__ = __CLASS__;
+\$_this = (isset(\$this)) ? \$this : null;
+";
+        return $output;
+    }
+    # END ASSEMBLY FRAME TEMPLATE.RAW
+    
 }
 namespace hcdk\assembly\__EO__;
 # BEGIN EXECUTABLE FRAME OF CONTROLLER.PHP
@@ -73,6 +83,18 @@ trait Controller {
     protected function processPlaceholders($input) {
         $output = PlaceholderParser::parse($input);
         return $output;
+    }
+    /**
+     * prependControlSymbols
+     * Used for method-bodies, to allow static templates with placeholders.
+     * The control-symbols are required in every method which allows placeholders
+     *
+     * @param $method_body - string - sourcecode of a method, that should be prepend with the control-symbols
+     *
+     * @return string - the $method_body with prepended control-symbols
+     */
+    protected function prependControlSymbols($method_body) {
+        return self::controlSymbols() . $method_body;
     }
     /**
      * checkInput

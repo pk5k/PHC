@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.template.Sql - BUILD 17.10.11#175
+<?php #HYPERCELL hcdk.assembly.template.Sql - BUILD 18.02.22#179
 namespace hcdk\assembly\template;
 class Sql extends \hcdk\assembly\template {
     use \hcf\core\dryver\Base, Sql\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
@@ -12,8 +12,10 @@ class Sql extends \hcdk\assembly\template {
     }
     # BEGIN ASSEMBLY FRAME TEMPLATE.TEXT
     protected function buildTemplateMethod() {
+        $__CLASS__ = __CLASS__;
+        $_this = (isset($this)) ? $this : null;
         $output = "
-\$sql = \"{$this->_arg(\func_get_args(), 0) }\";
+\$sql = \"{$__CLASS__::_arg(\func_get_args(), 0, $__CLASS__, $_this) }\";
 
 return \$sql;";
         return $output;
@@ -32,7 +34,7 @@ trait Controller {
         $output = str_replace('"', '\\"', $data['content']); //escape double-quotes
         $output = $this->processPlaceholders($output, true);
         $method = new Method($name, $data['mod']);
-        $method->setBody($this->buildTemplateMethod($output));
+        $method->setBody($this->prependControlSymbols($this->buildTemplateMethod($output)));
         return $method->toString();
     }
 }

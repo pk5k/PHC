@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.style.Scss - BUILD 17.10.11#169
+<?php #HYPERCELL hcdk.assembly.style.Scss - BUILD 18.02.22#172
 namespace hcdk\assembly\style;
 class Scss extends \hcdk\assembly\style\Css {
     use \hcf\core\dryver\Base, Scss\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
@@ -12,13 +12,15 @@ class Scss extends \hcdk\assembly\style\Css {
     }
     # BEGIN ASSEMBLY FRAME TEMPLATE.TEXT
     protected function tplBuildStyle() {
+        $__CLASS__ = __CLASS__;
+        $_this = (isset($this)) ? $this : null;
         $output = "
 if(\$as_array)
 {
 	return self::makeStylesheetArray();
 }
 
-{$this->_call('buildMethodBody') }
+{$__CLASS__::_call('buildMethodBody', $__CLASS__, $_this) }
 ";
         return $output;
     }

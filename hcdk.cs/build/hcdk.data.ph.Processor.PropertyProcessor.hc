@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.data.ph.Processor.PropertyProcessor - BUILD 17.10.11#53
+<?php #HYPERCELL hcdk.data.ph.Processor.PropertyProcessor - BUILD 18.02.22#57
 namespace hcdk\data\ph\Processor;
 class PropertyProcessor extends \hcdk\data\ph\Processor {
     use \hcf\core\dryver\Base, PropertyProcessor\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -34,9 +34,9 @@ trait Controller {
      */
     public static function process($content, $between_double_quotes = true) {
         if ($between_double_quotes) {
-            return '{$this->_property(\'' . $content . '\')}';
+            return '{$__CLASS__::_property(\'' . $content . '\', $__CLASS__, $_this)}';
         } else {
-            return '$this->_property(\'' . $content . '\')';
+            return '$__CLASS__::_property(\'' . $content . '\', $__CLASS__, $_this)';
         }
     }
 }

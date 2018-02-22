@@ -2,6 +2,7 @@
 use \hcf\db\Connection as DatabaseConnection;
 use \hcf\core\log\Internal as IL;
 use \hcf\web\Cookie as Cookie;
+use \hcf\db\Dict\NoSuchValueException;
 
 trait Controller
 {
@@ -372,6 +373,37 @@ trait Controller
 		}
 
 		return $stmt->execute();
+	}
+
+	public static function lookupKey($for_value)
+	{
+		$ed = new static(self::EMPTY_KEY);
+		$stmt = DatabaseConnection::to(self::config()->connection->name)->prepare($ed->tplLookupKey($for_value));
+
+		if ($stmt->execute())
+		{
+			$results = $stmt->fetchAll(\PDO::FETCH_OBJ);
+			$cols = self::config()->connection->table->col;
+			$col_key = $cols->key;
+
+			if (!count($results))
+			{
+				throw new NoSuchValueException($for_value);
+			}
+
+			foreach ($results as $result) 
+			{
+				return $result->$col_key;
+			}
+		}
+		else 
+		{
+			$err = $stmt->errorInfo();
+			$err_str = $err[0].' ('.$err[1].') '.$err[2];
+
+		 	IL::log()->warn(self::FQN.' - unable to lookup key for value "'.$for_value.'" due following error:');
+		 	IL::log()->error($err_str);
+		}
 	}
 
 	public static function add($locale, $key, $value, $comment)

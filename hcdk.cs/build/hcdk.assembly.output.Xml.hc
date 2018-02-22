@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.output.Xml - BUILD 17.10.11#170
+<?php #HYPERCELL hcdk.assembly.output.Xml - BUILD 18.02.22#174
 namespace hcdk\assembly\output;
 class Xml extends \hcdk\assembly\output {
     use \hcf\core\dryver\Base, Xml\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
@@ -12,9 +12,11 @@ class Xml extends \hcdk\assembly\output {
     }
     # BEGIN ASSEMBLY FRAME TEMPLATE.TEXT
     protected function template__toString() {
+        $__CLASS__ = __CLASS__;
+        $_this = (isset($this)) ? $this : null;
         $output = "
 \$output = '';
-{$this->_arg(\func_get_args(), 0) }
+{$__CLASS__::_arg(\func_get_args(), 0, $__CLASS__, $_this) }
 
 return \$output;
 ";
@@ -38,7 +40,7 @@ trait Controller {
         // $ph_output  = $this->processPlaceholders($this->raw_input);
         $output = XMLParser::parse($this->rawInput(), $this->for_file);
         $method = new Method('__toString', ['public']);
-        $method->setBody($this->template__toString($output));
+        $method->setBody($this->prependControlSymbols($this->template__toString($output)));
         return $method->toString();
     }
 }

@@ -1,3 +1,6 @@
+#+tplLookupKey:
+SELECT key FROM {{property:config.connection.table.name}} WHERE VALUE = '{{arg:0}}'
+
 #+tplLoadDict:
 SELECT * FROM {{property:config.connection.table.name}};
 

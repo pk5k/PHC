@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.web.Container - BUILD 17.10.11#3121
+<?php #HYPERCELL hcf.web.Container - BUILD 18.02.22#3123
 namespace hcf\web;
 class Container {
     use \hcf\core\dryver\Client, \hcf\core\dryver\Config, Container\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
@@ -188,48 +188,52 @@ if(typeof define==='function'&&define.amd){define(function(){return md5})}else i
     # END ASSEMBLY FRAME CONFIG.JSON
     # BEGIN ASSEMBLY FRAME OUTPUT.TEXT
     public function __toString() {
+        $__CLASS__ = __CLASS__;
+        $_this = (isset($this)) ? $this : null;
         $output = "<!DOCTYPE html>
-{$this->_call('stdTpl') }
+{$__CLASS__::_call('stdTpl', $__CLASS__, $_this) }
 ";
         return $output;
     }
     # END ASSEMBLY FRAME OUTPUT.TEXT
     # BEGIN ASSEMBLY FRAME TEMPLATE.XML
     public function stdTpl() {
+        $__CLASS__ = __CLASS__;
+        $_this = (isset($this)) ? $this : null;
         $output = '';
-        $output.= "<html lang=\"{$this->_property('content_language') }\">";
+        $output.= "<html lang=\"{$__CLASS__::_property('content_language', $__CLASS__, $_this) }\">";
         $output.= "<head>";
         $output.= "<meta http-equiv=\"X-UA-Compatible\" content=\"IE=Edge\"/>";
-        $output.= "<meta charset=\"{$this->_property('encoding') }\"/>";
-        $output.= "<title>{$this->_property('title') }</title>";
-        $output.= "<link rel=\"icon\" type=\"{$this->_property('fav_mimetype') }\" href=\"{$this->_property('fav_path') }\"/>";
-        foreach ($this->_property('meta_http_equiv') as $metaname => $typearr) {
+        $output.= "<meta charset=\"{$__CLASS__::_property('encoding', $__CLASS__, $_this) }\"/>";
+        $output.= "<title>{$__CLASS__::_property('title', $__CLASS__, $_this) }</title>";
+        $output.= "<link rel=\"icon\" type=\"{$__CLASS__::_property('fav_mimetype', $__CLASS__, $_this) }\" href=\"{$__CLASS__::_property('fav_path', $__CLASS__, $_this) }\"/>";
+        foreach ($__CLASS__::_property('meta_http_equiv', $__CLASS__, $_this) as $metaname => $typearr) {
             foreach ($typearr as $val) {
                 $output.= "<meta http-equiv=\"$metaname\" content=\"$val\"/>";
             }
         }
-        foreach ($this->_property('meta_name') as $metaname => $typearr) {
+        foreach ($__CLASS__::_property('meta_name', $__CLASS__, $_this) as $metaname => $typearr) {
             foreach ($typearr as $val) {
                 $output.= "<meta name=\"$metaname\" content=\"$val\"/>";
             }
         }
-        foreach ($this->_property('ext_js') as $src) {
+        foreach ($__CLASS__::_property('ext_js', $__CLASS__, $_this) as $src) {
             $output.= "<script type=\"text/javascript\" src=\"$src\"></script>";
         }
-        foreach ($this->_property('ext_css') as $href => $media) {
+        foreach ($__CLASS__::_property('ext_css', $__CLASS__, $_this) as $href => $media) {
             $output.= "<link rel=\"stylesheet\" type=\"text/css\" href=\"$href\" media=\"$media\"/>";
         }
-        $output.= "<script language=\"javascript\">{$this->_call('client') }</script>";
-        foreach ($this->_property('emb_js') as $emb_js_str) {
+        $output.= "<script language=\"javascript\">{$__CLASS__::_call('client', $__CLASS__, $_this) }</script>";
+        foreach ($__CLASS__::_property('emb_js', $__CLASS__, $_this) as $emb_js_str) {
             $output.= "<script language=\"javascript\">$emb_js_str</script>";
         }
-        foreach ($this->_property('emb_css') as $emb_css_str) {
+        foreach ($__CLASS__::_property('emb_css', $__CLASS__, $_this) as $emb_css_str) {
             $output.= "<style>$emb_css_str</style>";
         }
-        $output.= "<style>body { font-family:'{$this->_property('font_family') }'!important; font-size:{$this->_property('font_size') }!important;}</style>";
-        $output.= "{$this->_call('autoloader') }";
+        $output.= "<style>body { font-family:'{$__CLASS__::_property('font_family', $__CLASS__, $_this) }'!important; font-size:{$__CLASS__::_property('font_size', $__CLASS__, $_this) }!important;}</style>";
+        $output.= "{$__CLASS__::_call('autoloader', $__CLASS__, $_this) }";
         $output.= "</head>";
-        $output.= "<body>{$this->_property('content') }</body>";
+        $output.= "<body>{$__CLASS__::_property('content', $__CLASS__, $_this) }</body>";
         $output.= "</html>";
         return $output;
     }

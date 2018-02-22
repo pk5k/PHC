@@ -23,11 +23,11 @@ trait Controller
 	{
 		if ($between_double_quotes)
 		{
-			return '{$this->_property(\''.$content.'\')}';
+			return '{$__CLASS__::_property(\''.$content.'\', $__CLASS__, $_this)}';
 		}
 		else
 		{
-			return '$this->_property(\''.$content.'\')';
+			return '$__CLASS__::_property(\''.$content.'\', $__CLASS__, $_this)';
 		}
 	}
 }

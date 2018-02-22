@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.raw.Hypercell - BUILD 17.10.13#194
+<?php #HYPERCELL hcdk.raw.Hypercell - BUILD 18.02.22#198
 namespace hcdk\raw;
 class Hypercell {
     use \hcf\core\dryver\Config, Hypercell\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
@@ -21,61 +21,71 @@ class Hypercell {
     # END ASSEMBLY FRAME CONFIG.INI
     # BEGIN ASSEMBLY FRAME OUTPUT.TEXT
     public function __toString() {
-        $output = "{$this->_call('body') }
+        $__CLASS__ = __CLASS__;
+        $_this = (isset($this)) ? $this : null;
+        $output = "{$__CLASS__::_call('body', $__CLASS__, $_this) }
 ";
         return $output;
     }
     # END ASSEMBLY FRAME OUTPUT.TEXT
     # BEGIN ASSEMBLY FRAME TEMPLATE.TEXT
     protected function body() {
+        $__CLASS__ = __CLASS__;
+        $_this = (isset($this)) ? $this : null;
         $output = "
-<?php #HYPERCELL {$this->_property('name.long') } - BUILD {$this->_property('build.no') }
-namespace {$this->_call('classNamespace') };
+<?php #HYPERCELL {$__CLASS__::_property('name.long', $__CLASS__, $_this) } - BUILD {$__CLASS__::_property('build.no', $__CLASS__, $_this) }
+namespace {$__CLASS__::_call('classNamespace', $__CLASS__, $_this) };
 
-{$this->_call('requiredAliases') }
+{$__CLASS__::_call('requiredAliases', $__CLASS__, $_this) }
 
-{$this->_call('classType') } class {$this->_property('name.short') } {$this->_call('classModifiers') }
+{$__CLASS__::_call('classType', $__CLASS__, $_this) } class {$__CLASS__::_property('name.short', $__CLASS__, $_this) } {$__CLASS__::_call('classModifiers', $__CLASS__, $_this) }
 {
-	use {$this->_call('requiredTraits') };
+	use {$__CLASS__::_call('requiredTraits', $__CLASS__, $_this) };
 
-	const FQN = '{$this->_property('name.long') }';
-	const NAME = '{$this->_property('name.short') }';
+	const FQN = '{$__CLASS__::_property('name.long', $__CLASS__, $_this) }';
+	const NAME = '{$__CLASS__::_property('name.short', $__CLASS__, $_this) }';
 
 	public function __construct()
 	{
-		{$this->_call('constructorRows') }
+		{$__CLASS__::_call('constructorRows', $__CLASS__, $_this) }
 	}
 
-	{$this->_call('assemblyFrames') }
+	{$__CLASS__::_call('assemblyFrames', $__CLASS__, $_this) }
 }
 
-namespace {$this->_call('executableNamespace') };
-{$this->_call('executableFrames') }
+namespace {$__CLASS__::_call('executableNamespace', $__CLASS__, $_this) };
+{$__CLASS__::_call('executableFrames', $__CLASS__, $_this) }
 
 __halt_compiler();#__COMPILER_HALT_OFFSET__
-{$this->_call('attachmentFrames') }
+{$__CLASS__::_call('attachmentFrames', $__CLASS__, $_this) }
 ?>
 
 ";
         return $output;
     }
     protected function assemblyFrame() {
+        $__CLASS__ = __CLASS__;
+        $_this = (isset($this)) ? $this : null;
         $output = "
-# {$this->_arg(\func_get_args(), 0) } ASSEMBLY FRAME {$this->_arg(\func_get_args(), 1) }
+# {$__CLASS__::_arg(\func_get_args(), 0, $__CLASS__, $_this) } ASSEMBLY FRAME {$__CLASS__::_arg(\func_get_args(), 1, $__CLASS__, $_this) }
 
 ";
         return $output;
     }
     protected function executableFrame() {
+        $__CLASS__ = __CLASS__;
+        $_this = (isset($this)) ? $this : null;
         $output = "
-# {$this->_arg(\func_get_args(), 0) } EXECUTABLE FRAME OF {$this->_arg(\func_get_args(), 1) }
+# {$__CLASS__::_arg(\func_get_args(), 0, $__CLASS__, $_this) } EXECUTABLE FRAME OF {$__CLASS__::_arg(\func_get_args(), 1, $__CLASS__, $_this) }
 
 ";
         return $output;
     }
     protected function attachmentFrame() {
+        $__CLASS__ = __CLASS__;
+        $_this = (isset($this)) ? $this : null;
         $output = "
-{$this->_arg(\func_get_args(), 0) }[{$this->_arg(\func_get_args(), 1) }]
+{$__CLASS__::_arg(\func_get_args(), 0, $__CLASS__, $_this) }[{$__CLASS__::_arg(\func_get_args(), 1, $__CLASS__, $_this) }]
 ";
         return $output;
     }
@@ -232,8 +242,8 @@ trait Controller {
                 $assembly_instance = self::getAssemblyInstance($file);
             }
             catch(\Exception $e) {
-                InternalLogger::log()->warn($this->name->long . ' - cannot resolve assembly for file "' . $file . '" due following exception:');
-                InternalLogger::log()->warn($e);
+                InternalLogger::log()->info($this->name->long . ' - cannot resolve assembly for file "' . $file . '" due following exception:');
+                InternalLogger::log()->info($e);
                 continue;
             }
             $assembly_hcfqn = self::resolveAssemblyHCFQN($file);

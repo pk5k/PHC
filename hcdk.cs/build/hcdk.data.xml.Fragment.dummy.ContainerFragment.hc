@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.data.xml.Fragment.dummy.ContainerFragment - BUILD 17.10.11#53
+<?php #HYPERCELL hcdk.data.xml.Fragment.dummy.ContainerFragment - BUILD 18.02.22#56
 namespace hcdk\data\xml\Fragment\dummy;
 class ContainerFragment extends \hcdk\data\xml\Fragment {
     use \hcf\core\dryver\Base, ContainerFragment\__EO__\Controller, \hcf\core\dryver\Internal;

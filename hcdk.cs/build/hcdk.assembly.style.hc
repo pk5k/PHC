@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.style - BUILD 17.10.11#180
+<?php #HYPERCELL hcdk.assembly.style - BUILD 18.02.22#183
 namespace hcdk\assembly;
 abstract class style extends \hcdk\assembly {
     use \hcf\core\dryver\Base, style\__EO__\Controller, \hcf\core\dryver\Internal;

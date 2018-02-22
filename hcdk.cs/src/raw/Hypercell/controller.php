@@ -229,8 +229,8 @@ trait Controller
 			}
 			catch(\Exception $e)
 			{
-				InternalLogger::log()->warn($this->name->long.' - cannot resolve assembly for file "'.$file.'" due following exception:');
-				InternalLogger::log()->warn($e);
+				InternalLogger::log()->info($this->name->long.' - cannot resolve assembly for file "'.$file.'" due following exception:');
+				InternalLogger::log()->info($e);
 
 				continue;
 			}

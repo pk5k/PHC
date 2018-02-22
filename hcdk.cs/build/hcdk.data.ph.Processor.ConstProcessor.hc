@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.data.ph.Processor.ConstProcessor - BUILD 17.10.11#53
+<?php #HYPERCELL hcdk.data.ph.Processor.ConstProcessor - BUILD 18.02.22#57
 namespace hcdk\data\ph\Processor;
 class ConstProcessor extends \hcdk\data\ph\Processor {
     use \hcf\core\dryver\Base, ConstProcessor\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -32,9 +32,9 @@ trait Controller {
      */
     public static function process($content, $between_double_quotes = true) {
         if ($between_double_quotes) {
-            return '{$this->_constant(\'' . $content . '\', __CLASS__)}';
+            return '{$__CLASS__::_constant(\'' . $content . '\', $__CLASS__, $_this)}';
         } else {
-            return '$this->_constant(\'' . $content . '\', __CLASS__)';
+            return '$__CLASS__::_constant(\'' . $content . '\', $__CLASS__, $_this)';
         }
     }
 }

@@ -2,6 +2,7 @@
 use \hcf\core\Utils as Utils;
 use \hcf\core\remote\Invoker as RemoteInvoker;
 use \hcf\web\Router;
+use \hcf\log\Internal as InternalLogger;
 
 trait Controller
 {
@@ -23,6 +24,38 @@ trait Controller
 		}
 	}
 
+	private function writeOutRequired($assembly_name)
+	{
+		$to = $this->assembly_link_routes[$assembly_name];
+
+		if (file_exists($to) && !isset($_GET['force-writeout']))
+		{
+			// nothing to do in this case
+			return false;
+		}
+		else 
+		{
+			return true;
+		}
+	}
+
+	private function writeOut($assembly_name)
+	{
+		$to = $this->assembly_link_routes[$assembly_name];
+
+		if (isset($_GET['force-writeout']))
+		{
+			InternalLogger::log()->info(self::FQN.' - write-out of assembly-type "'.$assembly_name.'" to "'.$to.'" was forced by $_GET[force-writeout]');
+		}
+
+		if (!is_writable(dirname($to)))
+		{
+			throw new \Exception(self::FQN.' - unable to write-out; "'.dirname($to).'" is not writeable');
+		}
+
+		@file_put_contents($to, $this->assembly_data->$assembly_name);
+	}
+
 	/**
 	 * assemblyLoader
 	 * Loads the assemblies of hypercells, defined inside the "assemblies" section of config.json
@@ -37,6 +70,7 @@ trait Controller
 		foreach ($assemblies as $assembly_name => $assembly_conf)
 		{
 			$implicit = ($assembly_name === 'output') ? true : false;
+			$is_writeout = false;
 
 			if (!isset($this->assembly_data->$assembly_name))
 			{
@@ -48,6 +82,10 @@ trait Controller
 				// linking happens by calling a route section of hcf.web.Router which outputs all required assemblies of a given assembly-type
 				// the route section is the assembly-type with a leading dash. This section can be overridden with an custom URI by replaceing
 				// {"link":true} trough {"link":{"from":"?!-another-route"}}.
+				// You can also add "is-writeout: true" to the link-object. This will write all the assembly-data to the file specified inside the 
+				// "from" property and link to it. In this case, the filepath must be relative to HCF_SHARED. 
+				// NOTE: if the file already exists the data won't be rewritten as long as no &force-writeout argument
+				// is set on the request that creates this instance of hcf.web.Container.Autoloader
 				$route_name = '-'.$assembly_name;
 				$this->assembly_link_routes[$assembly_name] = '?!='.$route_name;
 
@@ -56,6 +94,20 @@ trait Controller
 					// change the route to an custom URI
 					$route_name = $assembly_conf->link->from;
 					$this->assembly_link_routes[$assembly_name] = $route_name;
+
+					if (isset($assembly_conf->link->{'is-writeout'}))
+					{
+						$is_writeout = $assembly_conf->link->{'is-writeout'};
+						$wo_target = HCF_SHARED.$route_name;
+						$this->assembly_link_routes[$assembly_name] = $wo_target;
+
+						if (isset($this->data[$wo_target]))
+						{
+							// if the assembly-data is written to a directory that is also an shared-loader directory, the write-out file will appear in the shared-loader-list
+							// remove it from the shared-list to avoid double-loading this files
+							unset($this->data[$wo_target]);
+						}
+					}
 				}
 				else if ((substr($this->assembly_link_routes[$assembly_name], 0, 3) == '?!=') && !isset(Router::config()->$route_name))
 				{
@@ -63,8 +115,11 @@ trait Controller
 					throw new \Exception(self::FQN.' - cannot enable external autoloading for assembly-type "'.$assembly_name.'"; missing route configuration "'.$route_name.'" in '.Router::FQN);
 				}
 
-				$this->assembly_data->$assembly_name = 'EXTERNAL';
-				continue;
+				if (!$is_writeout || !$this->writeOutRequired($assembly_name))
+				{
+					$this->assembly_data->$assembly_name = 'EXTERNAL';
+					continue;
+				}
 			}
 
 			foreach ($assembly_conf->hypercells as $hcfqn)
@@ -97,6 +152,12 @@ trait Controller
 				{
 					throw new \RuntimeException('Failed to access assembly_name "'.$assembly_name.'" for Hypercell "'.$component.'" - assembly_name does not exist but was defined to load');
 				}
+			}
+
+			if ($is_writeout)
+			{
+				$this->writeOut($assembly_name);
+				$this->assembly_data->$assembly_name = 'EXTERNAL';// mark as EXTERNAL after writingOut to add the link to the markup
 			}
 		}
 

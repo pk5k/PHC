@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.core.log.Internal - BUILD 17.10.11#151
+<?php #HYPERCELL hcf.core.log.Internal - BUILD 18.02.22#153
 namespace hcf\core\log;
 class Internal {
     use Internal\__EO__\Controller, \hcf\core\dryver\Log, \hcf\core\dryver\Internal;

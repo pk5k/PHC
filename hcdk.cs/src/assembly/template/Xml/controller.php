@@ -17,7 +17,7 @@ trait Controller
 		// $ph_output  =
 		$output = XMLParser::parse($data['content'], $this->for_file);
 		$method = new Method($name, $data['mod']);
-		$method->setBody($this->buildTemplateMethod($output));
+		$method->setBody($this->prependControlSymbols($this->buildTemplateMethod($output)));
 
 		return $method->toString();
 	}

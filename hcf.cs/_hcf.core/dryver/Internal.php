@@ -12,41 +12,37 @@ namespace hcf\core\dryver
 
     // To decide, if placeholder-processors like "method" or "property" have to access static or non-static values.
   	// These placeholder will be translated to executable fragments of php-script, which will use this methods on execution of the specific assembly-methods
-		private function _constant($name, $scope)
+		private static function _constant($name, $__CLASS__, $_this)
   	{
-  		return constant($scope.'::'.$name);
+  		return constant($__CLASS__.'::'.$name);
   	}
 
-		private function _call($name)
+		private static function _call($name, $__CLASS__, $_this)
   	{
   		$args = func_get_args();
   		array_shift($args);//remove $name
+      array_shift($args);//remove $__CLASS__
+      array_shift($args);//remove $_this
 
   		$method = new \ReflectionMethod(__CLASS__, $name);
 
+      // TODO: remove
   		if (!$method->isPublic())
   		{
   			$method->setAccessible(true);
   		}
 
-  		$scope 	= null;
-
-  		if (!$method->isStatic())
-  		{
-  			$scope = $this;
-  		}
-
   		if (count($args) > 0)
   		{
-  			return $method->invokeArgs($scope, $args);
+  			return $method->invokeArgs($_this, $args);
   		}
   		else
   		{
-  			return $method->invoke($scope);
+  			return $method->invoke($_this);
   		}
   	}
 
-		private function _property($name)
+		private static function _property($name, $__CLASS__, $_this)
   	{
       // access nested properties inside objects by typing {{property:my_prop_obj.key1.level2}}
       $prop_val = null;
@@ -73,7 +69,7 @@ namespace hcf\core\dryver
   		}
       else
       {
-        $prop_val = $this->$name;
+        $prop_val = $_this->$name;
       }
 
       if ($obj_access)
@@ -92,7 +88,7 @@ namespace hcf\core\dryver
       return $prop_val;
   	}
 
-		private function _arg($args, $arg_no)
+		private static function _arg($args, $arg_no, $__CLASS__, $_this)
 		{
 			if (!is_array($args))
 			{

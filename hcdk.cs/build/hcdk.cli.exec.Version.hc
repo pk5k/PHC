@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.cli.exec.Version - BUILD 17.10.11#52
+<?php #HYPERCELL hcdk.cli.exec.Version - BUILD 18.02.22#55
 namespace hcdk\cli\exec;
 class Version extends \hcf\cli\exec {
     use \hcf\core\dryver\Base, Version\__EO__\Controller, \hcf\core\dryver\Internal;

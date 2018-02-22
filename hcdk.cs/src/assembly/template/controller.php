@@ -21,11 +21,6 @@ trait Controller
 
 		foreach ($sections as $name => $data)
 		{
-			if ($data['content'] != $this->processPlaceholders($data['content']) && in_array('static', $data['mod']))
-			{
-				throw new \Exception(static::FQN.' - placeholders in static template "'.$name.'" detected. Using placeholders inside static templates is not possible.');
-			}
-
 			$methods[$name] = $this->buildTemplate($name, $data);
 		}
 

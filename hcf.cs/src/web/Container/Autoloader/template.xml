@@ -3,15 +3,17 @@
   <loop.foreach var="{{property:assembly_data}}" key="assembly_name" value="content" call="shiftExternal">
   	<!-- add wrappers for each channel-type -->
   	<condition.switch value="{{local:assembly_name}}">
+  		
   		<condition.case value="style">
 				<condition.if value="{{local:content}}" is="EXTERNAL">
 					<!-- hcf.web.Router and the hcf.web.Container.Autoloader.provider will do the rest -->
 					<link rel="stylesheet" type="text/css" href="{{property:current_assembly_route}}"/>
 				</condition.if>
 				<condition.else>
-  				<style>{{local:content}}</style>
+  					<style>{{local:content}}</style>
 				</condition.else>
   		</condition.case>
+  		
   		<condition.case value="client">
 				<condition.if value="{{local:content}}" is="EXTERNAL">
 					<!-- hcf.web.Router and the hcf.web.Container.Autoloader.provider will do the rest -->
@@ -21,6 +23,7 @@
 					<script language="javascript">{{local:content}}</script>
 				</condition.else>
   		</condition.case>
+  		
   		<condition.case value="output">
 				<condition.if value="{{local:content}}" is="EXTERNAL">
 					<script language="javascript">alert('EXTERNAL LOADING OF OUTPUT ASSEMBLIES IS CURRENTLY NOT POSSIBLE TROUGH THE hcf.web.Container - greetings from {{const:FQN}}');</script>
@@ -29,9 +32,11 @@
 					<dummy.container>{{local:content}}</dummy.container>
 				</condition.else>
   		</condition.case>
+
   		<condition.case>
   			<dummy.container>{{local:content}}</dummy.container>
   		</condition.case>
+
   	</condition.switch>
   </loop.foreach>
 </dummy.container>

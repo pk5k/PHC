@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.data.ph.Processor.ArgProcessor - BUILD 17.10.11#53
+<?php #HYPERCELL hcdk.data.ph.Processor.ArgProcessor - BUILD 18.02.22#57
 namespace hcdk\data\ph\Processor;
 class ArgProcessor extends \hcdk\data\ph\Processor {
     use \hcf\core\dryver\Base, ArgProcessor\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -24,9 +24,9 @@ trait Controller {
      */
     public static function process($content, $between_double_quotes = true) {
         if ($between_double_quotes) {
-            return '{$this->_arg(\func_get_args(), ' . $content . ')}';
+            return '{$__CLASS__::_arg(\func_get_args(), ' . $content . ', $__CLASS__, $_this)}';
         } else {
-            return '$this->_arg(\func_get_args(), ' . $content . ')';
+            return '$__CLASS__::_arg(\func_get_args(), ' . $content . ', $__CLASS__, $_this)';
         }
     }
 }

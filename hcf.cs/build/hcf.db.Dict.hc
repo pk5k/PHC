@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.db.Dict - BUILD 17.11.23#57
+<?php #HYPERCELL hcf.db.Dict - BUILD 18.02.22#63
 namespace hcf\db;
 class Dict {
     use \hcf\core\dryver\Config, \hcf\core\dryver\Constant, Dict\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
@@ -26,64 +26,89 @@ class Dict {
     # END ASSEMBLY FRAME CONSTANT
     # BEGIN ASSEMBLY FRAME OUTPUT.TEXT
     public function __toString() {
-        $output = "{$this->_call('apply') }
+        $__CLASS__ = __CLASS__;
+        $_this = (isset($this)) ? $this : null;
+        $output = "{$__CLASS__::_call('apply', $__CLASS__, $_this) }
 ";
         return $output;
     }
     # END ASSEMBLY FRAME OUTPUT.TEXT
     # BEGIN ASSEMBLY FRAME TEMPLATE.SQL
-    public function tplLoadDict() {
+    public function tplLookupKey() {
+        $__CLASS__ = __CLASS__;
+        $_this = (isset($this)) ? $this : null;
         $sql = "
-SELECT * FROM {$this->_property('config.connection.table.name') };
+SELECT key FROM {$__CLASS__::_property('config.connection.table.name', $__CLASS__, $_this) } WHERE VALUE = '{$__CLASS__::_arg(\func_get_args(), 0, $__CLASS__, $_this) }'
+
+";
+        return $sql;
+    }
+    public function tplLoadDict() {
+        $__CLASS__ = __CLASS__;
+        $_this = (isset($this)) ? $this : null;
+        $sql = "
+SELECT * FROM {$__CLASS__::_property('config.connection.table.name', $__CLASS__, $_this) };
 
 
 ";
         return $sql;
     }
     public function tplCreateDictTable() {
+        $__CLASS__ = __CLASS__;
+        $_this = (isset($this)) ? $this : null;
         $sql = "
-CREATE TABLE {$this->_property('config.connection.table.name') }
+CREATE TABLE {$__CLASS__::_property('config.connection.table.name', $__CLASS__, $_this) }
 (
-	 {$this->_property('config.connection.table.col.key') } VARCHAR(255) NOT NULL PRIMARY KEY,
-	 {$this->_property('config.connection.table.col.locale') } VARCHAR(255),
-	 {$this->_property('config.connection.table.col.value') } TEXT,
-	 {$this->_property('config.connection.table.col.comment') } TEXT
+	 {$__CLASS__::_property('config.connection.table.col.key', $__CLASS__, $_this) } VARCHAR(255) NOT NULL PRIMARY KEY,
+	 {$__CLASS__::_property('config.connection.table.col.locale', $__CLASS__, $_this) } VARCHAR(255),
+	 {$__CLASS__::_property('config.connection.table.col.value', $__CLASS__, $_this) } TEXT,
+	 {$__CLASS__::_property('config.connection.table.col.comment', $__CLASS__, $_this) } TEXT
 );
 
 ";
         return $sql;
     }
     public function tplCreateDictEntry() {
+        $__CLASS__ = __CLASS__;
+        $_this = (isset($this)) ? $this : null;
         $sql = "
-INSERT INTO {$this->_property('config.connection.table.name') } VALUES ('{$this->_arg(\func_get_args(), 0) }', '{$this->_arg(\func_get_args(), 1) }', '{$this->_arg(\func_get_args(), 2) }', '{$this->_arg(\func_get_args(), 3) }')
+INSERT INTO {$__CLASS__::_property('config.connection.table.name', $__CLASS__, $_this) } VALUES ('{$__CLASS__::_arg(\func_get_args(), 0, $__CLASS__, $_this) }', '{$__CLASS__::_arg(\func_get_args(), 1, $__CLASS__, $_this) }', '{$__CLASS__::_arg(\func_get_args(), 2, $__CLASS__, $_this) }', '{$__CLASS__::_arg(\func_get_args(), 3, $__CLASS__, $_this) }')
 
 ";
         return $sql;
     }
     public function tplUpdateDictEntry() {
+        $__CLASS__ = __CLASS__;
+        $_this = (isset($this)) ? $this : null;
         $sql = "
-UPDATE {$this->_property('config.connection.table.name') } SET {$this->_property('config.connection.table.col.value') } = '{$this->_arg(\func_get_args(), 0) }', {$this->_property('config.connection.table.col.comment') } = '{$this->_arg(\func_get_args(), 1) }' WHERE {$this->_property('config.connection.table.col.key') } = '{$this->_property('key') }' AND {$this->_property('config.connection.table.col.locale') } = '{$this->_property('locale') }'
+UPDATE {$__CLASS__::_property('config.connection.table.name', $__CLASS__, $_this) } SET {$__CLASS__::_property('config.connection.table.col.value', $__CLASS__, $_this) } = '{$__CLASS__::_arg(\func_get_args(), 0, $__CLASS__, $_this) }', {$__CLASS__::_property('config.connection.table.col.comment', $__CLASS__, $_this) } = '{$__CLASS__::_arg(\func_get_args(), 1, $__CLASS__, $_this) }' WHERE {$__CLASS__::_property('config.connection.table.col.key', $__CLASS__, $_this) } = '{$__CLASS__::_property('key', $__CLASS__, $_this) }' AND {$__CLASS__::_property('config.connection.table.col.locale', $__CLASS__, $_this) } = '{$__CLASS__::_property('locale', $__CLASS__, $_this) }'
 
 ";
         return $sql;
     }
     public function tplDeleteDictEntry() {
+        $__CLASS__ = __CLASS__;
+        $_this = (isset($this)) ? $this : null;
         $sql = "
-DELETE FROM {$this->_property('config.connection.table.name') } WHERE {$this->_property('config.connection.table.col.key') } = '{$this->_property('key') }' AND {$this->_property('config.connection.table.col.locale') } = '{$this->_property('locale') }'
+DELETE FROM {$__CLASS__::_property('config.connection.table.name', $__CLASS__, $_this) } WHERE {$__CLASS__::_property('config.connection.table.col.key', $__CLASS__, $_this) } = '{$__CLASS__::_property('key', $__CLASS__, $_this) }' AND {$__CLASS__::_property('config.connection.table.col.locale', $__CLASS__, $_this) } = '{$__CLASS__::_property('locale', $__CLASS__, $_this) }'
 
 ";
         return $sql;
     }
     public function tplTruncate() {
+        $__CLASS__ = __CLASS__;
+        $_this = (isset($this)) ? $this : null;
         $sql = "
-TRUNCATE TABLE {$this->_property('config.connection.table.name') }
+TRUNCATE TABLE {$__CLASS__::_property('config.connection.table.name', $__CLASS__, $_this) }
 
 ";
         return $sql;
     }
     public function tplTruncateLocale() {
+        $__CLASS__ = __CLASS__;
+        $_this = (isset($this)) ? $this : null;
         $sql = "
-DELETE FROM {$this->_property('config.connection.table.name') } WHERE {$this->_property('config.connection.table.col.locale') } = '{$this->_arg(\func_get_args(), 0) }'
+DELETE FROM {$__CLASS__::_property('config.connection.table.name', $__CLASS__, $_this) } WHERE {$__CLASS__::_property('config.connection.table.col.locale', $__CLASS__, $_this) } = '{$__CLASS__::_arg(\func_get_args(), 0, $__CLASS__, $_this) }'
 ";
         return $sql;
     }
@@ -95,6 +120,7 @@ namespace hcf\db\Dict\__EO__;
 use \hcf\db\Connection as DatabaseConnection;
 use \hcf\core\log\Internal as IL;
 use \hcf\web\Cookie as Cookie;
+use \hcf\db\Dict\NoSuchValueException;
 trait Controller {
     private static $raw_cache = null; // stores the whole result-set of the table - load at first use of hcf.db.Dict
     private static $dynamic_cache = []; // stores hcf.db.Dict instances that already were used due this execution
@@ -328,6 +354,26 @@ trait Controller {
             $stmt = $dbc->prepare($ed->tplTruncateLocale($locale));
         }
         return $stmt->execute();
+    }
+    public static function lookupKey($for_value) {
+        $ed = new static (self::EMPTY_KEY);
+        $stmt = DatabaseConnection::to(self::config()->connection->name)->prepare($ed->tplLookupKey($for_value));
+        if ($stmt->execute()) {
+            $results = $stmt->fetchAll(\PDO::FETCH_OBJ);
+            $cols = self::config()->connection->table->col;
+            $col_key = $cols->key;
+            if (!count($results)) {
+                throw new NoSuchValueException($for_value);
+            }
+            foreach ($results as $result) {
+                return $result->$col_key;
+            }
+        } else {
+            $err = $stmt->errorInfo();
+            $err_str = $err[0] . ' (' . $err[1] . ') ' . $err[2];
+            IL::log()->warn(self::FQN . ' - unable to lookup key for value "' . $for_value . '" due following error:');
+            IL::log()->error($err_str);
+        }
     }
     public static function add($locale, $key, $value, $comment) {
         $ed = new static (self::EMPTY_KEY);

@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.data.xml.Fragment.loop.ForeachFragment - BUILD 17.10.11#53
+<?php #HYPERCELL hcdk.data.xml.Fragment.loop.ForeachFragment - BUILD 18.02.22#57
 namespace hcdk\data\xml\Fragment\loop;
 class ForeachFragment extends \hcdk\data\xml\Fragment {
     use \hcf\core\dryver\Base, ForeachFragment\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -45,7 +45,7 @@ trait Controller {
         }
         $output.= ') {';
         if (!is_null($call)) {
-            $output.= ' $this->_call(\'' . $call . '\',';
+            $output.= ' $__CLASS__::_call(\'' . $call . '\', $__CLASS__, $_this,';
             if (!is_null($as_key)) {
                 $output.= '$' . $as_key . ',';
             }

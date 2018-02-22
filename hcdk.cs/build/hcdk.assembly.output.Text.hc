@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.output.Text - BUILD 17.10.11#168
+<?php #HYPERCELL hcdk.assembly.output.Text - BUILD 18.02.22#172
 namespace hcdk\assembly\output;
 class Text extends \hcdk\assembly\output {
     use \hcf\core\dryver\Base, Text\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
@@ -12,8 +12,10 @@ class Text extends \hcdk\assembly\output {
     }
     # BEGIN ASSEMBLY FRAME TEMPLATE.TEXT
     protected function template__toString() {
+        $__CLASS__ = __CLASS__;
+        $_this = (isset($this)) ? $this : null;
         $output = "
-\$output = \"{$this->_arg(\func_get_args(), 0) }\";
+\$output = \"{$__CLASS__::_arg(\func_get_args(), 0, $__CLASS__, $_this) }\";
 return \$output;
 ";
         return $output;
@@ -31,7 +33,7 @@ trait Controller {
     public function build__toString() {
         $output = str_replace('"', '\\"', $this->processPlaceholders($this->rawInput())); //escape double-quotes
         $method = new Method('__toString', ['public']);
-        $method->setBody($this->template__toString($output));
+        $method->setBody($this->prependControlSymbols($this->template__toString($output)));
         return $method->toString();
     }
 }

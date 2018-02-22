@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.client - BUILD 17.10.11#179
+<?php #HYPERCELL hcdk.assembly.client - BUILD 18.02.22#182
 namespace hcdk\assembly;
 abstract class client extends \hcdk\assembly {
     use \hcf\core\dryver\Base, client\__EO__\Controller, \hcf\core\dryver\Internal;

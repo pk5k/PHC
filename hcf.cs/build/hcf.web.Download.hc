@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.web.Download - BUILD 17.10.11#18
+<?php #HYPERCELL hcf.web.Download - BUILD 18.02.22#20
 namespace hcf\web;
 class Download {
     use \hcf\core\dryver\Config, Download\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Internal;
@@ -21,7 +21,9 @@ class Download {
     # END ASSEMBLY FRAME CONFIG.INI
     # BEGIN ASSEMBLY FRAME OUTPUT.TEXT
     public function __toString() {
-        $output = "{$this->_call('provideDownload') }";
+        $__CLASS__ = __CLASS__;
+        $_this = (isset($this)) ? $this : null;
+        $output = "{$__CLASS__::_call('provideDownload', $__CLASS__, $_this) }";
         return $output;
     }
     # END ASSEMBLY FRAME OUTPUT.TEXT

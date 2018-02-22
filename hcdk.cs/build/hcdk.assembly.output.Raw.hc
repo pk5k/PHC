@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.output.Raw - BUILD 17.10.11#167
+<?php #HYPERCELL hcdk.assembly.output.Raw - BUILD 18.02.22#171
 namespace hcdk\assembly\output;
 class Raw extends \hcdk\assembly\output {
     use \hcf\core\dryver\Base, Raw\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Internal;
@@ -12,7 +12,9 @@ class Raw extends \hcdk\assembly\output {
     }
     # BEGIN ASSEMBLY FRAME OUTPUT.TEXT
     public function __toString() {
-        $output = "\$output = \"{$this->_property('output') }\";
+        $__CLASS__ = __CLASS__;
+        $_this = (isset($this)) ? $this : null;
+        $output = "\$output = \"{$__CLASS__::_property('output', $__CLASS__, $_this) }\";
 return \$output;";
         return $output;
     }
@@ -30,7 +32,7 @@ trait Controller {
     public function build__toString() {
         $this->output = str_replace('"', '\\"', $this->rawInput()); //escape double-quotes
         $method = new Method('__toString', ['public']);
-        $method->setBody($this->toString());
+        $method->setBody($this->prependControlSymbols($this->toString()));
         return $method->toString();
     }
 }

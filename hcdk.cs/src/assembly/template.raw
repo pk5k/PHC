@@ -1,0 +1,3 @@
+@~controlSymbols:
+\$__CLASS__ = __CLASS__;
+\$_this = (isset(\$this)) ? \$this : null;

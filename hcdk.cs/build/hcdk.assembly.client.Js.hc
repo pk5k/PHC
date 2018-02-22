@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.client.Js - BUILD 17.10.11#169
+<?php #HYPERCELL hcdk.assembly.client.Js - BUILD 18.02.22#172
 namespace hcdk\assembly\client;
 class Js extends \hcdk\assembly\client {
     use \hcf\core\dryver\Base, \hcf\core\dryver\Config, Js\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
@@ -22,8 +22,10 @@ class Js extends \hcdk\assembly\client {
     # END ASSEMBLY FRAME CONFIG.INI
     # BEGIN ASSEMBLY FRAME TEMPLATE.TEXT
     protected function buildClientMethod() {
+        $__CLASS__ = __CLASS__;
+        $_this = (isset($this)) ? $this : null;
         $output = "
-\$js = \"{$this->_arg(\func_get_args(), 0) }\";
+\$js = \"{$__CLASS__::_arg(\func_get_args(), 0, $__CLASS__, $_this) }\";
 
 return \$js;";
         return $output;

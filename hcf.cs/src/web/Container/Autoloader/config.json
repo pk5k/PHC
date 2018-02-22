@@ -1,16 +1,17 @@
 {
   "assemblies":{
     "output":{
-			"embed": true,
+			"link": false,
 			"hypercells": []
 		},
     "style":{
-			"embed": true,
+			"link": true,
 			"hypercells": []
 		},
     "client":{
-			"embed": {
-				"from": "?!=-script"
+			"link": {
+        "write-out": true,
+				"from": "js/scripts.js"
 			},
 			"hypercells": ["hcf.web.Bridge"]
 		}

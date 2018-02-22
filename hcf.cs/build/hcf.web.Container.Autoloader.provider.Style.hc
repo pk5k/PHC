@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.web.Container.Autoloader.provider.Style - BUILD 17.10.11#7
+<?php #HYPERCELL hcf.web.Container.Autoloader.provider.Style - BUILD 18.02.22#9
 namespace hcf\web\Container\Autoloader\provider;
 class Style extends \hcf\web\Container\Autoloader\provider {
     use \hcf\core\dryver\Base, Style\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Internal;
@@ -12,7 +12,9 @@ class Style extends \hcf\web\Container\Autoloader\provider {
     }
     # BEGIN ASSEMBLY FRAME OUTPUT.TEXT
     public function __toString() {
-        $output = "{$this->_call('provideAssemblies') }
+        $__CLASS__ = __CLASS__;
+        $_this = (isset($this)) ? $this : null;
+        $output = "{$__CLASS__::_call('provideAssemblies', $__CLASS__, $_this) }
 ";
         return $output;
     }
