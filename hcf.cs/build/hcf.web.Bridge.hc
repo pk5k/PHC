@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.web.Bridge - BUILD 18.02.22#3143
+<?php #HYPERCELL hcf.web.Bridge - BUILD 18.05.17#3145
 namespace hcf\web;
 class Bridge {
     use \hcf\core\dryver\Client, \hcf\core\dryver\Config, Bridge\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Internal;
@@ -141,8 +141,11 @@ else
 {if(callbacks.success||callbacks.error)
 {console.warn('Useless callback given in send - XMLHttpRequest.onreadystatechange is overwritten by custom XHR in overwrites-object - callbacks inside the callback-object will be ignored');}}
 if(callbacks.before)
-{old_request=http_request;http_request=callbacks.before(old_request);if(!http_request)
-{http_request=old_request;}}
+{var before_ret=callbacks.before(http_request);if(before_ret!==undefined)
+{if(before_ret===false)
+{return;}
+else if(before_ret.constructor===XMLHttpRequest)
+{http_request=before_ret;}}}
 var data=argsToFormData(args,files);http_request.open(req_method,'?!=-bridge',async);http_request.setRequestHeader(\"X-Bridge-Action\",self.action());http_request.setRequestHeader(\"X-Bridge-Target\",self.target());if(async)
 {http_request.timeout=timeout;}
 http_request.send(data);}
