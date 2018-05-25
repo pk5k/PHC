@@ -7,7 +7,7 @@ trait Controller
 	{
 		parent::provideFileTypeHeader(Utils::getMimeTypeByExtension('myscript.js'));
 
-		return parent::provideAssembliesOfType('client');
+		return parent::provideAssembliesOfType('script');
 	}
 }
 ?>

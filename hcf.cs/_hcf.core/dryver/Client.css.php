@@ -1,7 +1,7 @@
 <?php
-namespace hcf\core\dryver
+namespace hcf\core\dryver\Client
 {
-	trait Style
+	trait Css
 	{
 		private static $parser = null;
 

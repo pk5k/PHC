@@ -1,7 +1,7 @@
-<?php #HYPERCELL hcf.web.Container - BUILD 18.02.22#3123
+<?php #HYPERCELL hcf.web.Container - BUILD 18.05.25#3126
 namespace hcf\web;
 class Container {
-    use \hcf\core\dryver\Client, \hcf\core\dryver\Config, Container\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
+    use \hcf\core\dryver\Client, \hcf\core\dryver\Client\Js, \hcf\core\dryver\Config, Container\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
     const FQN = 'hcf.web.Container';
     const NAME = 'Container';
     public function __construct() {
@@ -13,14 +13,14 @@ class Container {
         }
     }
     # BEGIN ASSEMBLY FRAME CLIENT.JS
-    public static function client() {
+    public static function script() {
         $js = "document.registerComponent=function(hcfqn,obj)
 {var prop_hcfqn=hcfqn;var split=hcfqn.split('.')
 var scope=window;var hcfqn=split.pop();var prop_name=hcfqn;for(var i in split)
 {var part=split[i];if(!scope[part])
 {scope[part]={};}
 scope=scope[part];}
-obj.__proto__=scope;obj.FQN=prop_hcfqn;obj.NAME=prop_name;scope[hcfqn]=obj;return scope[hcfqn];}
+obj.prototype=scope;obj.FQN=prop_hcfqn;obj.NAME=prop_name;scope[hcfqn]=obj;return scope[hcfqn];}
 document.recursiveOffset=function(aobj)
 {var currOffset={x:0,y:0}
 var newOffset={x:0,y:0}
@@ -223,7 +223,7 @@ if(typeof define==='function'&&define.amd){define(function(){return md5})}else i
         foreach ($__CLASS__::_property('ext_css', $__CLASS__, $_this) as $href => $media) {
             $output.= "<link rel=\"stylesheet\" type=\"text/css\" href=\"$href\" media=\"$media\"/>";
         }
-        $output.= "<script language=\"javascript\">{$__CLASS__::_call('client', $__CLASS__, $_this) }</script>";
+        $output.= "<script language=\"javascript\">{$__CLASS__::_call('script', $__CLASS__, $_this) }</script>";
         foreach ($__CLASS__::_property('emb_js', $__CLASS__, $_this) as $emb_js_str) {
             $output.= "<script language=\"javascript\">$emb_js_str</script>";
         }

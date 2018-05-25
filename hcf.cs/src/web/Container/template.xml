@@ -25,7 +25,7 @@
 			<link rel="stylesheet" type="text/css" href="{{local:href}}" media="{{local:media}}"/>
 		</loop.foreach>
 
-		<script language="javascript">{{method:client}}</script>
+		<script language="javascript">{{method:script}}</script>
 
 		<loop.foreach var="{{property:emb_js}}" value="emb_js_str">
 			<script language="javascript">{{local:emb_js_str}}</script>

@@ -1,7 +1,7 @@
-<?php #HYPERCELL hcf.web.Bridge - BUILD 18.05.17#3145
+<?php #HYPERCELL hcf.web.Bridge - BUILD 18.05.17#3146
 namespace hcf\web;
 class Bridge {
-    use \hcf\core\dryver\Client, \hcf\core\dryver\Config, Bridge\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Internal;
+    use \hcf\core\dryver\Client, \hcf\core\dryver\Client\Js, \hcf\core\dryver\Config, Bridge\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Internal;
     const FQN = 'hcf.web.Bridge';
     const NAME = 'Bridge';
     public function __construct() {
@@ -13,7 +13,7 @@ class Bridge {
         }
     }
     # BEGIN ASSEMBLY FRAME CLIENT.JS
-    public static function client() {
+    public static function script() {
         $js = "function(to)
 {var self=this;self._target=to;self._action=undefined;self._method=undefined;self.do=function(arg_obj)
 {if(arg_obj===undefined)

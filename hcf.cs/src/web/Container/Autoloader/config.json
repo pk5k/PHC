@@ -1,14 +1,10 @@
 {
-  "assemblies":{
-    "output":{
-			"link": false,
-			"hypercells": []
-		},
+  "client":{
     "style":{
 			"link": true,
 			"hypercells": []
 		},
-    "client":{
+    "script":{
 			"link": {
         "write-out": true,
 				"from": "js/scripts.js"

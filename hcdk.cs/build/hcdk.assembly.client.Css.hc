@@ -1,8 +1,8 @@
-<?php #HYPERCELL hcdk.assembly.style.Css - BUILD 18.02.22#172
-namespace hcdk\assembly\style;
-class Css extends \hcdk\assembly\style {
+<?php #HYPERCELL hcdk.assembly.client.Css - BUILD 18.05.25#177
+namespace hcdk\assembly\client;
+class Css extends \hcdk\assembly\client {
     use \hcf\core\dryver\Base, Css\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
-    const FQN = 'hcdk.assembly.style.Css';
+    const FQN = 'hcdk.assembly.client.Css';
     const NAME = 'Css';
     public function __construct() {
         if (method_exists($this, 'onConstruct')) {
@@ -27,20 +27,31 @@ return self::_attachment(__FILE__, __COMPILER_HALT_OFFSET__, '{$__CLASS__::_call
     # END ASSEMBLY FRAME TEMPLATE.TEXT
     
 }
-namespace hcdk\assembly\style\Css\__EO__;
+namespace hcdk\assembly\client\Css\__EO__;
 # BEGIN EXECUTABLE FRAME OF CONTROLLER.PHP
 use \hcdk\raw\Method as Method;
 trait Controller {
     public function getType() {
         return 'CSS';
     }
-    public function getIsAttachment() {
+    public function sourceIsAttachment() {
         return true;
     }
-    public function buildStyle() {
+    public function buildClient() {
         $method = new Method('style', ['public', 'static'], ['as_array' => false]);
         $method->setBody($this->tplBuildStyle());
         return $method->toString();
+    }
+    public function getStaticMethods() {
+        $methods = [];
+        $methods['style'] = $this->buildClient();
+        return $methods;
+    }
+    public function defaultInput() {
+        return '';
+    }
+    public function getTraits() {
+        return ['Client' => '\\hcf\\core\\dryver\\Client', 'ClientCss' => '\\hcf\\core\\dryver\\Client\\Css'];
     }
 }
 # END EXECUTABLE FRAME OF CONTROLLER.PHP

@@ -1,8 +1,8 @@
-<?php #HYPERCELL hcdk.assembly.style.Scss - BUILD 18.02.22#172
-namespace hcdk\assembly\style;
-class Scss extends \hcdk\assembly\style\Css {
+<?php #HYPERCELL hcdk.assembly.client.Scss - BUILD 18.05.25#175
+namespace hcdk\assembly\client;
+class Scss extends \hcdk\assembly\client\Css {
     use \hcf\core\dryver\Base, Scss\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
-    const FQN = 'hcdk.assembly.style.Scss';
+    const FQN = 'hcdk.assembly.client.Scss';
     const NAME = 'Scss';
     public function __construct() {
         if (method_exists($this, 'onConstruct')) {
@@ -27,7 +27,7 @@ if(\$as_array)
     # END ASSEMBLY FRAME TEMPLATE.TEXT
     
 }
-namespace hcdk\assembly\style\Scss\__EO__;
+namespace hcdk\assembly\client\Scss\__EO__;
 # BEGIN EXECUTABLE FRAME OF CONTROLLER.PHP
 use Leafo\ScssPhp\Compiler as scssc;
 use \hcdk\raw\Method as Method;
@@ -35,7 +35,7 @@ trait Controller {
     public function getType() {
         return 'SCSS';
     }
-    public function getIsAttachment() {
+    public function sourceIsAttachment() {
         return false;
     }
     private function compile($scss) {
@@ -52,10 +52,21 @@ trait Controller {
         $body.= '\';';
         return $body;
     }
-    public function buildStyle() {
+    public function buildClient() {
         $method = new Method('style', ['public', 'static'], ['as_array' => 'false']);
         $method->setBody($this->tplBuildStyle());
         return $method->toString();
+    }
+    public function getStaticMethods() {
+        $methods = [];
+        $methods['style'] = $this->buildClient();
+        return $methods;
+    }
+    public function defaultInput() {
+        return '';
+    }
+    public function getTraits() {
+        return ['Client' => '\\hcf\\core\\dryver\\Client', 'ClientCss' => '\\hcf\\core\\dryver\\Client\\Css'];
     }
 }
 # END EXECUTABLE FRAME OF CONTROLLER.PHP

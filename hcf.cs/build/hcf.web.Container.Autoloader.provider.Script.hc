@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.web.Container.Autoloader.provider.Script - BUILD 18.02.22#10
+<?php #HYPERCELL hcf.web.Container.Autoloader.provider.Script - BUILD 18.05.25#12
 namespace hcf\web\Container\Autoloader\provider;
 class Script extends \hcf\web\Container\Autoloader\provider {
     use \hcf\core\dryver\Base, Script\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Internal;
@@ -27,7 +27,7 @@ use \hcf\core\Utils;
 trait Controller {
     public static function provideAssemblies() {
         parent::provideFileTypeHeader(Utils::getMimeTypeByExtension('myscript.js'));
-        return parent::provideAssembliesOfType('client');
+        return parent::provideAssembliesOfType('script');
     }
 }
 # END EXECUTABLE FRAME OF CONTROLLER.PHP

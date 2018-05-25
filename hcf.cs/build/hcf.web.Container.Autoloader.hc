@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.web.Container.Autoloader - BUILD 18.02.22#3142
+<?php #HYPERCELL hcf.web.Container.Autoloader - BUILD 18.05.25#3146
 namespace hcf\web\Container;
 class Autoloader {
     use \hcf\core\dryver\Config, Autoloader\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
@@ -36,28 +36,21 @@ class Autoloader {
             $__CLASS__::_call('createRow', $__CLASS__, $_this, $current_value);
             $output.= "{$__CLASS__::_property('current_row', $__CLASS__, $_this) }";
         }
-        foreach ($__CLASS__::_property('assembly_data', $__CLASS__, $_this) as $assembly_name => $content) {
-            $__CLASS__::_call('shiftExternal', $__CLASS__, $_this, $assembly_name, $content);
-            switch ($assembly_name) {
+        foreach ($__CLASS__::_property('client_data', $__CLASS__, $_this) as $client_name => $content) {
+            $__CLASS__::_call('shiftExternal', $__CLASS__, $_this, $client_name, $content);
+            switch ($client_name) {
                 case 'style':
                     if ($content == "EXTERNAL") {
-                        $output.= "<link rel=\"stylesheet\" type=\"text/css\" href=\"{$__CLASS__::_property('current_assembly_route', $__CLASS__, $_this) }\"/>";
+                        $output.= "<link rel=\"stylesheet\" type=\"text/css\" href=\"{$__CLASS__::_property('current_client_route', $__CLASS__, $_this) }\"/>";
                     } else {
                         $output.= "<style>$content</style>";
                     }
                 break;
-                case 'client':
+                case 'script':
                     if ($content == "EXTERNAL") {
-                        $output.= "<script src=\"{$__CLASS__::_property('current_assembly_route', $__CLASS__, $_this) }\" language=\"javascript\"></script>";
+                        $output.= "<script src=\"{$__CLASS__::_property('current_client_route', $__CLASS__, $_this) }\" language=\"javascript\"></script>";
                     } else {
                         $output.= "<script language=\"javascript\">$content</script>";
-                    }
-                break;
-                case 'output':
-                    if ($content == "EXTERNAL") {
-                        $output.= "<script language=\"javascript\">alert('EXTERNAL LOADING OF OUTPUT ASSEMBLIES IS CURRENTLY NOT POSSIBLE TROUGH THE hcf.web.Container - greetings from {$__CLASS__::_constant('FQN', $__CLASS__, $_this) }');</script>";
-                    } else {
-                        $output.= "$content";
                     }
                 break;
                 default:
@@ -107,21 +100,21 @@ use \hcf\web\Router;
 use \hcf\log\Internal as InternalLogger;
 trait Controller {
     private $data = [];
-    private $assembly_data = '';
+    private $client_data = '';
     private $current_row = null;
-    private $assembly_link_routes = [];
-    private $current_assembly_route = null;
+    private $client_link_routes = [];
+    private $current_client_route = null;
     /**
      * __construct
      */
     public function onConstruct($autorun = true) {
         if ($autorun) {
             $this->processSections(self::config()->shared);
-            $this->assemblyLoader(self::config()->assemblies);
+            $this->clientLoader(self::config()->client);
         }
     }
-    private function writeOutRequired($assembly_name) {
-        $to = $this->assembly_link_routes[$assembly_name];
+    private function writeOutRequired($client_name) {
+        $to = $this->client_link_routes[$client_name];
         if (file_exists($to) && !isset($_GET['force-writeout'])) {
             // nothing to do in this case
             return false;
@@ -129,100 +122,97 @@ trait Controller {
             return true;
         }
     }
-    private function writeOut($assembly_name) {
-        $to = $this->assembly_link_routes[$assembly_name];
+    private function writeOut($client_name) {
+        $to = $this->client_link_routes[$client_name];
         if (isset($_GET['force-writeout'])) {
-            InternalLogger::log()->info(self::FQN . ' - write-out of assembly-type "' . $assembly_name . '" to "' . $to . '" was forced by $_GET[force-writeout]');
+            InternalLogger::log()->info(self::FQN . ' - write-out of client-type "' . $client_name . '" to "' . $to . '" was forced by $_GET[force-writeout]');
         }
         if (!is_writable(dirname($to))) {
             throw new \Exception(self::FQN . ' - unable to write-out; "' . dirname($to) . '" is not writeable');
         }
-        @file_put_contents($to, $this->assembly_data->$assembly_name);
+        @file_put_contents($to, $this->client_data->$client_name);
     }
     /**
-     * assemblyLoader
-     * Loads the assemblies of hypercells, defined inside the "assemblies" section of config.json
+     * clientLoader
+     * Loads the client-data of hypercells, defined inside the "client-data" section of config.json
      *
-     * @return string - assemblyLoader output
+     * @return string - clientLoader output
      */
-    public function assemblyLoader($assemblies) {
-        $this->assembly_data = new \stdClass();
+    public function clientLoader($assemblies) {
+        $this->client_data = new \stdClass();
         $implicit = false;
-        foreach ($assemblies as $assembly_name => $assembly_conf) {
-            $implicit = ($assembly_name === 'output') ? true : false;
+        foreach ($assemblies as $client_name => $client_conf) {
+            $implicit = ($client_name === 'output') ? true : false;
             $is_writeout = false;
-            if (!isset($this->assembly_data->$assembly_name)) {
-                $this->assembly_data->$assembly_name = '';
+            if (!isset($this->client_data->$client_name)) {
+                $this->client_data->$client_name = '';
             }
-            if (isset($assembly_conf->link) && ($assembly_conf->link === true || is_object($assembly_conf->link))) {
-                // linking happens by calling a route section of hcf.web.Router which outputs all required assemblies of a given assembly-type
-                // the route section is the assembly-type with a leading dash. This section can be overridden with an custom URI by replaceing
+            if (isset($client_conf->link) && ($client_conf->link === true || is_object($client_conf->link))) {
+                // linking happens by calling a route section of hcf.web.Router which outputs all required assemblies of a given client-type
+                // the route section is the client-type with a leading dash. This section can be overridden with an custom URI by replaceing
                 // {"link":true} trough {"link":{"from":"?!-another-route"}}.
-                // You can also add "is-writeout: true" to the link-object. This will write all the assembly-data to the file specified inside the
+                // You can also add "is-writeout: true" to the link-object. This will write all the client-data to the file specified inside the
                 // "from" property and link to it. In this case, the filepath must be relative to HCF_SHARED.
                 // NOTE: if the file already exists the data won't be rewritten as long as no &force-writeout argument
                 // is set on the request that creates this instance of hcf.web.Container.Autoloader
-                $route_name = '-' . $assembly_name;
-                $this->assembly_link_routes[$assembly_name] = '?!=' . $route_name;
-                if (is_object($assembly_conf->link) && isset($assembly_conf->link->from)) {
+                $route_name = '-' . $client_name;
+                $this->client_link_routes[$client_name] = '?!=' . $route_name;
+                if (is_object($client_conf->link) && isset($client_conf->link->from)) {
                     // change the route to an custom URI
-                    $route_name = $assembly_conf->link->from;
-                    $this->assembly_link_routes[$assembly_name] = $route_name;
-                    if (isset($assembly_conf->link->{'is-writeout'})) {
-                        $is_writeout = $assembly_conf->link->{'is-writeout'};
+                    $route_name = $client_conf->link->from;
+                    $this->client_link_routes[$client_name] = $route_name;
+                    if (isset($client_conf->link->{'is-writeout'})) {
+                        $is_writeout = $client_conf->link->{'is-writeout'};
                         $wo_target = HCF_SHARED . $route_name;
-                        $this->assembly_link_routes[$assembly_name] = $wo_target;
+                        $this->client_link_routes[$client_name] = $wo_target;
                         if (isset($this->data[$wo_target])) {
-                            // if the assembly-data is written to a directory that is also an shared-loader directory, the write-out file will appear in the shared-loader-list
+                            // if the client-data is written to a directory that is also an shared-loader directory, the write-out file will appear in the shared-loader-list
                             // remove it from the shared-list to avoid double-loading this files
                             unset($this->data[$wo_target]);
                         }
                     }
-                } else if ((substr($this->assembly_link_routes[$assembly_name], 0, 3) == '?!=') && !isset(Router::config()->$route_name)) {
+                } else if ((substr($this->client_link_routes[$client_name], 0, 3) == '?!=') && !isset(Router::config()->$route_name)) {
                     // == '?!=' -> if an internal route is meant
-                    throw new \Exception(self::FQN . ' - cannot enable external autoloading for assembly-type "' . $assembly_name . '"; missing route configuration "' . $route_name . '" in ' . Router::FQN);
+                    throw new \Exception(self::FQN . ' - cannot enable external autoloading for client-type "' . $client_name . '"; missing route configuration "' . $route_name . '" in ' . Router::FQN);
                 }
-                if (!$is_writeout || !$this->writeOutRequired($assembly_name)) {
-                    $this->assembly_data->$assembly_name = 'EXTERNAL';
+                if (!$is_writeout || !$this->writeOutRequired($client_name)) {
+                    $this->client_data->$client_name = 'EXTERNAL';
                     continue;
                 }
             }
-            foreach ($assembly_conf->hypercells as $hcfqn) {
+            foreach ($client_conf->hypercells as $hcfqn) {
                 RemoteInvoker::implicitConstructor($implicit);
                 $invoker = new RemoteInvoker($hcfqn);
-                if ($invoker->invoke('hasAssembly', [$assembly_name])) {
+                $hc_methods = $invoker->accessibleMethods();
+                if (isset($hc_methods[$client_name])) {
                     // all assemblies will be embedded
-                    switch ($assembly_name) {
-                        case 'output':
-                            // output assemblies will be rendered as-is into the container and their constructor will be called implicit
-                            $this->assembly_data->$assembly_name.= $invoker->invoke('toString');
-                        break;
+                    switch ($client_name) {
                         case 'style':
                             $data = $invoker->invoke('style') . Utils::newLine();
-                            $this->assembly_data->$assembly_name.= (string)$data;
+                            $this->client_data->$client_name.= (string)$data;
                         break;
-                        case 'client':
-                            $data = $invoker->invoke('client') . Utils::newLine();
-                            $this->assembly_data->$assembly_name.= $this->registerHCFQN($hcfqn, $data);
+                        case 'script':
+                            $data = $invoker->invoke('script') . Utils::newLine();
+                            $this->client_data->$client_name.= $this->registerHCFQN($hcfqn, $data);
                         break;
                     }
                 } else {
-                    throw new \RuntimeException('Failed to access assembly_name "' . $assembly_name . '" for Hypercell "' . $component . '" - assembly_name does not exist but was defined to load');
+                    throw new \RuntimeException('Failed to access client_name "' . $client_name . '" for Hypercell "' . $hcfqn . '" - client_name does not exist but was defined to load');
                 }
             }
             if ($is_writeout) {
-                $this->writeOut($assembly_name);
-                $this->assembly_data->$assembly_name = 'EXTERNAL'; // mark as EXTERNAL after writingOut to add the link to the markup
+                $this->writeOut($client_name);
+                $this->client_data->$client_name = 'EXTERNAL'; // mark as EXTERNAL after writingOut to add the link to the markup
                 
             }
         }
-        return $this->assembly_data;
+        return $this->client_data;
     }
     private function shiftExternal($k, $v) {
-        if (isset($this->assembly_link_routes[$k])) {
-            $this->current_assembly_route = $this->assembly_link_routes[$k];
+        if (isset($this->client_link_routes[$k])) {
+            $this->current_client_route = $this->client_link_routes[$k];
         } else {
-            $this->current_assembly_route = '';
+            $this->current_client_route = '';
         }
     }
     /**
@@ -294,16 +284,12 @@ __halt_compiler();
 BEGIN[CONFIG.JSON]
 
 {
-  "assemblies":{
-    "output":{
-			"link": false,
-			"hypercells": []
-		},
+  "client":{
     "style":{
 			"link": true,
 			"hypercells": []
 		},
-    "client":{
+    "script":{
 			"link": {
         "write-out": true,
 				"from": "js/scripts.js"
