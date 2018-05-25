@@ -44,7 +44,7 @@ trait Controller
 			return null;
 		}
 
-		return [999 => 'call_user_func_array(\'parent::__construct\', func_get_args());'];// 999 to be sure, it's the last row in our constructor
+		return [999 => 'call_user_func_array(\'parent::__construct\', func_get_args());'];// 999 to be sure, it's the last row in our constructor 
 	}
 
 	public function getMethods() { return null; }
