@@ -1,11 +1,15 @@
 #!/bin/bash/
 # execute this file, to make the "hcdk" binary avaiable in your terminal
+# pass the name of your bash-profile file as first argument if you using a different than ".bashrc" and ".bash_profile"
 
 # Get directory, this script is located at
 __DIR__="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+ 
+target="";
 
-target=""
-if [ -f ~/.bashrc ]; then
+if [ -f ~/$1 ]; then 
+	target=~/$1
+elif [ -f ~/.bashrc ]; then
 	target=~/.bashrc
 elif [ -f ~/.bash_profile ]; then
 	target=~/.bash_profile
