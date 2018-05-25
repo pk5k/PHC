@@ -21,11 +21,11 @@ trait Controller
 	{
 		if ($between_double_quotes)
 		{
-			return '{$this->_constant(\''.$content.'\', __CLASS__)}';
+			return '{$__CLASS__::_constant(\''.$content.'\', $__CLASS__, $_this)}';
 		}
 		else
 		{
-			return '$this->_constant(\''.$content.'\', __CLASS__)';
+			return '$__CLASS__::_constant(\''.$content.'\', $__CLASS__, $_this)';
 		}
 	}
 }

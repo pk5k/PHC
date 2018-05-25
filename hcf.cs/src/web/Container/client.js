@@ -19,7 +19,7 @@ document.registerComponent = function(hcfqn, obj)
     scope = scope[part];
   }
 
-	obj.__proto__ = scope;
+	obj.prototype = scope;
 	obj.FQN = prop_hcfqn;
 	obj.NAME = prop_name;
 	

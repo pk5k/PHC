@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.client.Js - BUILD 17.10.11#169
+<?php #HYPERCELL hcdk.assembly.client.Js - BUILD 18.05.25#175
 namespace hcdk\assembly\client;
 class Js extends \hcdk\assembly\client {
     use \hcf\core\dryver\Base, \hcf\core\dryver\Config, Js\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
@@ -22,8 +22,10 @@ class Js extends \hcdk\assembly\client {
     # END ASSEMBLY FRAME CONFIG.INI
     # BEGIN ASSEMBLY FRAME TEMPLATE.TEXT
     protected function buildClientMethod() {
+        $__CLASS__ = __CLASS__;
+        $_this = (isset($this)) ? $this : null;
         $output = "
-\$js = \"{$this->_arg(\func_get_args(), 0) }\";
+\$js = \"{$__CLASS__::_arg(\func_get_args(), 0, $__CLASS__, $_this) }\";
 
 return \$js;";
         return $output;
@@ -52,10 +54,21 @@ trait Controller {
     public function buildClient() {
         $client_data = str_replace('"', '\\"', $this->minifyJS($this->rawInput()));
         $client_data = str_replace('$', '\\$', $client_data); //Escape the $ for e.g. jQuery
-        $method = new Method('client', ['public', 'static']);
+        $method = new Method('script', ['public', 'static']);
         $method->setBody($this->buildClientMethod($client_data));
         //$client_data = $this->processPlaceholders($client_data);
         return $method;
+    }
+    public function getStaticMethods() {
+        $methods = [];
+        $methods['script'] = $this->buildClient();
+        return $methods;
+    }
+    public function defaultInput() {
+        return '{}';
+    }
+    public function getTraits() {
+        return ['Client' => '\\hcf\\core\\dryver\\Client', 'ClientJs' => '\\hcf\\core\\dryver\\Client\\Js'];
     }
 }
 # END EXECUTABLE FRAME OF CONTROLLER.PHP

@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.client - BUILD 17.10.11#179
+<?php #HYPERCELL hcdk.assembly.client - BUILD 18.05.25#184
 namespace hcdk\assembly;
 abstract class client extends \hcdk\assembly {
     use \hcf\core\dryver\Base, client\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -14,8 +14,8 @@ abstract class client extends \hcdk\assembly {
 namespace hcdk\assembly\client\__EO__;
 # BEGIN EXECUTABLE FRAME OF CONTROLLER.PHP
 trait Controller {
-    //public abstract function buildClient();
-    //protected abstract function sourceIsAttachment();
+    public abstract function buildClient();
+    protected abstract function sourceIsAttachment();
     public function getName() {
         return 'CLIENT';
     }
@@ -24,11 +24,6 @@ trait Controller {
     }
     public function getMethods() {
         return null;
-    }
-    public function getStaticMethods() {
-        $methods = [];
-        $methods['client'] = $this->buildClient();
-        return $methods;
     }
     public function getProperties() {
         return null;
@@ -48,13 +43,7 @@ trait Controller {
     public function getAliases() {
         return null;
     }
-    public function getTraits() {
-        return ['Client' => '\\hcf\\core\\dryver\\Client'];
-    }
     public function checkInput() {
-    }
-    public function defaultInput() {
-        return '';
     }
 }
 # END EXECUTABLE FRAME OF CONTROLLER.PHP

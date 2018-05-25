@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.controller.Php - BUILD 17.10.11#179
+<?php #HYPERCELL hcdk.assembly.controller.Php - BUILD 18.02.22#182
 namespace hcdk\assembly\controller;
 class Php extends \hcdk\assembly\controller {
     use \hcf\core\dryver\Base, \hcf\core\dryver\Constant, Php\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
@@ -16,16 +16,20 @@ class Php extends \hcdk\assembly\controller {
     # END ASSEMBLY FRAME CONSTANT
     # BEGIN ASSEMBLY FRAME TEMPLATE.TEXT
     protected function constructorDelegation() {
+        $__CLASS__ = __CLASS__;
+        $_this = (isset($this)) ? $this : null;
         $output = "
-if (method_exists(\$this, '{$this->_arg(\func_get_args(), 0) }'))
+if (method_exists(\$this, '{$__CLASS__::_arg(\func_get_args(), 0, $__CLASS__, $_this) }'))
 {
-	call_user_func_array([\$this, '{$this->_arg(\func_get_args(), 0) }'], func_get_args());
+	call_user_func_array([\$this, '{$__CLASS__::_arg(\func_get_args(), 0, $__CLASS__, $_this) }'], func_get_args());
 }
 
 ";
         return $output;
     }
     public function defaultInput() {
+        $__CLASS__ = __CLASS__;
+        $_this = (isset($this)) ? $this : null;
         $output = "
 <?php
 trait Controller

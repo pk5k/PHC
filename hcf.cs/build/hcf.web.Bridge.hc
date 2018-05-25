@@ -1,7 +1,7 @@
-<?php #HYPERCELL hcf.web.Bridge - BUILD 17.10.11#3141
+<?php #HYPERCELL hcf.web.Bridge - BUILD 18.05.17#3146
 namespace hcf\web;
 class Bridge {
-    use \hcf\core\dryver\Client, \hcf\core\dryver\Config, Bridge\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Internal;
+    use \hcf\core\dryver\Client, \hcf\core\dryver\Client\Js, \hcf\core\dryver\Config, Bridge\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Internal;
     const FQN = 'hcf.web.Bridge';
     const NAME = 'Bridge';
     public function __construct() {
@@ -13,7 +13,7 @@ class Bridge {
         }
     }
     # BEGIN ASSEMBLY FRAME CLIENT.JS
-    public static function client() {
+    public static function script() {
         $js = "function(to)
 {var self=this;self._target=to;self._action=undefined;self._method=undefined;self.do=function(arg_obj)
 {if(arg_obj===undefined)
@@ -141,8 +141,11 @@ else
 {if(callbacks.success||callbacks.error)
 {console.warn('Useless callback given in send - XMLHttpRequest.onreadystatechange is overwritten by custom XHR in overwrites-object - callbacks inside the callback-object will be ignored');}}
 if(callbacks.before)
-{old_request=http_request;http_request=callbacks.before(old_request);if(!http_request)
-{http_request=old_request;}}
+{var before_ret=callbacks.before(http_request);if(before_ret!==undefined)
+{if(before_ret===false)
+{return;}
+else if(before_ret.constructor===XMLHttpRequest)
+{http_request=before_ret;}}}
 var data=argsToFormData(args,files);http_request.open(req_method,'?!=-bridge',async);http_request.setRequestHeader(\"X-Bridge-Action\",self.action());http_request.setRequestHeader(\"X-Bridge-Target\",self.target());if(async)
 {http_request.timeout=timeout;}
 http_request.send(data);}
@@ -178,7 +181,9 @@ return self;}";
     # END ASSEMBLY FRAME CONFIG.INI
     # BEGIN ASSEMBLY FRAME OUTPUT.TEXT
     public function __toString() {
-        $output = "{$this->_property('output') }";
+        $__CLASS__ = __CLASS__;
+        $_this = (isset($this)) ? $this : null;
+        $output = "{$__CLASS__::_property('output', $__CLASS__, $_this) }";
         return $output;
     }
     # END ASSEMBLY FRAME OUTPUT.TEXT

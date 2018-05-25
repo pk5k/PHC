@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.web.Router - BUILD 17.10.11#32
+<?php #HYPERCELL hcf.web.Router - BUILD 18.02.22#44
 namespace hcf\web;
 class Router {
     use \hcf\core\dryver\Config, Router\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -38,10 +38,7 @@ trait Controller {
                 $route_section = self::config()->default;
             } else {
                 IL::log()->error(self::FQN . ' - cannot find routing-arg "' . $arg . '" in $_GET parameters and no default route was set - error 500 will be send');
-                if (!headers_sent()) {
-                    header(Utils::getHTTPHeader(500));
-                }
-                return false;
+                return self::renderError(500);
             }
         } else {
             $route_section = $_GET['!'];
@@ -52,10 +49,7 @@ trait Controller {
         $config = self::config();
         if (!isset($config->$route_section)) {
             IL::log()->error(self::FQN . ' - route-section "' . $route_section . '" doesn\'t exist - error 404 will be send');
-            if (!headers_sent()) {
-                header(Utils::getHTTPHeader(404));
-            }
-            return false;
+            return self::renderError(404);
         }
         $req_method = strtolower($_SERVER['REQUEST_METHOD']);
         $output_hc = null;
@@ -65,10 +59,7 @@ trait Controller {
             $output_hc = $config->$route_section->$req_method->output;
         } else {
             IL::log()->error(self::FQN . ' - route-section "' . $route_section . '" doesn\'t have an output nor ' . $req_method . '.output configuration - error 404 will be send');
-            if (!headers_sent()) {
-                header(Utils::getHTTPHeader(404));
-            }
-            return false;
+            return self::renderError(404);
         }
         return self::getOutput($output_hc, $route_section);
     }
@@ -100,10 +91,16 @@ trait Controller {
                 }
             }
         }
-        IL::log()->info($e);
         if (!is_string($new_route_section)) {
-            IL::log()->info(self::FQN . ' - hypercell ' . $output_hc . ' failed during execution of route-section ' . $route_section . ' and no catch was found for Exception ' . $type_hcfqn . ' - exception will be thrown up');
-            throw $e;
+            if (ini_get('display_errors') == 0) {
+                // don't display errors -> don't throw up the exception to the exceptionHandler -> instead, show error-page 500 if defined and log the exception manually
+                IL::log()->error($e);
+                return self::renderError(500);
+            } else {
+                IL::log()->info(self::FQN . ' - hypercell ' . $output_hc . ' failed during execution of route-section ' . $route_section . ' and no catch was found for Exception ' . $type_hcfqn . ' - exception will be thrown up to stdOut since display_errors is enabled');
+                throw $e; // let the exceptionHandler render and log the stacktrace for this exception
+                
+            }
         } else {
             IL::log()->info(self::FQN . ' - hypercell ' . $output_hc . ' failed during execution of route-section ' . $route_section . ' - redirecting to route-section ' . $new_route_section);
             return self::routeBySection($new_route_section);
@@ -121,6 +118,20 @@ trait Controller {
             return self::catchException($e, $output_hc, $route_section);
         }
     }
+    private static function renderError($error_code) {
+        // only override http-response-code if no error code is already defined
+        if (!headers_sent() && http_response_code() <= 200) {
+            header(Utils::getHTTPHeader($error_code));
+        }
+        $sent_error_code = http_response_code();
+        $errs = isset(self::config()->error) ? self::config()->error : [];
+        if (isset($errs[$sent_error_code]) && is_readable($errs[$sent_error_code])) {
+            $location = $errs[$sent_error_code];
+            return @file_get_contents($location);
+        } else {
+            return 'Error ' . $sent_error_code;
+        }
+    }
 }
 # END EXECUTABLE FRAME OF CONTROLLER.PHP
 __halt_compiler();
@@ -130,6 +141,18 @@ BEGIN[CONFIG.INI]
 
 arg = "route"; key of the $_GET array that will be used as the value of the route-section.
 default = "-bridge"; if the arg is not set, this route will be used
+
+; ERROR PAGES
+; If an exception is thrown while rendering the output of a section below
+; and no catch was specified, the current http-response-code (or 500 if nothing was set until this moment)
+; will be checked against the error-array-keys below. The value is a file path that will be used as output.
+; If no value is mapped to the http-response-code, a placeholder-text will be displayed.
+; NOTICE: This feature won't work, if your surface.ini is configured to display-errors = true;
+; in this case, the exception + stacktrace will be displayed instead of the error-page.
+error[403] = "static/not-allowed.html"
+error[404] = "static/not-found.html"
+error[500] = "static/error.html"
+error[503] = "http://www.checkupdown.com/status/E503_de.html"
 
 ; TIP: before checking the $_GET array against the argument above, $_GET['!'] will be checked.
 ; 	example: http://blablabla.com?!=-internal-route

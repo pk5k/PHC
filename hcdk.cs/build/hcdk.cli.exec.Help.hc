@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.cli.exec.Help - BUILD 17.10.11#53
+<?php #HYPERCELL hcdk.cli.exec.Help - BUILD 18.02.22#56
 namespace hcdk\cli\exec;
 class Help extends \hcf\cli\exec {
     use \hcf\core\dryver\Base, Help\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Internal;
@@ -12,6 +12,8 @@ class Help extends \hcf\cli\exec {
     }
     # BEGIN ASSEMBLY FRAME OUTPUT.TEXT
     public function __toString() {
+        $__CLASS__ = __CLASS__;
+        $_this = (isset($this)) ? $this : null;
         $output = "* * * * * * * * * * * * * * *
 * HYPERCELL DEVELOPMENT KIT 
 * COMMAND LINE INTERFACE HELP

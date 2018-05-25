@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.raw.Constant - BUILD 17.10.11#169
+<?php #HYPERCELL hcdk.raw.Constant - BUILD 18.02.22#172
 namespace hcdk\raw;
 class Constant {
     use Constant\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Internal;
@@ -11,7 +11,9 @@ class Constant {
     }
     # BEGIN ASSEMBLY FRAME OUTPUT.TEXT
     public function __toString() {
-        $output = "const {$this->_property('name') } = {$this->_property('value') };";
+        $__CLASS__ = __CLASS__;
+        $_this = (isset($this)) ? $this : null;
+        $output = "const {$__CLASS__::_property('name', $__CLASS__, $_this) } = {$__CLASS__::_property('value', $__CLASS__, $_this) };";
         return $output;
     }
     # END ASSEMBLY FRAME OUTPUT.TEXT

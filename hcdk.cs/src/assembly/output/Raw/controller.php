@@ -13,8 +13,9 @@ trait Controller
 	public function build__toString()
 	{
 		$this->output = str_replace('"', '\\"', $this->rawInput()); //escape double-quotes
+
 		$method = new Method('__toString', ['public']);
-		$method->setBody($this->toString());
+		$method->setBody($this->prependControlSymbols($this->toString()));
 
 		return $method->toString();
 	}

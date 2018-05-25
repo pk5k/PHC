@@ -27,7 +27,7 @@ if ($cli_exec instanceof \hcf\cli\exec)
 {
 	$cli_exec->execute($pass_argv, $pass_argc);
 }
-else 
+else
 {
 	throw new \RuntimeException(HCDK_CLI_BASE.$cli_hc.' is not an hcf.cli.exec instance');
 }

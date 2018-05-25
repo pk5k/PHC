@@ -2,6 +2,7 @@
 use \hcf\db\Connection as DatabaseConnection;
 use \hcf\core\log\Internal as IL;
 use \hcf\web\Cookie as Cookie;
+use \hcf\db\Dict\NoSuchValueException;
 
 trait Controller
 {
@@ -168,22 +169,73 @@ trait Controller
 		self::$locale = $locale;
 	}
 
+	private static function resolveLanguageCookie()
+	{
+		$resolved_lang = self::config()->locale->default;
+
+		$name = self::config()->locale->cookie;
+		$offset = null;
+
+		if (is_object($name))
+		{
+			if (isset($name->offset))
+			{
+				$offset = $name->offset;
+			}
+
+			$name = $name->name;
+		}
+
+		if (Cookie::exists($name))
+		{
+			$data = Cookie::get($name);
+
+			if (is_null($offset))
+			{
+				$resolved_lang = $data;
+			}
+			else 
+			{
+				// implies that cookies content is a JSON
+				$data = json_decode($data);
+
+				if (strpos($offset, '.') !== false)
+				{
+					$scope = $data;
+					$split = explode('.', $offset);
+
+					foreach ($split as $part)
+					{
+						if (isset($scope->$part))
+						{
+							$scope = $scope->$part;
+						}
+						else 
+						{
+							// setting does not exist
+							return $resolved_lang;
+						}
+					}
+
+					$resolved_lang = $scope;
+				}
+				else if (isset($data->$offset))
+				{
+					$resolved_lang = $data->$offset;
+				}
+			}
+		}
+
+		return $resolved_lang;
+	}
+
 	public static function get($key, $locale = null)
 	{
 		if (!isset(self::$locale))
 		{
 			if (!isset($locale))
 			{
-				$locale_cookie = self::config()->locale->cookie;
-
-				if (Cookie::exists($locale_cookie))
-				{
-					self::$locale = Cookie::get($locale_cookie);
-				}
-				else
-				{
-					self::$locale = self::config()->locale->default;
-				}
+				self::$locale = self::resolveLanguageCookie();
 			}
 			else
 			{
@@ -321,6 +373,37 @@ trait Controller
 		}
 
 		return $stmt->execute();
+	}
+
+	public static function lookupKey($for_value)
+	{
+		$ed = new static(self::EMPTY_KEY);
+		$stmt = DatabaseConnection::to(self::config()->connection->name)->prepare($ed->tplLookupKey($for_value));
+
+		if ($stmt->execute())
+		{
+			$results = $stmt->fetchAll(\PDO::FETCH_OBJ);
+			$cols = self::config()->connection->table->col;
+			$col_key = $cols->key;
+
+			if (!count($results))
+			{
+				throw new NoSuchValueException($for_value);
+			}
+
+			foreach ($results as $result) 
+			{
+				return $result->$col_key;
+			}
+		}
+		else 
+		{
+			$err = $stmt->errorInfo();
+			$err_str = $err[0].' ('.$err[1].') '.$err[2];
+
+		 	IL::log()->warn(self::FQN.' - unable to lookup key for value "'.$for_value.'" due following error:');
+		 	IL::log()->error($err_str);
+		}
 	}
 
 	public static function add($locale, $key, $value, $comment)

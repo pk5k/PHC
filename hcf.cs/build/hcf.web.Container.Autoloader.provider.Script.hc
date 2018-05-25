@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.web.Container.Autoloader.provider.Script - BUILD 17.10.11#8
+<?php #HYPERCELL hcf.web.Container.Autoloader.provider.Script - BUILD 18.05.25#12
 namespace hcf\web\Container\Autoloader\provider;
 class Script extends \hcf\web\Container\Autoloader\provider {
     use \hcf\core\dryver\Base, Script\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Internal;
@@ -12,7 +12,9 @@ class Script extends \hcf\web\Container\Autoloader\provider {
     }
     # BEGIN ASSEMBLY FRAME OUTPUT.TEXT
     public function __toString() {
-        $output = "{$this->_call('provideAssemblies') }
+        $__CLASS__ = __CLASS__;
+        $_this = (isset($this)) ? $this : null;
+        $output = "{$__CLASS__::_call('provideAssemblies', $__CLASS__, $_this) }
 ";
         return $output;
     }
@@ -25,7 +27,7 @@ use \hcf\core\Utils;
 trait Controller {
     public static function provideAssemblies() {
         parent::provideFileTypeHeader(Utils::getMimeTypeByExtension('myscript.js'));
-        return parent::provideAssembliesOfType('client');
+        return parent::provideAssembliesOfType('script');
     }
 }
 # END EXECUTABLE FRAME OF CONTROLLER.PHP

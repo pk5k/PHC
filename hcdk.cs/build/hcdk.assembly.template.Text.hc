@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.template.Text - BUILD 17.10.11#170
+<?php #HYPERCELL hcdk.assembly.template.Text - BUILD 18.02.22#174
 namespace hcdk\assembly\template;
 class Text extends \hcdk\assembly\template {
     use \hcf\core\dryver\Base, Text\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
@@ -12,8 +12,10 @@ class Text extends \hcdk\assembly\template {
     }
     # BEGIN ASSEMBLY FRAME TEMPLATE.TEXT
     protected function buildTemplateMethod() {
+        $__CLASS__ = __CLASS__;
+        $_this = (isset($this)) ? $this : null;
         $output = "
-\$output = \"{$this->_arg(\func_get_args(), 0) }\";
+\$output = \"{$__CLASS__::_arg(\func_get_args(), 0, $__CLASS__, $_this) }\";
 return \$output;";
         return $output;
     }
@@ -31,7 +33,7 @@ trait Controller {
         $output = str_replace('"', '\\"', $data['content']); //escape double-quotes
         $output = $this->processPlaceholders($output, true);
         $method = new Method($name, $data['mod']);
-        $method->setBody($this->buildTemplateMethod($output));
+        $method->setBody($this->prependControlSymbols($this->buildTemplateMethod($output)));
         return $method->toString();
     }
 }

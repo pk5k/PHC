@@ -20,7 +20,7 @@ trait Controller
 		$this->output = $this->processPlaceholders($this->escape($this->rawInput())); //escape double-quotes from json
 
 		$method = new Method('__toString', ['public']);
-		$method->setBody($this->toString());
+		$method->setBody($this->prependControlSymbols($this->toString()));
 
 		return $method->toString();
 	}

@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.raw.Property - BUILD 17.10.11#169
+<?php #HYPERCELL hcdk.raw.Property - BUILD 18.02.22#172
 namespace hcdk\raw;
 class Property {
     use Property\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Internal;
@@ -11,7 +11,9 @@ class Property {
     }
     # BEGIN ASSEMBLY FRAME OUTPUT.TEXT
     public function __toString() {
-        $output = "{$this->_call('makeModifierString') } \${$this->_property('name') } = {$this->_property('value') };";
+        $__CLASS__ = __CLASS__;
+        $_this = (isset($this)) ? $this : null;
+        $output = "{$__CLASS__::_call('makeModifierString', $__CLASS__, $_this) } \${$__CLASS__::_property('name', $__CLASS__, $_this) } = {$__CLASS__::_property('value', $__CLASS__, $_this) };";
         return $output;
     }
     # END ASSEMBLY FRAME OUTPUT.TEXT

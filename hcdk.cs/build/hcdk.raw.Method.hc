@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.raw.Method - BUILD 17.10.11#168
+<?php #HYPERCELL hcdk.raw.Method - BUILD 18.02.22#171
 namespace hcdk\raw;
 class Method {
     use Method\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Internal;
@@ -11,7 +11,9 @@ class Method {
     }
     # BEGIN ASSEMBLY FRAME OUTPUT.TEXT
     public function __toString() {
-        $output = "{$this->_call('makeModifierString') } function {$this->_call('getName') }({$this->_call('makeArgumentString') }){$this->_call('makeBodyString') }";
+        $__CLASS__ = __CLASS__;
+        $_this = (isset($this)) ? $this : null;
+        $output = "{$__CLASS__::_call('makeModifierString', $__CLASS__, $_this) } function {$__CLASS__::_call('getName', $__CLASS__, $_this) }({$__CLASS__::_call('makeArgumentString', $__CLASS__, $_this) }){$__CLASS__::_call('makeBodyString', $__CLASS__, $_this) }";
         return $output;
     }
     # END ASSEMBLY FRAME OUTPUT.TEXT

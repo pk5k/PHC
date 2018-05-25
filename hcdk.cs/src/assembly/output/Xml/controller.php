@@ -17,7 +17,7 @@ trait Controller
 		// $ph_output  = $this->processPlaceholders($this->raw_input);
 		$output = XMLParser::parse($this->rawInput(), $this->for_file);
 		$method = new Method('__toString', ['public']);
-		$method->setBody($this->template__toString($output));
+		$method->setBody($this->prependControlSymbols($this->template__toString($output)));
 
 		return $method->toString();
 	}

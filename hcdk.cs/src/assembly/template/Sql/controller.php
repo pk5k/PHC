@@ -13,7 +13,7 @@ trait Controller
 		$output = str_replace('"', '\\"', $data['content']); //escape double-quotes
 		$output = $this->processPlaceholders($output, true);
 		$method = new Method($name, $data['mod']);
-		$method->setBody($this->buildTemplateMethod($output));
+		$method->setBody($this->prependControlSymbols($this->buildTemplateMethod($output)));
 
 		return $method->toString();
 	}

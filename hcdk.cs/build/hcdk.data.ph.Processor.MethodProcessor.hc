@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.data.ph.Processor.MethodProcessor - BUILD 17.10.11#53
+<?php #HYPERCELL hcdk.data.ph.Processor.MethodProcessor - BUILD 18.02.22#57
 namespace hcdk\data\ph\Processor;
 class MethodProcessor extends \hcdk\data\ph\Processor {
     use \hcf\core\dryver\Base, MethodProcessor\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -36,9 +36,9 @@ trait Controller {
      */
     public static function process($content, $between_double_quotes = true) {
         if ($between_double_quotes) {
-            return '{$this->_call(\'' . $content . '\')}';
+            return '{$__CLASS__::_call(\'' . $content . '\', $__CLASS__, $_this)}';
         } else {
-            return '$this->_call(\'' . $content . '\')';
+            return '$__CLASS__::_call(\'' . $content . '\', $__CLASS__, $_this)';
         }
     }
 }

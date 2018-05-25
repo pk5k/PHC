@@ -32,12 +32,28 @@ trait Controller
 		$client_data = str_replace('"', '\\"', $this->minifyJS($this->rawInput()));
 		$client_data = str_replace('$', '\\$', $client_data);//Escape the $ for e.g. jQuery
 
-		$method = new Method('client', ['public', 'static']);
+		$method = new Method('script', ['public', 'static']);
 		$method->setBody($this->buildClientMethod($client_data));
 
 		//$client_data = $this->processPlaceholders($client_data);
 
 		return $method;
+	}
+
+	public function getStaticMethods()
+	{
+		$methods = [];
+
+		$methods['script'] = $this->buildClient();
+
+		return $methods;
+	}
+
+	public function defaultInput() { return '{}'; }
+
+	public function getTraits()
+	{
+		return ['Client' => '\\hcf\\core\\dryver\\Client', 'ClientJs' => '\\hcf\\core\\dryver\\Client\\Js'];
 	}
 }
 ?>

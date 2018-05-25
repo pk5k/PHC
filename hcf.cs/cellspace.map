@@ -5,6 +5,7 @@ hcf\core\log\Internal=build/hcf.core.log.Internal.hc
 hcf\core\remote\Invoker=build/hcf.core.remote.Invoker.hc
 hcf\db\Connection=build/hcf.db.Connection.hc
 hcf\db\Dict=build/hcf.db.Dict.hc
+hcf\db\Dict\NoSuchValueException=build/hcf.db.Dict.NoSuchValueException.hc
 hcf\web\Bridge=build/hcf.web.Bridge.hc
 hcf\web\Container=build/hcf.web.Container.hc
 hcf\web\Cookie=build/hcf.web.Cookie.hc

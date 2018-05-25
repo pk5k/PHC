@@ -1,7 +1,7 @@
-<?php #HYPERCELL hcf.web.Container - BUILD 17.10.11#3120
+<?php #HYPERCELL hcf.web.Container - BUILD 18.05.25#3126
 namespace hcf\web;
 class Container {
-    use \hcf\core\dryver\Client, \hcf\core\dryver\Config, Container\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
+    use \hcf\core\dryver\Client, \hcf\core\dryver\Client\Js, \hcf\core\dryver\Config, Container\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
     const FQN = 'hcf.web.Container';
     const NAME = 'Container';
     public function __construct() {
@@ -13,14 +13,14 @@ class Container {
         }
     }
     # BEGIN ASSEMBLY FRAME CLIENT.JS
-    public static function client() {
+    public static function script() {
         $js = "document.registerComponent=function(hcfqn,obj)
 {var prop_hcfqn=hcfqn;var split=hcfqn.split('.')
 var scope=window;var hcfqn=split.pop();var prop_name=hcfqn;for(var i in split)
 {var part=split[i];if(!scope[part])
 {scope[part]={};}
 scope=scope[part];}
-obj.__proto__=scope;obj.FQN=prop_hcfqn;obj.NAME=prop_name;scope[hcfqn]=obj;return scope[hcfqn];}
+obj.prototype=scope;obj.FQN=prop_hcfqn;obj.NAME=prop_name;scope[hcfqn]=obj;return scope[hcfqn];}
 document.recursiveOffset=function(aobj)
 {var currOffset={x:0,y:0}
 var newOffset={x:0,y:0}
@@ -188,48 +188,52 @@ if(typeof define==='function'&&define.amd){define(function(){return md5})}else i
     # END ASSEMBLY FRAME CONFIG.JSON
     # BEGIN ASSEMBLY FRAME OUTPUT.TEXT
     public function __toString() {
+        $__CLASS__ = __CLASS__;
+        $_this = (isset($this)) ? $this : null;
         $output = "<!DOCTYPE html>
-{$this->_call('stdTpl') }
+{$__CLASS__::_call('stdTpl', $__CLASS__, $_this) }
 ";
         return $output;
     }
     # END ASSEMBLY FRAME OUTPUT.TEXT
     # BEGIN ASSEMBLY FRAME TEMPLATE.XML
     public function stdTpl() {
+        $__CLASS__ = __CLASS__;
+        $_this = (isset($this)) ? $this : null;
         $output = '';
-        $output.= "<html>";
+        $output.= "<html lang=\"{$__CLASS__::_property('content_language', $__CLASS__, $_this) }\">";
         $output.= "<head>";
         $output.= "<meta http-equiv=\"X-UA-Compatible\" content=\"IE=Edge\"/>";
-        $output.= "<title>{$this->_property('title') }</title>";
-        $output.= "<link rel=\"icon\" type=\"{$this->_property('fav_mimetype') }\" href=\"{$this->_property('fav_path') }\"/>";
-        $output.= "<meta charset=\"{$this->_property('encoding') }\"/>";
-        foreach ($this->_property('meta_http_equiv') as $metaname => $typearr) {
+        $output.= "<meta charset=\"{$__CLASS__::_property('encoding', $__CLASS__, $_this) }\"/>";
+        $output.= "<title>{$__CLASS__::_property('title', $__CLASS__, $_this) }</title>";
+        $output.= "<link rel=\"icon\" type=\"{$__CLASS__::_property('fav_mimetype', $__CLASS__, $_this) }\" href=\"{$__CLASS__::_property('fav_path', $__CLASS__, $_this) }\"/>";
+        foreach ($__CLASS__::_property('meta_http_equiv', $__CLASS__, $_this) as $metaname => $typearr) {
             foreach ($typearr as $val) {
                 $output.= "<meta http-equiv=\"$metaname\" content=\"$val\"/>";
             }
         }
-        foreach ($this->_property('meta_name') as $metaname => $typearr) {
+        foreach ($__CLASS__::_property('meta_name', $__CLASS__, $_this) as $metaname => $typearr) {
             foreach ($typearr as $val) {
                 $output.= "<meta name=\"$metaname\" content=\"$val\"/>";
             }
         }
-        foreach ($this->_property('ext_js') as $src) {
+        foreach ($__CLASS__::_property('ext_js', $__CLASS__, $_this) as $src) {
             $output.= "<script type=\"text/javascript\" src=\"$src\"></script>";
         }
-        foreach ($this->_property('ext_css') as $href => $media) {
+        foreach ($__CLASS__::_property('ext_css', $__CLASS__, $_this) as $href => $media) {
             $output.= "<link rel=\"stylesheet\" type=\"text/css\" href=\"$href\" media=\"$media\"/>";
         }
-        $output.= "<script language=\"javascript\">{$this->_call('client') }</script>";
-        foreach ($this->_property('emb_js') as $emb_js_str) {
+        $output.= "<script language=\"javascript\">{$__CLASS__::_call('script', $__CLASS__, $_this) }</script>";
+        foreach ($__CLASS__::_property('emb_js', $__CLASS__, $_this) as $emb_js_str) {
             $output.= "<script language=\"javascript\">$emb_js_str</script>";
         }
-        foreach ($this->_property('emb_css') as $emb_css_str) {
+        foreach ($__CLASS__::_property('emb_css', $__CLASS__, $_this) as $emb_css_str) {
             $output.= "<style>$emb_css_str</style>";
         }
-        $output.= "<style>body { font-family:'{$this->_property('font_family') }'!important; font-size:{$this->_property('font_size') }!important;}</style>";
-        $output.= "{$this->_call('autoloader') }";
+        $output.= "<style>body { font-family:'{$__CLASS__::_property('font_family', $__CLASS__, $_this) }'!important; font-size:{$__CLASS__::_property('font_size', $__CLASS__, $_this) }!important;}</style>";
+        $output.= "{$__CLASS__::_call('autoloader', $__CLASS__, $_this) }";
         $output.= "</head>";
-        $output.= "<body>{$this->_property('content') }</body>";
+        $output.= "<body>{$__CLASS__::_property('content', $__CLASS__, $_this) }</body>";
         $output.= "</html>";
         return $output;
     }
@@ -250,6 +254,7 @@ use \hcf\core\Utils as Utils;
  */
 trait Controller {
     private $title = self::FQN;
+    private $content_language = 'en';
     private $content = 'No content set.';
     private $ext_js = [];
     private $emb_js = [];
@@ -400,6 +405,23 @@ trait Controller {
             throw new \RuntimeException('Argument $css_data for "' . self::FQN . '::embedScript($css_data)" is not a valid string.');
         }
         $this->emb_css[] = $css_data;
+    }
+    /**
+     * contentLanguage
+     *
+     *
+     * @param $lang - string - the value that will be used as lang-attribute on the HTML-element
+     *
+     * @return
+     */
+    public function contentLanguage($lang = null) {
+        if (is_null($lang)) {
+            return $this->content_language;
+        }
+        if (!is_string($lang)) {
+            throw new \RuntimeException(self::FQN . ' - invalid content-language value passed; not a string');
+        }
+        $this->content_language = $lang;
     }
     /**
      * meta

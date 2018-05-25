@@ -12,7 +12,7 @@ trait Controller
 	{
 		$output = str_replace('"', '\\"', $this->processPlaceholders($this->rawInput())); //escape double-quotes
 		$method = new Method('__toString', ['public']);
-		$method->setBody($this->template__toString($output));
+		$method->setBody($this->prependControlSymbols($this->template__toString($output)));
 
 		return $method->toString();
 	}

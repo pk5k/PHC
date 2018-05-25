@@ -13,6 +13,7 @@ use \hcf\core\Utils as Utils;
 trait Controller
 {
 	private $title = self::FQN;
+	private $content_language = 'en';
 	private $content = 'No content set.';
 	private $ext_js = [];
 	private $emb_js = [];
@@ -206,6 +207,29 @@ trait Controller
 		}
 
 		$this->emb_css[] = $css_data;
+	}
+
+	/**
+	 * contentLanguage
+	 *
+	 *
+	 * @param $lang - string - the value that will be used as lang-attribute on the HTML-element
+	 *
+	 * @return
+	 */
+	public function contentLanguage($lang = null)
+	{
+		if (is_null($lang))
+		{
+			return $this->content_language;
+		}
+
+		if (!is_string($lang))
+		{
+			throw new \RuntimeException(self::FQN.' - invalid content-language value passed; not a string');
+		}
+
+		$this->content_language = $lang;
 	}
 
 	/**

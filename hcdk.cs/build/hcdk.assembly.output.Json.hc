@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.output.Json - BUILD 17.10.11#168
+<?php #HYPERCELL hcdk.assembly.output.Json - BUILD 18.02.22#172
 namespace hcdk\assembly\output;
 class Json extends \hcdk\assembly\output {
     use \hcf\core\dryver\Base, Json\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Internal;
@@ -12,7 +12,9 @@ class Json extends \hcdk\assembly\output {
     }
     # BEGIN ASSEMBLY FRAME OUTPUT.TEXT
     public function __toString() {
-        $output = "\$output = \"{$this->_property('output') }\";
+        $__CLASS__ = __CLASS__;
+        $_this = (isset($this)) ? $this : null;
+        $output = "\$output = \"{$__CLASS__::_property('output', $__CLASS__, $_this) }\";
 return \$output;";
         return $output;
     }
@@ -33,7 +35,7 @@ trait Controller {
         }
         $this->output = $this->processPlaceholders($this->escape($this->rawInput())); //escape double-quotes from json
         $method = new Method('__toString', ['public']);
-        $method->setBody($this->toString());
+        $method->setBody($this->prependControlSymbols($this->toString()));
         return $method->toString();
     }
     private static function isJSON($possible_json_str) {

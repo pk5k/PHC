@@ -181,7 +181,7 @@ trait Controller
 			$offset = Utils::getOffset($dir, $source_dir);
 			$hypercell = null;
 
-			if(!is_string($offset) || $offset == '.' || $offset == '..')
+			if(!is_string($offset) || !strlen($offset) || $offset == '.' || $offset == '..')
 			{
 				continue;
 			}

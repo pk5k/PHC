@@ -457,14 +457,20 @@ function (to)
 
 		if (callbacks.before)
 		{
-			old_request = http_request;
-			// the http_request must be returned from the before-callback to overwrite it. There you have the possibility to manipulate the request before sending it
-			http_request = callbacks.before(old_request);
+			// the http_request must be returned from the before-callback to overwrite it. There you have the possibility to manipulate or abort the request before sending it
+			// return an XMLHttpRequest Object to override and false to abort it
+			var before_ret = callbacks.before(http_request);
 
-			if (!http_request)
+			if (before_ret !== undefined)
 			{
-				// if nothing was returned, use the old one
-				http_request = old_request;
+				if (before_ret === false)
+				{
+					return;// returning false aborts the request completely
+				}
+				else if (before_ret.constructor === XMLHttpRequest)
+				{
+					http_request = before_ret;// returning an XMLHttpRequest instance overrides the current one
+				}
 			}
 		}
 

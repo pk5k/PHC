@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.web.Upload - BUILD 17.10.11#34
+<?php #HYPERCELL hcf.web.Upload - BUILD 18.02.22#37
 namespace hcf\web;
 class Upload {
     use \hcf\core\dryver\Config, Upload\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Internal;
@@ -21,9 +21,11 @@ class Upload {
     # END ASSEMBLY FRAME CONFIG.INI
     # BEGIN ASSEMBLY FRAME OUTPUT.TEXT
     public function __toString() {
+        $__CLASS__ = __CLASS__;
+        $_this = (isset($this)) ? $this : null;
         $output = "{
-	\"state\": \"{$this->_property('state_indicator') }\",
-	\"data\": {$this->_call('getMessage') }
+	\"state\": \"{$__CLASS__::_property('state_indicator', $__CLASS__, $_this) }\",
+	\"data\": {$__CLASS__::_call('getMessage', $__CLASS__, $_this) }
 }";
         return $output;
     }

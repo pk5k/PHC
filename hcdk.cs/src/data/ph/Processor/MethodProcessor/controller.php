@@ -25,11 +25,11 @@ trait Controller
 	{
 		if ($between_double_quotes)
 		{
-			return '{$this->_call(\''.$content.'\')}';
+			return '{$__CLASS__::_call(\''.$content.'\', $__CLASS__, $_this)}';
 		}
 		else
 		{
-			return '$this->_call(\''.$content.'\')';
+			return '$__CLASS__::_call(\''.$content.'\', $__CLASS__, $_this)';
 		}
 	}
 }

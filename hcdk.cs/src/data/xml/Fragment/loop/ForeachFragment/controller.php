@@ -49,7 +49,7 @@ trait Controller
 
 		if(!is_null($call))
 		{
-			$output .= ' $this->_call(\''.$call.'\',';
+			$output .= ' $__CLASS__::_call(\''.$call.'\', $__CLASS__, $_this,';
 
 			if(!is_null($as_key))
 			{

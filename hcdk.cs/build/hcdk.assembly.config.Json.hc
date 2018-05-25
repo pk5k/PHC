@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.config.Json - BUILD 17.10.11#169
+<?php #HYPERCELL hcdk.assembly.config.Json - BUILD 18.02.22#172
 namespace hcdk\assembly\config;
 class Json extends \hcdk\assembly\config {
     use \hcf\core\dryver\Base, Json\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
@@ -12,14 +12,18 @@ class Json extends \hcdk\assembly\config {
     }
     # BEGIN ASSEMBLY FRAME TEMPLATE.TEXT
     protected function buildLoadConfigMethod() {
+        $__CLASS__ = __CLASS__;
+        $_this = (isset($this)) ? $this : null;
         $output = "
-\$content = self::_attachment(__FILE__, __COMPILER_HALT_OFFSET__, '{$this->_call('getName') }', '{$this->_call('getType') }');
+\$content = self::_attachment(__FILE__, __COMPILER_HALT_OFFSET__, '{$__CLASS__::_call('getName', $__CLASS__, $_this) }', '{$__CLASS__::_call('getType', $__CLASS__, $_this) }');
 self::\$config = json_decode(\$content);
 
 ";
         return $output;
     }
     public function defaultInput() {
+        $__CLASS__ = __CLASS__;
+        $_this = (isset($this)) ? $this : null;
         $output = "
 {}
 ";

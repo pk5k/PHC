@@ -52,7 +52,7 @@ final class PHP_Beautifier_Filter_Default extends PHP_Beautifier_Filter
         if (!is_array($aArgs) or count($aArgs) != 1) {
             throw (new Exception('Call to Filter::__call with wrong argument'));
         }
-        PHP_Beautifier_Common::getLog()->log('Default Filter:unhandled[' . $aArgs[0] . ']', PEAR_LOG_DEBUG);
+
         $this->oBeaut->add($aArgs[0]);
     }
     // Bypass the function!

@@ -1,8 +1,8 @@
 <?php
 trait Controller
 {
-	//public abstract function buildClient();
-	//protected abstract function sourceIsAttachment();
+	public abstract function buildClient();
+	protected abstract function sourceIsAttachment();
 
 	public function getName()
 	{
@@ -12,15 +12,6 @@ trait Controller
 	public function getConstructor() { return null; }
 
 	public function getMethods() { return null; }
-
-	public function getStaticMethods()
-	{
-		$methods = [];
-
-		$methods['client'] = $this->buildClient();
-
-		return $methods;
-	}
 
 	public function getProperties() { return null; }
 
@@ -46,12 +37,6 @@ trait Controller
 		return null;
 	}
 
-	public function getTraits()
-	{
-		return ['Client' => '\\hcf\\core\\dryver\\Client'];
-	}
-
 	public function checkInput() {}
-	public function defaultInput() { return ''; }
 }
 ?>

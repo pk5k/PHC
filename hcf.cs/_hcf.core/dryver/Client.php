@@ -1,9 +1,12 @@
 <?php
 namespace hcf\core\dryver
 {
-	trait Client
+	require_once __DIR__.'/Client.css.php';
+	require_once __DIR__.'/Client.js.php';
+
+	trait Client 
 	{
-		public abstract static function client($plain = false);
+
 	}
 }
 ?>

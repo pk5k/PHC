@@ -82,6 +82,20 @@ trait Controller
 	}
 
 	/**
+	 * prependControlSymbols
+	 * Used for method-bodies, to allow static templates with placeholders.
+	 * The control-symbols are required in every method which allows placeholders
+	 *
+	 * @param $method_body - string - sourcecode of a method, that should be prepend with the control-symbols
+	 *
+	 * @return string - the $method_body with prepended control-symbols
+	 */
+	protected function prependControlSymbols($method_body)
+	{
+		return self::controlSymbols().$method_body;
+	}
+
+	/**
 	 * checkInput
 	 * Each assembly implementation can check it's raw-input trough this method.
 	 * If the input is detected as invalid, this method should throw an Exception (will be displayed at build-time and triggers the rollback of this build)

@@ -15,10 +15,11 @@ trait Controller
 	public static function exceptionHandler($e)
 	{
         $ex_str = self::exStr($e);
-		self::log()->error($ex_str);
+				self::log()->error($ex_str);
 
-        if (!headers_sent())
+        if (!headers_sent() && http_response_code() == 200)
         {
+						// this shouldn't be a 200
             header(Utils::getHTTPHeader(500));
         }
 
@@ -47,27 +48,28 @@ trait Controller
             E_COMPILE_ERROR   => 'COMPILE_ERROR',
             E_COMPILE_WARNING => 'COMPILE_WARNING');
 
-        // If our last error wasn't fatal then this must be a normal shutdown.  
+        // If our last error wasn't fatal then this must be a normal shutdown.
         if (!isset($handledErrorTypes[$err['type']]))
         {
             return;
         }
 
         $err_str = self::errStr($err);
-     
+
         $now = getcwd();
         chdir($cwd);
 
         self::log()->error($err_str);
 
         chdir($now);
-        
-        if (!headers_sent())
+
+				if (!headers_sent() && http_response_code() == 200)
         {
+						// this shouldn't be a 200
             header(Utils::getHTTPHeader(500));
         }
 
-        if (ini_get('display_errors') && isset($_SERVER['REQUEST_METHOD']))
+				if (ini_get('display_errors') && isset($_SERVER['REQUEST_METHOD']))
         {
             echo '<pre>'.$err_str.'</pre>';
         }
