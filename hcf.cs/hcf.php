@@ -1,5 +1,5 @@
 <?php
-define('HCF_VERSION', '1.1.0');// version of this copy
+define('HCF_VERSION', '1.0.0');// version of this copy
 define('HCF_INI_FILE', 'surface.ini');// name of the cores initialisation file
 define('CS_MAP_NAME', 'cellspace.map');// name of the cellspace's map file - also set inside the hcdk.cellspace.DataMapper
 
