@@ -62,7 +62,10 @@ trait Controller
 	 */
 	public function getChecksum()
 	{
-		return md5($this->rawInput());
+		$ri = $this->rawInput();
+		$ri = preg_replace("/\R/", "", $ri);// before creating the checksum, replace all Line-Breaks inside this raw-input to don't mark a file as modified if another OS is used
+
+		return md5($ri);
 	}
 
 	/**

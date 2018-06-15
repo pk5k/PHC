@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.raw.Hypercell - BUILD 18.02.22#198
+<?php #HYPERCELL hcdk.raw.Hypercell - BUILD 18.06.15#200
 namespace hcdk\raw;
 class Hypercell {
     use \hcf\core\dryver\Config, Hypercell\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
@@ -170,7 +170,7 @@ trait Controller {
         if ($new) {
             $this->newBuildInfo();
         }
-        $build_info = $this->build->no . Utils::newLine() . $this->build->checksum;
+        $build_info = $this->build->no . '@' . $this->build->checksum;
         return file_put_contents($file, $build_info);
     }
     public function getBuildInfo() {
@@ -196,6 +196,10 @@ trait Controller {
         $this->build->checksum = '?';
         if (is_readable($file)) {
             $lines = file($file);
+            if (count($lines) > 0 && strpos($lines[0], '@') !== false) {
+                // new build-info Notation splitted with @ instead of a new line (which causes some problems)
+                $lines = explode('@', $lines[0]);
+            }
             // The last build-number of this Hypercell
             if (count($lines) > 0) {
                 $this->build->no = trim($lines[0]);

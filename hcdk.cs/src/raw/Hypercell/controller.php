@@ -117,7 +117,7 @@ trait Controller
 			$this->newBuildInfo();
 		}
 
-		$build_info = $this->build->no.Utils::newLine().$this->build->checksum;
+		$build_info = $this->build->no.'@'.$this->build->checksum;
 
 		return file_put_contents($file, $build_info);
 	}
@@ -156,6 +156,12 @@ trait Controller
 		if (is_readable($file))
 		{
 			$lines = file($file);
+
+			if (count($lines) > 0 && strpos($lines[0], '@') !== false)
+			{
+				// new build-info Notation splitted with @ instead of a new line (which causes some problems)
+				$lines = explode('@', $lines[0]);
+			}
 
 			// The last build-number of this Hypercell
 			if (count($lines) > 0)

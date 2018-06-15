@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.data.xml.Parser - BUILD 18.02.22#55
+<?php #HYPERCELL hcdk.data.xml.Parser - BUILD 18.06.15#57
 namespace hcdk\data\xml;
 class Parser {
     use \hcf\core\dryver\Config, Parser\__EO__\Controller, \hcf\core\dryver\Internal;

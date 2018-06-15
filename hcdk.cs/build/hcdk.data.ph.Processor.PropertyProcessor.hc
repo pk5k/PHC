@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.data.ph.Processor.PropertyProcessor - BUILD 18.02.22#57
+<?php #HYPERCELL hcdk.data.ph.Processor.PropertyProcessor - BUILD 18.06.15#59
 namespace hcdk\data\ph\Processor;
 class PropertyProcessor extends \hcdk\data\ph\Processor {
     use \hcf\core\dryver\Base, PropertyProcessor\__EO__\Controller, \hcf\core\dryver\Internal;

@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.cli.exec.Add - BUILD 18.02.22#58
+<?php #HYPERCELL hcdk.cli.exec.Add - BUILD 18.06.15#60
 namespace hcdk\cli\exec;
 class Add extends \hcf\cli\exec {
     use \hcf\core\dryver\Base, Add\__EO__\Controller, \hcf\core\dryver\Internal;

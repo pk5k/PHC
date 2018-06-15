@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.data.php.ClassParser - BUILD 18.02.22#57
+<?php #HYPERCELL hcdk.data.php.ClassParser - BUILD 18.06.15#59
 namespace hcdk\data\php;
 class ClassParser {
     use \hcf\core\dryver\Config, ClassParser\__EO__\Controller, \hcf\core\dryver\Internal;

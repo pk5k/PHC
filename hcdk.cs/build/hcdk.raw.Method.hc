@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.raw.Method - BUILD 18.02.22#171
+<?php #HYPERCELL hcdk.raw.Method - BUILD 18.06.15#173
 namespace hcdk\raw;
 class Method {
     use Method\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Internal;
@@ -27,7 +27,7 @@ trait Controller {
     private $modifiers = [];
     private $arguments = [];
     private $body = null;
-    public function onConstruct($name, $modifiers = null, $arguments = null) {
+    public function onConstruct($name, $modifiers = [], $arguments = []) {
         $this->setName($name);
         $this->setModifiers($modifiers);
         $this->setArguments($arguments);

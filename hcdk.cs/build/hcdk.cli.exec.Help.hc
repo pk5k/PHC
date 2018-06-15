@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.cli.exec.Help - BUILD 18.02.22#56
+<?php #HYPERCELL hcdk.cli.exec.Help - BUILD 18.06.15#58
 namespace hcdk\cli\exec;
 class Help extends \hcf\cli\exec {
     use \hcf\core\dryver\Base, Help\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Internal;

@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.output.Json - BUILD 18.02.22#172
+<?php #HYPERCELL hcdk.assembly.output.Json - BUILD 18.06.15#174
 namespace hcdk\assembly\output;
 class Json extends \hcdk\assembly\output {
     use \hcf\core\dryver\Base, Json\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Internal;

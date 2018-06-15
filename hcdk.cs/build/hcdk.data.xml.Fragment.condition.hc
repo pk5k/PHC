@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.data.xml.Fragment.condition - BUILD 18.02.22#56
+<?php #HYPERCELL hcdk.data.xml.Fragment.condition - BUILD 18.06.15#58
 namespace hcdk\data\xml\Fragment;
 abstract class condition extends \hcdk\data\xml\Fragment {
     use \hcf\core\dryver\Base, condition\__EO__\Controller, \hcf\core\dryver\Internal;

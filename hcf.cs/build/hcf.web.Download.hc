@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.web.Download - BUILD 18.02.22#21
+<?php #HYPERCELL hcf.web.Download - BUILD 18.05.25#22
 namespace hcf\web;
 class Download {
     use \hcf\core\dryver\Config, Download\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Internal;

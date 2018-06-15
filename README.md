@@ -63,12 +63,12 @@ die CLI-Hilfe des hcdks angezeigt werden - die Installation ist somit abgeschlos
 Die obigen Installationsanweisungen beziehen sich auf UNIX-Systeme. Unter Windows muss deshalb bei der Installation folgendes beachtet werden:
 
 1. Als Kommandozeile sollte die git Bash verwendet werden welche mit der Installation von GIT geliefert wird.
-2. Wird beim ausführen von `setup.sh` keine Konfiguration gefunden, muss im Home-Verzeichnis des aktuellen Benutzers eine Datei namens `.bash_profile` erstellt werden.
-3. Wird der Befehl `php` beim ausführen von einem `hcdk` Befehls nicht gefunden, muss in der vorletzten Zeile der Datei `PHC/hcdk.cs/bin/hcdk.sh` der Befehl `php` durch den expliziten Pfad zu der php.exe angegeben werden (im Falle von PHP via XAMPP wäre das /c/xampp/php/php.exe).
+2. Wird beim Ausführen von `setup.sh` keine Konfiguration gefunden, muss im Home-Verzeichnis des aktuellen Benutzers eine Datei Namens `.bash_profile` erstellt werden.
+3. Wird der Befehl `php` beim Ausführen von einem `hcdk` Befehls nicht gefunden, muss in der vorletzten Zeile der Datei `PHC/hcdk.cs/bin/hcdk.sh` der Befehl `php` durch den expliziten Pfad zu der php.exe angegeben werden (im Falle von PHP via XAMPP wäre das /c/xampp/php/php.exe).
 
 # PHC Komponentenmodell
 
-Das PHC Komponentenmodell arbeitet auf Dateisystem-Ebene. Anwendungen die dieses Modell verwenden werden in Paketen - *Cellspaces* - entwickelt und per *surfacing* zugänglich gemacht. Jeder Cellspace weißt die selbe Grundstruktur auf
+Das PHC Komponentenmodell arbeitet auf Dateisystem-Ebene. Anwendungen die dieses Modell verwenden werden in Paketen - *Cellspaces* - entwickelt und per *surfacing* zugänglich gemacht. Jeder Cellspace weist die selbe Grundstruktur auf
 
  - Cellspace
  	- Hypercell
@@ -148,7 +148,7 @@ Eine Ausnahme bei der HCFQN Notation bildet PHP selbst, da dort Namensräume sta
 
 	\app\utils\Component
 	
-Diese Ausnahme trifft nur bei direkt ausgeführtem PHP-Skript zu. Wird innerhalb einer PHP Assembly ein HCFQN in Form eines Strings erwartet, kann die übgliche Notation verwendet werden.
+Diese Ausnahme trifft nur bei direkt ausgeführtem PHP-Skript zu. Wird innerhalb einer PHP Assembly ein HCFQN in Form eines Strings erwartet, kann die übliche Notation verwendet werden.
 
 ### Reguläre und abstrakte Hypercells
 
@@ -210,8 +210,8 @@ Folgende Platzhalter stehen zur Verfügung
 
 | Typ  | Wert | Bedeutung | Beispiel |
 |---|---|---|---|
-| method | *Methodenname* | Die angegebene Methode wird aufgerufen und deren Rückgabewert anstelle des Platzhalters verwendet. Die Methode muss sich innerhalb der selben Hypercell befinden. | `{{method:myMethod}}` | 
-| property | *Eigenschaftsname*  | Der Platzhalter wird durch den Wert der angegebenen Eigenschaft ersetzt. Die Eigenschaft muss sich innerhalb der selben Hypercell befinden. Handelt es sich bei der Eigenschaft um ein Objekt, so kann direkt über den Placeholder auf einen Schlüssel dieses Objekts zugegriffen werden. | `{{property:my_prop}}` <br/>  oder `{{property:my_obj_prop.my_key}}` |
+| method | *Methodenname* | Die angegebene Methode wird aufgerufen und deren Rückgabewert anstelle des Platzhalters verwendet. Die Methode muss sich innerhalb derselben Hypercell befinden. | `{{method:myMethod}}` | 
+| property | *Eigenschaftsname*  | Der Platzhalter wird durch den Wert der angegebenen Eigenschaft ersetzt. Die Eigenschaft muss sich innerhalb derselben Hypercell befinden. Handelt es sich bei der Eigenschaft um ein Objekt, so kann direkt über den Placeholder auf einen Schlüssel dieses Objekts zugegriffen werden. | `{{property:my_prop}}` <br/>  oder `{{property:my_obj_prop.my_key}}` |
 | const | *Konstante* | Wert einer Konstante mit welchem der Platzhalter ersetzt werden soll. | `{{const:HCFQN}}` |
 | arg | 0-n | Innerhalb der Methode in welchem der Platzhalter agiert kann hiermit ein Index der übergebenen Funktionsvariablen verwendet werden, durch deren Wert der Platzhalter ersetzt werden soll. | `{{arg:0}}` |
 | local | *Variablenname* | Wert einer lokalen Variable, welche in dieser Methode existiert und gültig ist. | `{{local:var}}` |
@@ -252,7 +252,7 @@ Anhand des Delimiters wird der Header vom eigentlichen Body abgegrenzt. Als Deli
 
 ## Assembly-Typen
 
-Im folgenden werden die verschiedenen Assembly-Typen erklärt, aus denen sich eine Hypercell zusammensetzt.
+Im Folgenden werden die verschiedenen Assembly-Typen erklärt, aus denen sich eine Hypercell zusammensetzt.
 
 ### base
 
@@ -262,7 +262,7 @@ Im folgenden werden die verschiedenen Assembly-Typen erklärt, aus denen sich ei
 
 Diese Baugruppe legt fest, von welcher Klasse oder Hypercell diese Komponente abgeleitet werden soll. Dabei wird der Name der abzuleitenden Klasse als Inhalt der Datei angegeben. 
 
-Will man z.B. eine Exception implementieren muss von der PHP-Klasse *Exception* abgeleitet werden, welche somit als Inhalt der Base-Assembly benötigt wird. Unabhängig davon, ob von einer Hypercell oder einer regulären PHP-Klasse abgeleitet wird, wird der Name der abzuleitenden Klasse in der HCFQN-Notation erwartet. Fügt man das Schlüsselwort *implicit* hinter den Namen der abzuleitenden Klasse an, so wird beim instanzieren der Eltern-Konstruktor am Ende des eigenen Konstruktors aufgerufen.
+Will man z.B. eine Exception implementieren muss von der PHP-Klasse *Exception* abgeleitet werden, welche somit als Inhalt der Base-Assembly benötigt wird. Unabhängig davon, ob von einer Hypercell oder einer regulären PHP-Klasse abgeleitet wird, wird der Name der abzuleitenden Klasse in der HCFQN-Notation erwartet. Fügt man das Schlüsselwort *implicit* hinter den Namen der abzuleitenden Klasse an, so wird beim instanziieren der Eltern-Konstruktor am Ende des eigenen Konstruktors aufgerufen.
 	
 Mit Eltern-Konstruktor Aufruf am Ende des eigenen
 
@@ -276,7 +276,7 @@ Ohne Eltern-Konstruktor Aufruf am Ende des eigenen
 
 Client Assemblies enthalten Daten, welche im Rahmen einer Webanwendung an den aufrufenden Client der Webseite übergeben werden müssen. 
 
-Die Hypercell *hcf.web.Container.Autoloader* des Hypercell-Frameworks stellt eine Konfiguration bereit, über welche Client-Assemblies durch angabe ihres HCFQN über den *hcf.web.Container* automatisch geladen werden. 
+Die Hypercell *hcf.web.Container.Autoloader* des Hypercell-Frameworks stellt eine Konfiguration bereit, über welche Client-Assemblies durch Angabe ihres HCFQN über den *hcf.web.Container* automatisch geladen werden. 
 
 #### client.js
 
@@ -370,14 +370,13 @@ Diese Baugruppe wird anhand eines [Traits](http://php.net/manual/de/language.oop
 	}
 	?>
 	
-### Internal
+### internal
 
 Diese Assembly wird vom hcdk erzeugt, sobald eine Hypercell erstmalig kompiliert wurde. Der Inhalt der Datei sollte nicht manuell geändert werden, da sie Informationen für das Kompilieren einer Hypercell enthält.
 
-Die erste Zeile der Datei enthält die Build-Nummer der Komponente sowie das Datum, wann sie kompiliert wurde. In der zweiten Zeile steht ein Hash, welcher anhand den Assemblies dieser Hypercell zum Kompilierzeitpunkt gebildet wurde. Wird nun ein Build-Vorgang angestoßen, wird anhand dieses Hashes überprüft ob sich der Inhalt dieser Hypercell verändert hat. Ist er unverändert, so wird die Komponente nicht erneut kompiliert.
+Die Datei enthält die Build-Nummer der Komponente sowie das Datum, wann sie kompiliert wurde. Durch ein `@` getrennt folgt ein Hash, welcher anhand den Assemblies dieser Hypercell zum Kompilierzeitpunkt gebildet wurde. Wird nun ein Build-Vorgang angestoßen, wird anhand dieses Hashes überprüft ob sich der Inhalt dieser Hypercell verändert hat. Ist er unverändert, so wird die Komponente nicht erneut kompiliert.
 
-	18.05.25#310
-	5fe5d3ec2f17e353ebd2206f2ee38b76
+	18.05.25#310@5fe5d3ec2f17e353ebd2206f2ee38b76
 
 ### log
 
@@ -385,7 +384,7 @@ Die erste Zeile der Datei enthält die Build-Nummer der Komponente sowie das Dat
 |:----------:|:----------:|:------------:|:---------:|
 | Ja 	    | Nein       | Nein         | Nein 	 |
 
-Log-Assemblies verwenden Apaches [log4php Framework](https://logging.apache.org/log4php/). Der Inhalt jeder Assembly ist eine log4php Konfiguration, welche zur Laufzeit überschrieben werden kann. Diese Baugruppe fügt einer Hypercell die statische Methode `log` hinzu. Beim Aufruf dieser Methode wird eine [Logger-Instanz](https://logging.apache.org/log4php/docs/loggers.html) anhand der Konfiguration erzeugt. Dabei kann der Methode ein String übergeben werden, welcher den Namen des zu erzeugenden Loggers enthält. Wird kein Name angegeben, wird eine Instanz des Root-Loggers erzeugt.
+Log-Assemblies verwenden Apaches [log4php Framework](https://logging.apache.org/log4php/). Der Inhalt jeder Assembly ist eine log4php Konfiguration, welche zur Laufzeit überschrieben werden kann. Diese Baugruppe fügt einer Hypercell die statische Methode `log` hinzu. Beim Aufruf dieser Methode wird eine [Logger-Instanz](https://logging.apache.org/log4php/docs/loggers.html) anhand der Konfiguration erzeugt. Dabei kann der Methode ein String übergeben werden, welcher den Namen des zu erzeugenden Loggers enthält. Wird kein Name angegeben, wird eine Instanz des Root-Loggers erzeugt.
 
 	\rootNamespace\package\MyLoggingService::log('foo');
 
@@ -436,13 +435,13 @@ Hierbei gibt die `__toString` Methode `You've got 4 new Messages.` zurück. Die 
 |:----------:|:----------:|:------------:|:---------:|
 | Nein 	    | Nein       | Ja         | Nein 	 |
 
-Im Rahmen einer Webanwendung spielt XML (meist als HTML) eine wichtige Rolle. Deshalb werden output.xml Assemblies mithilfe von PHPs [SimpleXML-Erweiterung](http://php.net/manual/de/intro.simplexml.php) zum Kompilierungszeitpunkt geparsed. Dies stellt zum einen sicher, dass das zu generierende XML valide ist, zum anderen können auf diesem Wege spezielle Prozessor-Elemente eingesetzt werden, die die Arbeit mit output.xml vereinfachen. Eine output Baugruppe vom Quelltyp XML sieht wie folgt aus 
+Im Rahmen einer Webanwendung spielt XML (meist als HTML) eine wichtige Rolle. Deshalb werden output.xml Assemblies mithilfe von PHPs [SimpleXML-Erweiterung](http://php.net/manual/de/intro.simplexml.php) zum Kompilierungszeitpunkt geparst. Dies stellt zum einen sicher, dass das zu generierende XML valide ist, zum anderen können auf diesem Wege spezielle Prozessor-Elemente eingesetzt werden, die die Arbeit mit output.xml vereinfachen. Eine output Baugruppe vom Quelltyp XML sieht wie folgt aus 
 
 	<div class="element-class">
 		<span id="span-id">{{method:renderContent}}</span>
 	</div>
 
-Hierbei ist das `<?xml ...?>` Element am Anfang nicht zwingend notwending, da es zum Verarbeitungszeitpunkt automatisch hinzugefügt wird. Ein XML-Output darf immer nur mit einem Root-Element beginnen.
+Hierbei ist das `<?xml ...?>` Element am Anfang nicht zwingend notwendig, da es zum Verarbeitungszeitpunkt automatisch hinzugefügt wird. Ein XML-Output darf immer nur mit einem Root-Element beginnen.
 
 ##### Platzhalter
 
@@ -487,7 +486,7 @@ Iteriert über eine im Attribut *var* angegebene Komponenteneigenschaft vom Typ 
 
 ##### `<condition.if>` / `<condition.else>`
 
-Nur wenn die Bedingung erfüllt wird, wird der Inhalt des Fragments dem Template-String hinzugefügt. Die Operatoren in form von Attributen haben folgende Bedeutung
+Nur wenn die Bedingung erfüllt wird, wird der Inhalt des Fragments dem Template-String hinzugefügt. Die Operatoren in Form von Attributen haben folgende Bedeutung
 
 | Attribut | Operator |
 |:--------:|:---------|
@@ -610,7 +609,7 @@ Mittels surfacing werden Cellspaces über ein Dokument (die Surface) eingebunden
 		require_once '/path/to/your/cellspaces/hcf.cs/hcf.php';
 		...
 
-Beim laden dieses Skripts wird innerhalb des selben Verzeichnisses eine Datei namens *surface.ini* benötigt.
+Beim laden dieses Skripts wird innerhalb desselben Verzeichnisses eine Datei namens *surface.ini* benötigt.
 
 ### surface.ini
 

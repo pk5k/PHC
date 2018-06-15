@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.template.Raw - BUILD 18.02.22#174
+<?php #HYPERCELL hcdk.assembly.template.Raw - BUILD 18.06.15#176
 namespace hcdk\assembly\template;
 class Raw extends \hcdk\assembly\template {
     use \hcf\core\dryver\Base, Raw\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
