@@ -1224,7 +1224,7 @@ class PHP_Beautifier implements PHP_Beautifier_Interface
      */
     public function decIndent() 
     {
-        if (count($this->aIndentStack > 1)) {
+        if (is_array($this->aIndentStack) && count($this->aIndentStack > 1)) {
             $iLastIndent = array_pop($this->aIndentStack);
             $this->iIndent-= $iLastIndent;
         }

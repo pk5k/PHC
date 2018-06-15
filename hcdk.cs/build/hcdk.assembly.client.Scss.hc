@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.client.Scss - BUILD 18.05.25#175
+<?php #HYPERCELL hcdk.assembly.client.Scss - BUILD 18.06.15#177
 namespace hcdk\assembly\client;
 class Scss extends \hcdk\assembly\client\Css {
     use \hcf\core\dryver\Base, Scss\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;

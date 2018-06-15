@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.cli.Colors - BUILD 18.02.22#38
+<?php #HYPERCELL hcf.cli.Colors - BUILD 18.05.25#39
 namespace hcf\cli;
 class Colors {
     use \hcf\core\dryver\Config, Colors\__EO__\Controller, \hcf\core\dryver\Internal;

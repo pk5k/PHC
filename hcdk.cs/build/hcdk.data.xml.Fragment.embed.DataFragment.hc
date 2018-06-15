@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.data.xml.Fragment.embed.DataFragment - BUILD 18.02.22#58
+<?php #HYPERCELL hcdk.data.xml.Fragment.embed.DataFragment - BUILD 18.06.15#60
 namespace hcdk\data\xml\Fragment\embed;
 class DataFragment extends \hcdk\data\xml\Fragment {
     use \hcf\core\dryver\Base, DataFragment\__EO__\Controller, \hcf\core\dryver\Internal;

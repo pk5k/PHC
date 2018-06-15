@@ -8,7 +8,7 @@ trait Controller
 	private $arguments = [];
 	private $body = null;
 
-	public function onConstruct($name, $modifiers = null, $arguments = null)
+	public function onConstruct($name, $modifiers = [], $arguments = [])
 	{
 		$this->setName($name);
 		$this->setModifiers($modifiers);
@@ -32,7 +32,7 @@ trait Controller
 
 	public function setModifiers($modifiers)
 	{
-		if(!is_array($modifiers) || !count($modifiers))
+		if (!is_array($modifiers) || !count($modifiers))
 		{
 			throw new \Exception('Given modifiers array is invalid');
 		}

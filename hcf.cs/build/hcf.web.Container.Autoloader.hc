@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.web.Container.Autoloader - BUILD 18.05.25#3146
+<?php #HYPERCELL hcf.web.Container.Autoloader - BUILD 18.05.25#3147
 namespace hcf\web\Container;
 class Autoloader {
     use \hcf\core\dryver\Config, Autoloader\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;

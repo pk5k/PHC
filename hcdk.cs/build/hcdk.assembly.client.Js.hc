@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.client.Js - BUILD 18.05.25#175
+<?php #HYPERCELL hcdk.assembly.client.Js - BUILD 18.06.15#177
 namespace hcdk\assembly\client;
 class Js extends \hcdk\assembly\client {
     use \hcf\core\dryver\Base, \hcf\core\dryver\Config, Js\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;

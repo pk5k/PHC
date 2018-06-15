@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.raw.Property - BUILD 18.02.22#172
+<?php #HYPERCELL hcdk.raw.Property - BUILD 18.06.15#174
 namespace hcdk\raw;
 class Property {
     use Property\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Internal;

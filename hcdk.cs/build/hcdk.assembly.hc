@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly - BUILD 18.02.22#114
+<?php #HYPERCELL hcdk.assembly - BUILD 18.06.15#117
 namespace hcdk;
 abstract class assembly {
     use assembly\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
@@ -70,7 +70,9 @@ trait Controller {
      * @return string - md5 checksum of the raw-input
      */
     public function getChecksum() {
-        return md5($this->rawInput());
+        $ri = $this->rawInput();
+        $ri = preg_replace("/\R/", "", $ri); // before creating the checksum, replace all Line-Breaks inside this raw-input to don't mark a file as modified if another OS is used
+        return md5($ri);
     }
     /**
      * processPlaceholders

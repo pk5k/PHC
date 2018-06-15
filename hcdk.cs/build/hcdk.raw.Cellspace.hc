@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.raw.Cellspace - BUILD 18.02.22#160
+<?php #HYPERCELL hcdk.raw.Cellspace - BUILD 18.06.15#162
 namespace hcdk\raw;
 class Cellspace {
     use \hcf\core\dryver\Config, Cellspace\__EO__\Controller, \hcf\core\dryver\Internal;

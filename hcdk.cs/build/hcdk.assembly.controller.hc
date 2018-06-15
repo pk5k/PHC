@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.controller - BUILD 18.02.22#184
+<?php #HYPERCELL hcdk.assembly.controller - BUILD 18.06.15#186
 namespace hcdk\assembly;
 abstract class controller extends \hcdk\assembly {
     use \hcf\core\dryver\Base, controller\__EO__\Controller, \hcf\core\dryver\Internal;
