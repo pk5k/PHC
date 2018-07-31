@@ -451,7 +451,7 @@ Im Falle von output.xml Assemblies gilt es zu beachten, dass Platzhalter erst na
 		<div {{property:attribute_name}}="attribute-value"/>
 	</{{property:element_name}}>
 
-Will man dennoch einen XML-String auf diesem Wege erzeugen, bietet sich die template.text Assembly oder die Verwendung von [CDATA-Elementen](https://de.wikipedia.org/wiki/CDATA) an.
+Will man dennoch einen XML-String auf diesem Wege erzeugen, bietet sich die output.text Assembly oder die Verwendung von [CDATA-Elementen](https://de.wikipedia.org/wiki/CDATA) an.
 
 ##### Prozessor-Elemente
 
@@ -486,11 +486,12 @@ Iteriert über eine im Attribut *var* angegebene Komponenteneigenschaft vom Typ 
 
 ##### `<condition.if>` / `<condition.else>`
 
-Nur wenn die Bedingung erfüllt wird, wird der Inhalt des Fragments dem Template-String hinzugefügt. Die Operatoren in Form von Attributen haben folgende Bedeutung
+Nur wenn die Bedingung erfüllt wird, wird der Inhalt des Fragments dem Ausgabe-String hinzugefügt. Die Operatoren in Form von Attributen haben folgende Bedeutung
 
 | Attribut | Operator |
 |:--------:|:---------|
 | `is="var"`	| `== var` |
+| `is-not="var"` | `!= var` |
 | `is-gt="var"` | `> var` |
 | `is-lt="var"` | `< var` |
 | `is-gte="var"` | `>= var` |
@@ -507,6 +508,7 @@ Nur wenn die Bedingung erfüllt wird, wird der Inhalt des Fragments dem Template
 		<i>ok</i>
 	</condition.else>
 	
+Im Falle von `<condition.else>` ist das Operator-Attribut je if/else-Block einmalig optional.
 
 ##### `<condition.switch>` / `<condition.case>`
 
