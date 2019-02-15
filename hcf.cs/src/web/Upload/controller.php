@@ -231,41 +231,41 @@ trait Controller
 		$name = $current_file['name'];
 
 		if ($current_file['error'] != 0)
-    {
-    	$message['errors'][] = self::resolveErrorCode($current_file['error'], $current_tunnel);
-    }
+	    {
+	    	$message['errors'][] = self::resolveErrorCode($current_file['error'], $current_tunnel);
+	    }
 
-    if ($current_file['error'] == 0)
-    {
-      if (!self::sizeIsAllowed($current_file['size'], $current_tunnel['max_size'], $tunnel_name))
-      {
-          $message['errors'][] = self::resolveErrorCode(UPLOAD_ERR_FORM_SIZE, $current_tunnel);
-      }
+		if ($current_file['error'] == 0)
+		{
+			if (!self::sizeIsAllowed($current_file['size'], $current_tunnel['max_size'], $tunnel_name))
+			{
+				$message['errors'][] = self::resolveErrorCode(UPLOAD_ERR_FORM_SIZE, $current_tunnel);
+			}
 			else if (!self::extensionIsAllowed(pathinfo($name, PATHINFO_EXTENSION), $current_tunnel['allow']))
 			{
 				$message['errors'][] = self::resolveErrorCode(UPLOAD_ERR_EXTENSION, $current_tunnel);
 			}
-	    else
-	    { // No error found - move uploaded file
-	    	$prefix = '';
+			else
+			{ // No error found - move uploaded file
+				$prefix = '';
 
-	      if (isset($current_tunnel->overwrite) && !$current_tunnel['overwrite'])
-	      {
-	      	$prefix = microtime(true).'-';
-	      }
+				if (isset($current_tunnel->overwrite) && !$current_tunnel['overwrite'])
+				{
+					$prefix = microtime(true).'-';
+				}
 
-	      if (self::moveUploadedFile($current_file["tmp_name"], $current_tunnel['destination'].$prefix.$name))
-	      {
-	      	$message['successful'][] = $current_tunnel['destination'].$prefix.$name;
-	    	}
-	    	else
-	    	{
-	    		$message['errors'][] = 'Unable to move file "'.$current_file['tmp_name'].'" to "'.$current_tunnel['destination'].$prefix.$name.'"';
-	    	}
-	    }
-    }
+				if (self::moveUploadedFile($current_file["tmp_name"], $current_tunnel['destination'].$prefix.$name))
+				{
+					$message['successful'][] = $current_tunnel['destination'].$prefix.$name;
+				}
+				else
+				{
+					$message['errors'][] = 'Unable to move file "'.$current_file['tmp_name'].'" to "'.$current_tunnel['destination'].$prefix.$name.'"';
+				}
+			}
+		}
 
-    return $message;
+		return $message;
 	}
 
 	private static function processFiles($current_tunnel, $tunnel_name)
@@ -274,33 +274,13 @@ trait Controller
 		$message['errors'] = array();
 		$message['successful'] = array();
 
-		$key = key($_FILES);
-
-		if (isset($key) && !is_null($key))
+		foreach ($_FILES as $file_key => $data)
 		{
-			if (is_array($_FILES[$key]['name']))
-			{
-				foreach ($_FILES[$key]['name'] as $f => $name)
-				{
-				    $current_file = array();
-				    $current_file['name'] = $_FILES[$key]['name'][$f];
-				    $current_file['error'] = $_FILES[$key]['error'][$f];
-				    $current_file['size'] = $_FILES[$key]['size'][$f];
-				    $current_file['tmp_name'] = $_FILES[$key]['tmp_name'][$f];
-
-				    $message = self::processFile($current_file, $current_tunnel, $message, $tunnel_name);
-				}
-			}
-			else
-			{
-				$message = self::processFile($_FILES[$key], $current_tunnel, $message, $tunnel_name);
-			}
+		    $current_file = $_FILES[$file_key];
+		    
+		    $message = self::processFile($current_file, $current_tunnel, $message, $tunnel_name);
 		}
-		else
-		{
-			$message['errors'][] = 'Unable to process request due to an unknown error';
-		}
-
+		
 		return $message;
 	}
 }

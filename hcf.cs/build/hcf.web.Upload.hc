@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.web.Upload - BUILD 18.05.25#38
+<?php #HYPERCELL hcf.web.Upload - BUILD 18.06.15#39
 namespace hcf\web;
 class Upload {
     use \hcf\core\dryver\Config, Upload\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Internal;
@@ -205,22 +205,9 @@ trait Controller {
         $message = array();
         $message['errors'] = array();
         $message['successful'] = array();
-        $key = key($_FILES);
-        if (isset($key) && !is_null($key)) {
-            if (is_array($_FILES[$key]['name'])) {
-                foreach ($_FILES[$key]['name'] as $f => $name) {
-                    $current_file = array();
-                    $current_file['name'] = $_FILES[$key]['name'][$f];
-                    $current_file['error'] = $_FILES[$key]['error'][$f];
-                    $current_file['size'] = $_FILES[$key]['size'][$f];
-                    $current_file['tmp_name'] = $_FILES[$key]['tmp_name'][$f];
-                    $message = self::processFile($current_file, $current_tunnel, $message, $tunnel_name);
-                }
-            } else {
-                $message = self::processFile($_FILES[$key], $current_tunnel, $message, $tunnel_name);
-            }
-        } else {
-            $message['errors'][] = 'Unable to process request due to an unknown error';
+        foreach ($_FILES as $file_key => $data) {
+            $current_file = $_FILES[$file_key];
+            $message = self::processFile($current_file, $current_tunnel, $message, $tunnel_name);
         }
         return $message;
     }
