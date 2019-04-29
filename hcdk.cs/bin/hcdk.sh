@@ -1,6 +1,16 @@
 #!/bin/bash/
 # Get directory, this script is located at
 __DIR__="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+lookup_file="cellspace.ini";
+
+while [ ! -f $lookup_file ]; do 
+	cd ..;
+
+	if [ $PWD == "/" ]; then
+		echo 'no cellspace.ini - aborting';
+		exit;
+	fi; 
+done;
 
 script=$1;
 
