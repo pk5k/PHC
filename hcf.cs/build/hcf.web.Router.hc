@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.web.Router - BUILD 18.05.25#45
+<?php #HYPERCELL hcf.web.Router - BUILD 20.01.22#47
 namespace hcf\web;
 class Router {
     use \hcf\core\dryver\Config, Router\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -169,6 +169,7 @@ error[503] = "http://www.checkupdown.com/status/E503_de.html"
 ; DON'T REMOVE THIS SECTION AND ADD IT TO YOUR ATTACHMENT IN CASE OF OVERRIDING IT
 ; THIS IS REQUIRED AS LOOPBACK FOR hcf.web.Bridge
 post.output = "hcf.web.Bridge"; HCFQN which will be instantiated with the $_GET parameters. The response (trough the HCs output assembly) will be returned from ::route()
+get.output = "hcf.web.Bridge.Worker"
 
 [-style]
 ; DON'T REMOVE THIS SECTION AND ADD IT TO YOUR ATTACHMENT IN CASE OF OVERRIDING IT

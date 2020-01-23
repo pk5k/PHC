@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.web.Bridge - BUILD 18.05.25#3147
+<?php #HYPERCELL hcf.web.Bridge - BUILD 20.01.23#3173
 namespace hcf\web;
 class Bridge {
     use \hcf\core\dryver\Client, \hcf\core\dryver\Client\Js, \hcf\core\dryver\Config, Bridge\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Internal;
@@ -15,16 +15,43 @@ class Bridge {
     # BEGIN ASSEMBLY FRAME CLIENT.JS
     public static function script() {
         $js = "function(to)
-{var self=this;self._target=to;self._action=undefined;self._method=undefined;self.do=function(arg_obj)
+{var self=this;var _internal_route='?!=-bridge';var _worker_address='hcf.web.Bridge.Worker';var _header={action:\"X-Bridge-Action\",target:\"X-Bridge-Target\"};self._target=to;self._action=undefined;self._method=undefined;if(document[_worker_address]==undefined&&window.Worker)
+{document[_worker_address]=new Worker(_internal_route);document[_worker_address].onmessage=receiveWorkerMessage;}
+else if(!window.Worker)
+{console.warn('Your Browser does not support WebWorkers - all requests will be executed on the main-thread.');}
+if(self._worker_store==undefined)
+{self._worker_store={};}
+self.do=function(arg_obj)
+{var prepared_data=prepareSend(arg_obj,false);send(prepared_data.url_args,prepared_data.passed_files,prepared_data.overwrites,prepared_data.callbacks);return self;}
+self.letDo=function(arg_obj)
+{if(!window.Worker||!document[_worker_address])
+{return self.do(arg_obj);}
+var prepared_data=prepareSend(arg_obj,true);var req_token=new Date().getTime();self._worker_store[req_token]=prepared_data;document[_worker_address].postMessage({_:{token:req_token,route:_internal_route,header:_header,target:self.target(),action:self.action()},overwrites:prepared_data.overwrites,args:prepared_data.url_args,files:prepared_data.passed_files});return self;}
+function receiveWorkerMessage(e)
+{var stored_data=self._worker_store[e.data.token];var callbacks=stored_data.callbacks;var overwrites=stored_data.overwrites;delete self._worker_store[e.data.token];switch(e.data.result)
+{case'success':if(overwrites.eval)
+{eval(e.data.data,false);}
+if(callbacks.success)
+{callbacks.success(e.data.data);}
+break;case'error':if(callbacks.error)
+{callbacks.error(e.data.data, e.data.code);}
+else
+{throw'WebWorker-request failed with response-code '+e.data.code+'.';}
+break;case'timeout':if(callbacks.timeout)
+{callbacks.timeout(e.data.data);}
+else
+{throw'WebWorker-request timed out.';}
+break;default:throw'WebWorker-request returned unknown result \"'+e.data.result+'\"';}}
+function prepareSend(arg_obj,for_worker)
 {if(arg_obj===undefined)
 {arg_obj={};}
 if(self.action()===undefined)
 {throw'No action specified';}
-var callbacks=getCallbacks(arg_obj);var overwrites=getOverwrites(arg_obj);var passed_args=getArguments(arg_obj);var passed_files=getFiles(arg_obj);var url_args={method:self.method(),};for(var key in passed_args)
-{if(url_args.hasOwnProperty(key))
+var prepared_data={callbacks:getCallbacks(arg_obj,for_worker),overwrites:getOverwrites(arg_obj,for_worker),passed_files:getFiles(arg_obj),url_args:{method:self.method()}};var passed_args=getArguments(arg_obj);for(var key in passed_args)
+{if(prepared_data.url_args.hasOwnProperty(key))
 {throw'Cannot use argument '+key+' - this argument is used by the bridge for internally routing';}
-url_args[key]=passed_args[key];}
-send(url_args,passed_files,overwrites,callbacks);return self;}
+prepared_data.url_args[key]=passed_args[key];}
+return prepared_data;}
 self.invoke=function(method,implicit_constructor)
 {if(method===undefined)
 {throw'No method specified that should be invoked in '+self.target;}
@@ -57,7 +84,7 @@ function getFiles(p_obj)
 else if(p_obj!=undefined)
 {passed_files=p_obj.files;}
 return passed_files;}
-function getCallbacks(p_obj)
+function getCallbacks(p_obj,for_worker)
 {var callbacks={};if(p_obj!==undefined)
 {var success=p_obj.onSuccess||false;var error=p_obj.onError||false;var timeout=p_obj.onTimeout||false;var upload=p_obj.onUpload||false;var download=p_obj.onDownload||false;var before=p_obj.onBefore||false;if(success)
 {callbacks.success=success;}
@@ -66,22 +93,27 @@ if(error)
 if(timeout)
 {callbacks.timeout=timeout;}
 if(upload)
-{callbacks.upload=upload;}
+{callbacks.upload=upload;if(for_worker)
+{throw'WebWorker requests can\'t use the upload-callback';}}
 if(download)
-{callbacks.download=download;}
+{callbacks.download=download;if(for_worker)
+{throw'WebWorker requests can\'t use the download-callback';}}
 if(before)
-{callbacks.before=before;}}
+{callbacks.before=before;if(for_worker)
+{throw'WebWorker requests can\'t use the before-callback';}}}
 return callbacks;}
-function getOverwrites(p_obj)
+function getOverwrites(p_obj,for_worker)
 {var overwrites={};if(p_obj!==undefined)
 {var xhr=p_obj.xhr||false;var method=p_obj.method||false;var eval=p_obj.eval||false;var timeout=undefined;if(!isNaN(p_obj.timeout))
 {timeout=Number(p_obj.timeout);}
 if(p_obj.async!==undefined&&p_obj.async!==null)
 {overwrites.async=p_obj.async;}
 if(xhr)
-{overwrites.xhr=xhr;}
+{overwrites.xhr=xhr;if(for_worker)
+{throw'WebWorker requests cant override the XHR-object';}}
 if(method)
-{overwrites.method=method;}
+{overwrites.method=method;if(for_worker)
+{throw'WebWorker requests cant override the request-method';}}
 if(!isNaN(timeout))
 {overwrites.timeout=timeout;}
 if(eval)
@@ -97,7 +129,7 @@ for(var i in files)
 {var file=files[i];fd.append(file.name,file);}
 return fd;}
 function send(args,files,overwrites,callbacks)
-{var http_request=false;var async=true;var req_method='POST';var timeout=4000;var eval=false;var info=false;if(overwrites!==undefined&&overwrites!==null)
+{var http_request=false;var async=true;var req_method='POST';var timeout=4000;var eval_reponse=false;var info=false;if(overwrites!==undefined&&overwrites!==null)
 {http_request=overwrites.xhr||http_request;req_method=overwrites.method||req_method;timeout=(!isNaN(overwrites.timeout))?overwrites.timeout:timeout;eval=overwrites.eval||eval;if(overwrites.async!==undefined&&overwrites.async!==null)
 {async=overwrites.async;}}
 if(callbacks===undefined||callbacks===null)
@@ -116,17 +148,17 @@ else
 if(callbacks.upload)
 {http_request.upload.onprogress=function(e)
 {callbacks.upload(e,http_request);}}
-var evalClosure=null;if(eval)
-{evalClosure=this.eval;}
+var evalClosure=null;if(eval_reponse)
+{evalClosure=eval;}
 if(http_request.onreadystatechange===null)
 {http_request.onreadystatechange=function()
 {if(http_request.readyState==4&&http_request.status<=300&&http_request.status>=100)
 {var response=http_request.responseText;if(info)
 {console.log('Request was successful - response data:');console.log((response.length>0)?response:'no data was sent');}
-if(eval)
-{response=evalClosure(response,false);}
+if(eval_reponse)
+{evalClosure(response,false);}
 if(callbacks.success)
-{callbacks.success(http_request.responseText);}}
+{callbacks.success(response);}}
 else if(http_request.readyState==4&&http_request.status>=400)
 {if(info)
 {console.log('Request failed - Server returned code '+http_request.status+' with following response data:');console.log((http_request.responseText.length>0)?http_request.responseText:'no data was sent');}
@@ -146,7 +178,7 @@ if(callbacks.before)
 {return;}
 else if(before_ret.constructor===XMLHttpRequest)
 {http_request=before_ret;}}}
-var data=argsToFormData(args,files);http_request.open(req_method,'?!=-bridge',async);http_request.setRequestHeader(\"X-Bridge-Action\",self.action());http_request.setRequestHeader(\"X-Bridge-Target\",self.target());if(async)
+var data=argsToFormData(args,files);http_request.open(req_method,_internal_route,async);http_request.setRequestHeader(_header.action,self.action());http_request.setRequestHeader(_header.target,self.target());if(async)
 {http_request.timeout=timeout;}
 http_request.send(data);}
 function eval(scripts,plain)
@@ -306,6 +338,7 @@ trait Controller {
         foreach ($section->allow as $allowed_pattern) {
             if (fnmatch($allowed_pattern, $target)) {
                 $allow = true;
+                break;
             }
         }
         if (!$allow) {

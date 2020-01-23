@@ -1,12 +1,120 @@
 function (to)
 {
 	var self = this;
+	var _internal_route = '?!=-bridge';
+	var _worker_address = 'hcf.web.Bridge.Worker';
+	var _header = {
+		action: "X-Bridge-Action",
+		target: "X-Bridge-Target"
+	};
 
 	self._target = to;
 	self._action = undefined;
 	self._method = undefined;
 
+	if (document[_worker_address] == undefined && window.Worker)
+	{
+		document[_worker_address] = new Worker(_internal_route);
+		document[_worker_address].onmessage = receiveWorkerMessage;
+	}
+	else if (!window.Worker)
+	{
+		console.warn('Your Browser does not support WebWorkers - all requests will be executed on the main-thread.');
+	}
+
+	if (self._worker_store == undefined)
+	{
+		self._worker_store = {};// store data here, that can't be serialized, until worker calls back
+	}
+
 	self.do = function (arg_obj)
+	{
+		var prepared_data = prepareSend(arg_obj, false);
+		send(prepared_data.url_args, prepared_data.passed_files, prepared_data.overwrites, prepared_data.callbacks);
+
+		return self;
+	}
+
+	self.letDo = function (arg_obj)
+	{
+		if (!window.Worker || !document[_worker_address])
+		{
+			// no WebWorker-support -> fallback
+			return self.do(arg_obj);
+		}
+
+		var prepared_data = prepareSend(arg_obj, true);
+		var req_token = new Date().getTime();
+
+		self._worker_store[req_token] = prepared_data;
+
+		document[_worker_address].postMessage({
+			// internal
+			_: {
+				token: req_token,
+				route: _internal_route,
+				header: _header,
+				target: self.target(),
+				action: self.action()
+			},
+			// user-data
+			overwrites: prepared_data.overwrites,
+			args: prepared_data.url_args, 
+			files: prepared_data.passed_files
+		});
+
+		return self;
+	}
+
+	function receiveWorkerMessage(e)
+	{
+		var stored_data = self._worker_store[e.data.token];
+		var callbacks = stored_data.callbacks;
+		var overwrites = stored_data.overwrites;
+
+		delete self._worker_store[e.data.token];
+		switch (e.data.result)
+		{
+			case 'success':
+				if (overwrites.eval)
+				{
+					eval(e.data.data , false);
+				}
+
+				if (callbacks.success)
+				{
+					callbacks.success(e.data.data);
+				}
+				break;
+
+			case 'error':
+				if (callbacks.error)
+				{
+					callbacks.error(e.data.data, e.data.code);
+				}
+				else 
+				{
+					throw 'WebWorker-request failed with response-code ' + e.data.code + '.';
+				}
+				break;
+
+			case 'timeout':
+				if (callbacks.timeout)
+				{
+					callbacks.timeout(e.data.data);
+				}
+				else
+				{
+					throw 'WebWorker-request timed out.';
+				}
+				break;
+
+			default:
+				throw 'WebWorker-request returned unknown result "' + e.data.result + '"';
+		}
+	}
+
+	function prepareSend(arg_obj, for_worker)
 	{
 		if (arg_obj === undefined)
 		{
@@ -18,28 +126,28 @@ function (to)
 			throw 'No action specified';
 		}
 
-		var callbacks = getCallbacks(arg_obj);
-		var overwrites = getOverwrites(arg_obj);
-		var passed_args = getArguments(arg_obj);
-		var passed_files = getFiles(arg_obj);
-
-		var url_args = {
-			method: self.method(),
+		var prepared_data = {
+			callbacks: getCallbacks(arg_obj, for_worker),
+			overwrites: getOverwrites(arg_obj, for_worker),
+			passed_files: getFiles(arg_obj),
+			url_args: {
+				method: self.method()
+			}
 		};
 
+		var passed_args = getArguments(arg_obj);
+		
 		for (var key in passed_args)
 		{
-			if (url_args.hasOwnProperty(key))
+			if (prepared_data.url_args.hasOwnProperty(key))
 			{
 				throw 'Cannot use argument ' + key + ' - this argument is used by the bridge for internally routing';
 			}
 
-			url_args[key] = passed_args[key];
+			prepared_data.url_args[key] = passed_args[key];
 		}
 
-		send(url_args, passed_files, overwrites, callbacks);
-
-		return self;
+		return prepared_data;
 	}
 
 	self.invoke = function(method, implicit_constructor)
@@ -169,7 +277,7 @@ function (to)
 
     	An object, containing the callbacks
 	*/
-	function getCallbacks(p_obj)
+	function getCallbacks(p_obj, for_worker)
 	{
 		var callbacks = {};
 
@@ -200,16 +308,31 @@ function (to)
 			if (upload)
 			{
 				callbacks.upload = upload;
+
+				if (for_worker)
+				{
+					throw 'WebWorker requests can\'t use the upload-callback';
+				}
 			}
 
 			if (download)
 			{
 				callbacks.download = download;
+
+				if (for_worker)
+				{
+					throw 'WebWorker requests can\'t use the download-callback';
+				}
 			}
 
 			if (before)
 			{
 				callbacks.before = before;
+
+				if (for_worker)
+				{
+					throw 'WebWorker requests can\'t use the before-callback';
+				}
 			}
 		}
 
@@ -230,7 +353,7 @@ function (to)
     	An object, containing the overwrites for the xmlhttprequest-settings
 	*/
 
-	function getOverwrites(p_obj)
+	function getOverwrites(p_obj, for_worker)
 	{
 		var overwrites = {};
 
@@ -254,11 +377,21 @@ function (to)
 			if (xhr)
 			{
 				overwrites.xhr = xhr;
+
+				if (for_worker)
+				{
+					throw 'WebWorker requests cant override the XHR-object';
+				}
 			}
 
 			if (method)
 			{
 				overwrites.method = method;
+
+				if (for_worker)
+				{
+					throw 'WebWorker requests cant override the request-method';
+				}
 			}
 
 			if (!isNaN(timeout))
@@ -274,28 +407,6 @@ function (to)
 
 		return overwrites;
 	}
-
-	// urlArgsToString: function (url_args)
-	// {
-	// 	var arg_str = '';
-
-	// 	for(var key in url_args)
-	// 	{
-	// 		if (url_args.hasOwnProperty(key))
-	// 		{
-	// 			var value = url_args[key];
-	// 			arg_str += key + '=' + value + '&';
-	// 		}
-	// 	}
-
-	// 	if (arg_str.length > 0)
-	// 	{
-	// 		// cut off the last &
-	// 		arg_str = arg_str.slice(0, -1);
-	// 	}
-
-	// 	return arg_str;
-	// },
 
 	function argsToFormData(args, files)
 	{
@@ -331,7 +442,7 @@ function (to)
 		var async = true;
 		var req_method = 'POST';//use POST so the POST-HOOK will be executed
 		var timeout = 4000;// 4 seconds for timeout as default
-		var eval = false;//eval http-response on success for possible javascript content
+		var eval_reponse = false;//eval http-response on success for possible javascript content
 		var info = false;//log infos to console
 
 		if (overwrites !== undefined && overwrites !== null)
@@ -390,9 +501,9 @@ function (to)
 
 		var evalClosure = null;
 
-		if (eval)
+		if (eval_reponse)
 		{
-			evalClosure = this.eval;
+			evalClosure = eval;
 		}
 
 		if (http_request.onreadystatechange === null) //if a given XHR-Object already contains a onreadystatechange function, don't add ours
@@ -409,14 +520,14 @@ function (to)
 						console.log((response.length > 0) ? response : 'no data was sent');
 					}
 
-					if (eval)
+					if (eval_reponse)
 					{
-						response = evalClosure(response, false);
+						evalClosure(response, false);
 					}
 
 					if (callbacks.success)
 					{
-						callbacks.success(http_request.responseText);
+						callbacks.success(response);
 					}
 				}
 				else if (http_request.readyState == 4 && http_request.status >= 400)// every http-response-code equal or higher 400 counts as error
@@ -475,11 +586,11 @@ function (to)
 		}
 
 		var data = argsToFormData(args, files);
-
+		
 		//Send request here
-		http_request.open(req_method, '?!=-bridge', async);// if you override config.ini@hcf.web.Router, don't forget to add the internal -bridge route
-		http_request.setRequestHeader("X-Bridge-Action", self.action());
-		http_request.setRequestHeader("X-Bridge-Target", self.target());
+		http_request.open(req_method, _internal_route, async);// if you override config.ini@hcf.web.Router, don't forget to add the internal -bridge route
+		http_request.setRequestHeader(_header.action, self.action());
+		http_request.setRequestHeader(_header.target, self.target());
 
 		if (async)
 		{

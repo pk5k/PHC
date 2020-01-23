@@ -143,17 +143,17 @@ trait Controller
 
 		$section = $config->$action;
 
-		if(!isset($section->action) || !is_string($section->action))
+		if (!isset($section->action) || !is_string($section->action))
 		{
 			throw new \RuntimeException('missing action-method in configuration for action "'.$action.'"');
 		}
 
-		if(!is_callable([$this, $section->action]))
+		if (!is_callable([$this, $section->action]))
 		{
 			throw new \RuntimeException('action-method for action "'.$action.'" is not callable');
 		}
 
-		if(!isset($section->allow) || !is_array($section->allow))
+		if (!isset($section->allow) || !is_array($section->allow))
 		{
 			throw new \RuntimeException('missing whitelist "allow" in configuration for action "'.$action.'"');
 		}
@@ -165,6 +165,7 @@ trait Controller
 			if(fnmatch($allowed_pattern, $target))
 			{
 				$allow = true;
+				break;
 			}
 		}
 
