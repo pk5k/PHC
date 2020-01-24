@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.web.Bridge - BUILD 20.01.23#3173
+<?php #HYPERCELL hcf.web.Bridge - BUILD 20.01.23#3174
 namespace hcf\web;
 class Bridge {
     use \hcf\core\dryver\Client, \hcf\core\dryver\Client\Js, \hcf\core\dryver\Config, Bridge\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Internal;
@@ -29,9 +29,7 @@ self.letDo=function(arg_obj)
 var prepared_data=prepareSend(arg_obj,true);var req_token=new Date().getTime();self._worker_store[req_token]=prepared_data;document[_worker_address].postMessage({_:{token:req_token,route:_internal_route,header:_header,target:self.target(),action:self.action()},overwrites:prepared_data.overwrites,args:prepared_data.url_args,files:prepared_data.passed_files});return self;}
 function receiveWorkerMessage(e)
 {var stored_data=self._worker_store[e.data.token];var callbacks=stored_data.callbacks;var overwrites=stored_data.overwrites;delete self._worker_store[e.data.token];switch(e.data.result)
-{case'success':if(overwrites.eval)
-{eval(e.data.data,false);}
-if(callbacks.success)
+{case'success':if(callbacks.success)
 {callbacks.success(e.data.data);}
 break;case'error':if(callbacks.error)
 {callbacks.error(e.data.data, e.data.code);}

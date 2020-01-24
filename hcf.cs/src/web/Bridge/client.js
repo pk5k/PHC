@@ -76,11 +76,6 @@ function (to)
 		switch (e.data.result)
 		{
 			case 'success':
-				if (overwrites.eval)
-				{
-					eval(e.data.data , false);
-				}
-
 				if (callbacks.success)
 				{
 					callbacks.success(e.data.data);

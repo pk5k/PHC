@@ -25,7 +25,12 @@ onmessage = function(e)
 				console.log((response.length > 0) ? response : 'no data was sent');
 			}
 			
-			returnToHost('success', http_request.status, http_request.responseText);
+			if (data.overwrites.eval)
+			{
+				_eval(response, false);
+			}
+
+			returnToHost('success', http_request.status, response);
 		}
 		else if (http_request.readyState == 4 && http_request.status >= 400)// every http-response-code equal or higher 400 counts as error
 		{
@@ -98,5 +103,53 @@ onmessage = function(e)
 		}
 
 		return fd;
+	}
+
+	function _eval(scripts, plain)
+	{
+		try
+		{
+			if (scripts != '')
+			{
+				var script = "";
+
+				if (plain !== undefined && plain === true)
+				{
+					script = scripts;
+				}
+				else
+				{
+					scripts = scripts.replace(/<script[^>]*>([\s\S]*?)<\/script>/gi, function()
+					{
+						if (scripts !== null)
+						{
+							script += arguments[1] + '\\n';
+						}
+
+						return '';
+					});
+				}
+
+				if (script)
+				{
+					 if (execScript)
+					 {
+					 	execScript(script);
+					 }
+					 else
+					 {
+					 	eval(script);
+					 }
+
+					 return true;
+				}
+			}
+
+			return false;
+		}
+		catch(e)
+		{
+			console.error('Eval error in following data: '+scripts);
+		}
 	}
 };

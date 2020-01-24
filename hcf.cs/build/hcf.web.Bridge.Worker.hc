@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.web.Bridge.Worker - BUILD 20.01.23#16
+<?php #HYPERCELL hcf.web.Bridge.Worker - BUILD 20.01.24#23
 namespace hcf\web\Bridge;
 class Worker {
     use \hcf\core\dryver\Client, \hcf\core\dryver\Client\Js, Worker\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Internal;
@@ -18,7 +18,9 @@ http_request.onreadystatechange=function()
 {if(http_request.readyState==4&&http_request.status<=300&&http_request.status>=100)
 {var response=http_request.responseText;if(info)
 {console.log('Request was successful - response data:');console.log((response.length>0)?response:'no data was sent');}
-returnToHost('success',http_request.status,http_request.responseText);}
+if(data.overwrites.eval)
+{_eval(response,false);}
+returnToHost('success',http_request.status,response);}
 else if(http_request.readyState==4&&http_request.status>=400)
 {if(info)
 {console.log('Request failed - Server returned code '+http_request.status+' with following response data:');console.log((http_request.responseText.length>0)?http_request.responseText:'no data was sent');}
@@ -35,7 +37,26 @@ function argsToFormData(args,files)
 fd.append(key,value);}}
 for(var i in files)
 {var file=files[i];fd.append(file.name,file);}
-return fd;}};";
+return fd;}
+function _eval(scripts,plain)
+{try
+{if(scripts!='')
+{var script=\"\";if(plain!==undefined&&plain===true)
+{script=scripts;}
+else
+{scripts=scripts.replace(/<script[^>]*>([\s\S]*?)<\/script>/gi,function()
+{if(scripts!==null)
+{script+=arguments[1]+'\\n';}
+return'';});}
+if(script)
+{if(execScript)
+{execScript(script);}
+else
+{eval(script);}
+return true;}}
+return false;}
+catch(e)
+{console.error('Eval error in following data: '+scripts);}}};";
         return $js;
     }
     # END ASSEMBLY FRAME CLIENT.JS
