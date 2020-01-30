@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.web.Bridge - BUILD 20.01.23#3174
+<?php #HYPERCELL hcf.web.Bridge - BUILD 20.01.30#3176
 namespace hcf\web;
 class Bridge {
     use \hcf\core\dryver\Client, \hcf\core\dryver\Client\Js, \hcf\core\dryver\Config, Bridge\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Internal;
@@ -15,20 +15,24 @@ class Bridge {
     # BEGIN ASSEMBLY FRAME CLIENT.JS
     public static function script() {
         $js = "function(to)
-{var self=this;var _internal_route='?!=-bridge';var _worker_address='hcf.web.Bridge.Worker';var _header={action:\"X-Bridge-Action\",target:\"X-Bridge-Target\"};self._target=to;self._action=undefined;self._method=undefined;if(document[_worker_address]==undefined&&window.Worker)
+{var self=this;var _internal_route='?!=-bridge';var _worker_address='hcf.web.Bridge.Worker';var _worker_store=_worker_address+'.Store';var _header={action:\"X-Bridge-Action\",target:\"X-Bridge-Target\"};self._target=to;self._action=undefined;self._method=undefined;if(document[_worker_address]==undefined&&window.Worker)
 {document[_worker_address]=new Worker(_internal_route);document[_worker_address].onmessage=receiveWorkerMessage;}
 else if(!window.Worker)
 {console.warn('Your Browser does not support WebWorkers - all requests will be executed on the main-thread.');}
-if(self._worker_store==undefined)
-{self._worker_store={};}
+if(document[_worker_store]==undefined)
+{document[_worker_store]={};}
 self.do=function(arg_obj)
 {var prepared_data=prepareSend(arg_obj,false);send(prepared_data.url_args,prepared_data.passed_files,prepared_data.overwrites,prepared_data.callbacks);return self;}
 self.letDo=function(arg_obj)
 {if(!window.Worker||!document[_worker_address])
 {return self.do(arg_obj);}
-var prepared_data=prepareSend(arg_obj,true);var req_token=new Date().getTime();self._worker_store[req_token]=prepared_data;document[_worker_address].postMessage({_:{token:req_token,route:_internal_route,header:_header,target:self.target(),action:self.action()},overwrites:prepared_data.overwrites,args:prepared_data.url_args,files:prepared_data.passed_files});return self;}
+var prepared_data=prepareSend(arg_obj,true);var req_token=new Date().getTime();document[_worker_store][req_token]=prepared_data;document[_worker_address].postMessage({_:{token:req_token,route:_internal_route,header:_header,target:self.target(),action:self.action()},overwrites:prepared_data.overwrites,args:prepared_data.url_args,files:prepared_data.passed_files});return self;}
 function receiveWorkerMessage(e)
-{var stored_data=self._worker_store[e.data.token];var callbacks=stored_data.callbacks;var overwrites=stored_data.overwrites;delete self._worker_store[e.data.token];switch(e.data.result)
+{var token=e.data.token;if(document[_worker_store]==undefined)
+{throw'Missing worker-store at document['+_worker_store+']';}
+else if(document[_worker_store][token]==undefined)
+{throw'Missing worker-store-data at document['+_worker_store+']['+token+']';}
+var stored_data=document[_worker_store][token];var callbacks=stored_data.callbacks;var overwrites=stored_data.overwrites;switch(e.data.result)
 {case'success':if(callbacks.success)
 {callbacks.success(e.data.data);}
 break;case'error':if(callbacks.error)
@@ -39,7 +43,8 @@ break;case'timeout':if(callbacks.timeout)
 {callbacks.timeout(e.data.data);}
 else
 {throw'WebWorker-request timed out.';}
-break;default:throw'WebWorker-request returned unknown result \"'+e.data.result+'\"';}}
+break;default:throw'WebWorker-request returned unknown result \"'+e.data.result+'\"';}
+delete document[_worker_store][token];}
 function prepareSend(arg_obj,for_worker)
 {if(arg_obj===undefined)
 {arg_obj={};}

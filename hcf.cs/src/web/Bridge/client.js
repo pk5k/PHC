@@ -3,6 +3,8 @@ function (to)
 	var self = this;
 	var _internal_route = '?!=-bridge';
 	var _worker_address = 'hcf.web.Bridge.Worker';
+	var _worker_store = _worker_address+'.Store';
+
 	var _header = {
 		action: "X-Bridge-Action",
 		target: "X-Bridge-Target"
@@ -22,9 +24,9 @@ function (to)
 		console.warn('Your Browser does not support WebWorkers - all requests will be executed on the main-thread.');
 	}
 
-	if (self._worker_store == undefined)
+	if (document[_worker_store] == undefined)
 	{
-		self._worker_store = {};// store data here, that can't be serialized, until worker calls back
+		document[_worker_store] = {};// store data here, that can't be serialized, until worker calls back
 	}
 
 	self.do = function (arg_obj)
@@ -46,7 +48,7 @@ function (to)
 		var prepared_data = prepareSend(arg_obj, true);
 		var req_token = new Date().getTime();
 
-		self._worker_store[req_token] = prepared_data;
+		document[_worker_store][req_token] = prepared_data;
 
 		document[_worker_address].postMessage({
 			// internal
@@ -68,11 +70,21 @@ function (to)
 
 	function receiveWorkerMessage(e)
 	{
-		var stored_data = self._worker_store[e.data.token];
+		var token = e.data.token;
+
+		if (document[_worker_store] == undefined)
+		{
+			throw 'Missing worker-store at document[' + _worker_store + ']';
+		}
+		else if (document[_worker_store][token] == undefined)
+		{
+			throw 'Missing worker-store-data at document[' + _worker_store + '][' + token + ']'; 
+		}
+
+		var stored_data = document[_worker_store][token];
 		var callbacks = stored_data.callbacks;
 		var overwrites = stored_data.overwrites;
 
-		delete self._worker_store[e.data.token];
 		switch (e.data.result)
 		{
 			case 'success':
@@ -107,6 +119,8 @@ function (to)
 			default:
 				throw 'WebWorker-request returned unknown result "' + e.data.result + '"';
 		}
+
+		delete document[_worker_store][token];
 	}
 
 	function prepareSend(arg_obj, for_worker)
