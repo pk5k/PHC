@@ -224,7 +224,9 @@ trait Controller
 		{
 			$assembly_instance = null;
 
-			if (basename($file) == '.' || basename($file) == '..' || is_dir($file) || basename($file) == self::config()->internal->file)
+			// Don't try to resolve following paths as assembly: current directory, parent directory, 
+			// each name that represents a directory, the internal build-assembly, every assembly starting with _ (use this prefix for e.g. scss-import-files to avoid warnings on compile-time)
+			if (basename($file) == '.' || basename($file) == '..' || is_dir($file) || basename($file) == self::config()->internal->file || substr(basename($file), 0, 1) == '_')
 			{
 				continue;
 			}

@@ -2,6 +2,7 @@
 define('HCF_VERSION', '1.0.0');// version of this copy
 define('HCF_INI_FILE', 'surface.ini');// name of the cores initialisation file
 define('CS_MAP_NAME', 'cellspace.map');// name of the cellspace's map file - also set inside the hcdk.cellspace.DataMapper
+ob_start();// buffer all output before hcf.web.Router calls the echo for the output
 
 require_once __DIR__.'/_hcf.core/_hcf.core.php';
 
@@ -90,12 +91,40 @@ if ((isset($_GET['!']) && isset($_SERVER['REQUEST_METHOD'])) ||
 	$output = '';
 
 	InternalLogger::log()->info('Using '.$method.'-HOOK...');
-	$output = Router::route();
+
+	try 
+	{
+		$output = Router::route();
+	}
+	catch (Exception $e) 
+	{
+		InternalLogger::log()->error($method.'-HOOK failed due following Exception (will be rethrown to surface):');
+		InternalLogger::log()->error($e);
+
+		throw $e;
+	}
+
 	InternalLogger::log()->info('...'.$method.'-HOOK finished - sending output: '.$output);
+	
+	if (ob_get_length() > 0)
+	{
+		$unexpected_output = ob_get_contents();
+		InternalLogger::log()->warn('Unexpected output detected before sending router-response: ' . $unexpected_output);
+	}
+
+	ob_end_flush(); // if display-errors is true, this will be visible on the surfaces output (in most cases it's the browser)
 
 	echo $output;
 	exit;
 }
+
+if (ob_get_length() > 0)
+{
+	$unexpected_output = ob_get_contents();
+	InternalLogger::log()->warn('Unexpected output detected before returning to surface: ' . $unexpected_output);
+}
+
+ob_end_flush(); // if display-errors is true, this will be visible on the surfaces output (in most cases it's the browser)
 
 InternalLogger::log()->info('Returning to surface');
 ?>

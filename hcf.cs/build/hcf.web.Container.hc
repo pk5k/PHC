@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.web.Container - BUILD 18.05.25#3127
+<?php #HYPERCELL hcf.web.Container - BUILD 20.08.14#3133
 namespace hcf\web;
 class Container {
     use \hcf\core\dryver\Client, \hcf\core\dryver\Client\Js, \hcf\core\dryver\Config, Container\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;

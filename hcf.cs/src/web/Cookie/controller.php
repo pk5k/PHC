@@ -93,7 +93,7 @@ trait Controller
         {
             foreach ($default_options as $option_key=>$option_value) 
             {
-                if (!array_key_exists($option_key, $options))
+                if (!isset($options[$option_key]))
                 {
                 	$options[$option_key] = $default_options[$option_key];
                 }
@@ -129,7 +129,7 @@ trait Controller
         {
             foreach ($default_options as $option_key=>$option_value)
             {
-                if (!array_key_exists($option_key, $options))
+                if (!isset($options[$option_key]))
                 {
                 	$options[$option_key] = $default_options[$option_key];
                 }

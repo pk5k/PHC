@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.web.Container.Autoloader - BUILD 18.05.25#3147
+<?php #HYPERCELL hcf.web.Container.Autoloader - BUILD 20.07.27#3172
 namespace hcf\web\Container;
 class Autoloader {
     use \hcf\core\dryver\Config, Autoloader\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
@@ -97,7 +97,8 @@ namespace hcf\web\Container\Autoloader\__EO__;
 use \hcf\core\Utils as Utils;
 use \hcf\core\remote\Invoker as RemoteInvoker;
 use \hcf\web\Router;
-use \hcf\log\Internal as InternalLogger;
+use \hcf\core\log\Internal as InternalLogger;
+use \hcf\core\loader\AutoLoader as CoreLoader;
 trait Controller {
     private $data = [];
     private $client_data = '';
@@ -122,8 +123,19 @@ trait Controller {
             return true;
         }
     }
+    private function resolveConstants($str) {
+        $mat = [];
+        preg_match_all('/%([a-zA-Z0-9_]+)%/', $str, $mat, PREG_SET_ORDER);
+        foreach ($mat as $match => $values) {
+            if (!defined($values[1])) {
+                throw new \Exception(self::FQN . ' - constant ' . $values[1] . ' does not exist.');
+            }
+            $str = str_replace($values[0], constant($values[1]), $str);
+        }
+        return $str;
+    }
     private function writeOut($client_name) {
-        $to = $this->client_link_routes[$client_name];
+        $to = $this->resolveConstants($this->client_link_routes[$client_name]);
         if (isset($_GET['force-writeout'])) {
             InternalLogger::log()->info(self::FQN . ' - write-out of client-type "' . $client_name . '" to "' . $to . '" was forced by $_GET[force-writeout]');
         }
@@ -131,6 +143,35 @@ trait Controller {
             throw new \Exception(self::FQN . ' - unable to write-out; "' . dirname($to) . '" is not writeable');
         }
         @file_put_contents($to, $this->client_data->$client_name);
+    }
+    private function dataExists($client_name, $data) {
+        // In case of wildcards data may be added doubled if one of the hypercells was added explicitly
+        return (strpos($this->client_data->$client_name, $data) !== false);
+    }
+    private function invokeClientForData($hcfqn, $client, $implicit, $is_generic) {
+        $hcfqn = Utils::PHPFQN2HCFQN($hcfqn);
+        RemoteInvoker::implicitConstructor($implicit);
+        $invoker = new RemoteInvoker($hcfqn);
+        $hc_methods = $invoker->accessibleMethods(true);
+        if (isset($hc_methods[$client])) {
+            // all assemblies will be embedded
+            switch ($client) {
+                case 'style':
+                    $data = $invoker->invoke('style') . Utils::newLine();
+                    if (!$this->dataExists($client, $data)) {
+                        $this->client_data->$client.= $data;
+                    }
+                break;
+                case 'script':
+                    $data = $invoker->invoke('script') . Utils::newLine();
+                    if (!$this->dataExists($client, $data)) {
+                        $this->client_data->$client.= $this->registerHCFQN($hcfqn, $data);
+                    }
+                break;
+            }
+        } else if (!$is_generic) {
+            throw new \RuntimeException('Failed to access client "' . $client . '" for Hypercell "' . $hcfqn . '" - client does not exist but was defined to load');
+        }
     }
     /**
      * clientLoader
@@ -159,7 +200,7 @@ trait Controller {
                 $this->client_link_routes[$client_name] = '?!=' . $route_name;
                 if (is_object($client_conf->link) && isset($client_conf->link->from)) {
                     // change the route to an custom URI
-                    $route_name = $client_conf->link->from;
+                    $route_name = $this->resolveConstants($client_conf->link->from);
                     $this->client_link_routes[$client_name] = $route_name;
                     if (isset($client_conf->link->{'is-writeout'})) {
                         $is_writeout = $client_conf->link->{'is-writeout'};
@@ -181,23 +222,14 @@ trait Controller {
                 }
             }
             foreach ($client_conf->hypercells as $hcfqn) {
-                RemoteInvoker::implicitConstructor($implicit);
-                $invoker = new RemoteInvoker($hcfqn);
-                $hc_methods = $invoker->accessibleMethods();
-                if (isset($hc_methods[$client_name])) {
-                    // all assemblies will be embedded
-                    switch ($client_name) {
-                        case 'style':
-                            $data = $invoker->invoke('style') . Utils::newLine();
-                            $this->client_data->$client_name.= (string)$data;
-                        break;
-                        case 'script':
-                            $data = $invoker->invoke('script') . Utils::newLine();
-                            $this->client_data->$client_name.= $this->registerHCFQN($hcfqn, $data);
-                        break;
+                // regex pattern must begin (and end) with /
+                if (substr($hcfqn, 0, 1) == '/') {
+                    $loaded_classes = array_keys(CoreLoader::loadByPattern($hcfqn));
+                    foreach ($loaded_classes as $phpfqn) {
+                        $this->invokeClientForData($phpfqn, $client_name, $implicit, true);
                     }
                 } else {
-                    throw new \RuntimeException('Failed to access client_name "' . $client_name . '" for Hypercell "' . $hcfqn . '" - client_name does not exist but was defined to load');
+                    $this->invokeClientForData($hcfqn, $client_name, $implicit, false);
                 }
             }
             if ($is_writeout) {

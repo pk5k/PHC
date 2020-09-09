@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.raw.Hypercell - BUILD 18.06.15#200
+<?php #HYPERCELL hcdk.raw.Hypercell - BUILD 18.06.15#201
 namespace hcdk\raw;
 class Hypercell {
     use \hcf\core\dryver\Config, Hypercell\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
@@ -239,7 +239,9 @@ trait Controller {
         $files = glob($path . '/*');
         foreach ($files as $file) {
             $assembly_instance = null;
-            if (basename($file) == '.' || basename($file) == '..' || is_dir($file) || basename($file) == self::config()->internal->file) {
+            // Don't try to resolve following paths as assembly: current directory, parent directory,
+            // each name that represents a directory, the internal build-assembly, every assembly starting with _ (use this prefix for e.g. scss-import-files to avoid warnings on compile-time)
+            if (basename($file) == '.' || basename($file) == '..' || is_dir($file) || basename($file) == self::config()->internal->file || substr(basename($file), 0, 1) == '_') {
                 continue;
             }
             try {

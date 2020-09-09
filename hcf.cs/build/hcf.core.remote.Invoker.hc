@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.core.remote.Invoker - BUILD 18.05.25#25
+<?php #HYPERCELL hcf.core.remote.Invoker - BUILD 18.06.15#26
 namespace hcf\core\remote;
 class Invoker {
     use Invoker\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -60,9 +60,9 @@ trait Controller {
      *
      * @return array - associative array with the accessible methods, while key is the method-name and value an array of the arguments, required for this method
      */
-    public function accessibleMethods() {
+    public function accessibleMethods($only_self_defined = false) {
         if (!isset($this->accessible_methods)) {
-            $this->getAccessibleMethods();
+            $this->getAccessibleMethods($only_self_defined);
         }
         return $this->accessible_methods;
     }
@@ -84,10 +84,13 @@ trait Controller {
      *
      * @return void
      */
-    protected function getAccessibleMethods() {
+    protected function getAccessibleMethods($only_self_defined = false) {
         $this->accessible_methods = [];
         $reflection_methods = $this->reflection_class->getMethods(\ReflectionMethod::IS_PUBLIC);
         foreach ($reflection_methods as $reflection_method) {
+            if ($only_self_defined && $reflection_method->getDeclaringClass()->name != $this->reflection_class->name) {
+                continue;
+            }
             $name = $reflection_method->getName();
             $args = $reflection_method->getParameters();
             $this->accessible_methods[$name] = [];

@@ -63,11 +63,11 @@ trait Controller
 	 *
 	 * @return array - associative array with the accessible methods, while key is the method-name and value an array of the arguments, required for this method
 	 */
-	public function accessibleMethods()
+	public function accessibleMethods($only_self_defined = false)
 	{
-		if(!isset($this->accessible_methods))
+		if (!isset($this->accessible_methods))
 		{
-			$this->getAccessibleMethods();
+			$this->getAccessibleMethods($only_self_defined);
 		}
 
 		return $this->accessible_methods;
@@ -93,19 +93,24 @@ trait Controller
 	 *
 	 * @return void
 	 */
-	protected function getAccessibleMethods()
+	protected function getAccessibleMethods($only_self_defined = false)
 	{
 		$this->accessible_methods	= [];
 		$reflection_methods 		= $this->reflection_class->getMethods(\ReflectionMethod::IS_PUBLIC);
 
-		foreach($reflection_methods as $reflection_method)
+		foreach ($reflection_methods as $reflection_method)
 		{
+			if ($only_self_defined && $reflection_method->getDeclaringClass()->name != $this->reflection_class->name)
+			{
+				continue;
+			}
+			
 			$name = $reflection_method->getName();
 			$args = $reflection_method->getParameters();
 
 			$this->accessible_methods[$name] = [];
 
-			foreach($args as $arg)
+			foreach ($args as $arg)
 			{
 				$arg_name 	= $arg->getName();
 				$index 		= $arg->getPosition();
@@ -141,22 +146,22 @@ trait Controller
 	{
 		$no_args = false;
 
-		if(isset($args) && !is_array($args))
+		if (isset($args) && !is_array($args))
 		{
 			// force args be an array
 			$args = [$args];
 		}
-		else if(!isset($args))
+		else if (!isset($args))
 		{
 			$no_args = true;
 		}
 
-		if(!isset($this->accessible_methods))
+		if (!isset($this->accessible_methods))
 		{
 			$this->getAccessibleMethods();
 		}
 
-		if(!isset($this->accessible_methods[$name]))
+		if (!isset($this->accessible_methods[$name]))
 		{
 			throw new \RuntimeException('Cannot invoke method "'.$name.'" for class '.$this->php_fqn.' - method does not exist or is not accessible');
 		}
@@ -164,12 +169,12 @@ trait Controller
 		$method = $this->reflection_class->getMethod($name);
 		$ref 	= null;
 
-		if(!$method->isStatic())
+		if (!$method->isStatic())
 		{
 			$ref = $this->reflected_instance;
 		}
 
-		if($no_args)
+		if ($no_args)
 		{
 			return $method->invoke($ref);
 		}

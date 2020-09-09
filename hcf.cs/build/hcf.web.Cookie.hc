@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.web.Cookie - BUILD 18.05.25#26
+<?php #HYPERCELL hcf.web.Cookie - BUILD 18.06.15#27
 namespace hcf\web;
 class Cookie {
     use \hcf\core\dryver\Config, Cookie\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -77,7 +77,7 @@ trait Controller {
         $cookie_set = false;
         if (!headers_sent()) {
             foreach ($default_options as $option_key => $option_value) {
-                if (!array_key_exists($option_key, $options)) {
+                if (!isset($options[$option_key])) {
                     $options[$option_key] = $default_options[$option_key];
                 }
             }
@@ -97,7 +97,7 @@ trait Controller {
         $return = false;
         if (!headers_sent()) {
             foreach ($default_options as $option_key => $option_value) {
-                if (!array_key_exists($option_key, $options)) {
+                if (!isset($options[$option_key])) {
                     $options[$option_key] = $default_options[$option_key];
                 }
             }
