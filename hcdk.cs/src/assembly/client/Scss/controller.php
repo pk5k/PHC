@@ -1,5 +1,5 @@
 <?php
-use Leafo\ScssPhp\Compiler as scssc;
+use \ScssPhp\Compiler as scssc;
 use \hcdk\raw\Method as Method;
 
 trait Controller

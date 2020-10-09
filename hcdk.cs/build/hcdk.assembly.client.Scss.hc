@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.client.Scss - BUILD 18.06.15#177
+<?php #HYPERCELL hcdk.assembly.client.Scss - BUILD 18.06.15#178
 namespace hcdk\assembly\client;
 class Scss extends \hcdk\assembly\client\Css {
     use \hcf\core\dryver\Base, Scss\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
@@ -26,52 +26,52 @@ if(\$as_array)
     }
     # END ASSEMBLY FRAME TEMPLATE.TEXT
     
-}
-namespace hcdk\assembly\client\Scss\__EO__;
-# BEGIN EXECUTABLE FRAME OF CONTROLLER.PHP
-use Leafo\ScssPhp\Compiler as scssc;
-use \hcdk\raw\Method as Method;
-trait Controller {
-    public function getType() {
-        return 'SCSS';
     }
-    public function sourceIsAttachment() {
-        return false;
+    namespace hcdk\assembly\client\Scss\__EO__;
+    # BEGIN EXECUTABLE FRAME OF CONTROLLER.PHP
+    use \ScssPhp\Compiler as scssc;
+    use \hcdk\raw\Method as Method;
+    trait Controller {
+        public function getType() {
+            return 'SCSS';
+        }
+        public function sourceIsAttachment() {
+            return false;
+        }
+        private function compile($scss) {
+            $compiler = new scssc();
+            $import_path = dirname($this->for_file);
+            // add the channel-source's directory as import path, so we can use imports
+            $compiler->addImportPath($import_path);
+            $compiler->setFormatter('Leafo\ScssPhp\Formatter\Compressed');
+            return $compiler->compile($scss);
+        }
+        private function buildMethodBody() {
+            $body = 'return \'';
+            $body.= str_replace("'", "\'", $this->compile($this->rawInput()));
+            $body.= '\';';
+            return $body;
+        }
+        public function buildClient() {
+            $method = new Method('style', ['public', 'static'], ['as_array' => 'false']);
+            $method->setBody($this->tplBuildStyle());
+            return $method->toString();
+        }
+        public function getStaticMethods() {
+            $methods = [];
+            $methods['style'] = $this->buildClient();
+            return $methods;
+        }
+        public function defaultInput() {
+            return '';
+        }
+        public function getTraits() {
+            return ['Client' => '\\hcf\\core\\dryver\\Client', 'ClientCss' => '\\hcf\\core\\dryver\\Client\\Css'];
+        }
     }
-    private function compile($scss) {
-        $compiler = new scssc();
-        $import_path = dirname($this->for_file);
-        // add the channel-source's directory as import path, so we can use imports
-        $compiler->addImportPath($import_path);
-        $compiler->setFormatter('Leafo\ScssPhp\Formatter\Compressed');
-        return $compiler->compile($scss);
-    }
-    private function buildMethodBody() {
-        $body = 'return \'';
-        $body.= str_replace("'", "\'", $this->compile($this->rawInput()));
-        $body.= '\';';
-        return $body;
-    }
-    public function buildClient() {
-        $method = new Method('style', ['public', 'static'], ['as_array' => 'false']);
-        $method->setBody($this->tplBuildStyle());
-        return $method->toString();
-    }
-    public function getStaticMethods() {
-        $methods = [];
-        $methods['style'] = $this->buildClient();
-        return $methods;
-    }
-    public function defaultInput() {
-        return '';
-    }
-    public function getTraits() {
-        return ['Client' => '\\hcf\\core\\dryver\\Client', 'ClientCss' => '\\hcf\\core\\dryver\\Client\\Css'];
-    }
-}
-# END EXECUTABLE FRAME OF CONTROLLER.PHP
-__halt_compiler();
-#__COMPILER_HALT_OFFSET__
+    # END EXECUTABLE FRAME OF CONTROLLER.PHP
+    __halt_compiler();
+    #__COMPILER_HALT_OFFSET__
 
 ?>
 
