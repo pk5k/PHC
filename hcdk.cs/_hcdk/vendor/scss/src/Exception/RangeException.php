@@ -13,10 +13,10 @@
 namespace ScssPhp\ScssPhp\Exception;
 
 /**
- * Compiler exception
+ * Range exception
  *
- * @author Oleksandr Savchenko <traveltino@gmail.com>
+ * @author Anthon Pang <anthon.pang@gmail.com>
  */
-class CompilerException extends \Exception implements SassException
+class RangeException extends \Exception implements SassException
 {
 }
