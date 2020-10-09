@@ -21,7 +21,7 @@ trait Controller
 
 		// add the channel-source's directory as import path, so we can use imports
 		$compiler->addImportPath($import_path);
-		$compiler->setFormatter('Leafo\ScssPhp\Formatter\Compressed');
+		$compiler->setFormatter('\ScssPhp\Formatter\Compressed');
 
 		return $compiler->compile($scss);
 	}
