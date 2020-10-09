@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.client.Scss - BUILD 20.10.09#179
+<?php #HYPERCELL hcdk.assembly.client.Scss - BUILD 20.10.09#180
 namespace hcdk\assembly\client;
 class Scss extends \hcdk\assembly\client\Css {
     use \hcf\core\dryver\Base, Scss\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
@@ -29,7 +29,7 @@ if(\$as_array)
     }
     namespace hcdk\assembly\client\Scss\__EO__;
     # BEGIN EXECUTABLE FRAME OF CONTROLLER.PHP
-    use \ScssPhp\Compiler as scssc;
+    use \ScssPhp\ScssPhp\Compiler as scssc;
     use \hcdk\raw\Method as Method;
     trait Controller {
         public function getType() {
@@ -43,7 +43,7 @@ if(\$as_array)
             $import_path = dirname($this->for_file);
             // add the channel-source's directory as import path, so we can use imports
             $compiler->addImportPath($import_path);
-            $compiler->setFormatter('\ScssPhp\Formatter\Compressed');
+            $compiler->setFormatter('ScssPhp\ScssPhp\Formatter\Compressed');
             return $compiler->compile($scss);
         }
         private function buildMethodBody() {

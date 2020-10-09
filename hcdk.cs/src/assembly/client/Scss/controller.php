@@ -1,5 +1,5 @@
 <?php
-use \ScssPhp\Compiler as scssc;
+use \ScssPhp\ScssPhp\Compiler as scssc;
 use \hcdk\raw\Method as Method;
 
 trait Controller
@@ -21,7 +21,7 @@ trait Controller
 
 		// add the channel-source's directory as import path, so we can use imports
 		$compiler->addImportPath($import_path);
-		$compiler->setFormatter('\ScssPhp\Formatter\Compressed');
+		$compiler->setFormatter('ScssPhp\ScssPhp\Formatter\Compressed');
 
 		return $compiler->compile($scss);
 	}
