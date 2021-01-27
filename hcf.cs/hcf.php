@@ -8,6 +8,7 @@ require_once __DIR__.'/_hcf.core/_hcf.core.php';
 
 use \hcf\core\loader\AutoLoader as AutoLoader;
 use \hcf\core\log\Internal as InternalLogger;
+use \hcf\core\ExceptionHandler as ExceptionHandler;
 use \hcf\core\loader\LibLoader as LibLoader;
 use \hcf\core\Utils as Utils;
 use \hcf\core\remote\Invoker as RemoteInvoker;
@@ -16,10 +17,10 @@ use \hcf\web\Router as Router;
 // this will load the hcf
 new AutoLoader(__DIR__, __DIR__.'/'.CS_MAP_NAME);
 
-$ilfqn = '\\'.Utils::HCFQN2PHPFQN(InternalLogger::FQN);
+$elfqn = '\\'.Utils::HCFQN2PHPFQN(ExceptionHandler::FQN);
 
-set_exception_handler([$ilfqn, 'exceptionHandler']);
-register_shutdown_function([$ilfqn, 'errorHandler'], getcwd());// getcwd for php/apache path-change on shutdown (to resolve relative paths correctly)
+set_exception_handler([$elfqn, 'exceptionHandler']);
+register_shutdown_function([$elfqn, 'errorHandler'], getcwd());// getcwd for php/apache path-change on shutdown (to resolve relative paths correctly)
 
 InternalLogger::log()->info('HYPERCELL FRAMEWORK '.HCF_VERSION.' - core initialized for following environment:');
 InternalLogger::log()->info(' - OS = ' . $os);

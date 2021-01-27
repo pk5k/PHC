@@ -20,6 +20,14 @@ trait Controller
 		$this->context = $context;
 	}
 
+	private function freeSession()
+	{
+		if (session_status() == PHP_SESSION_ACTIVE)
+		{
+			session_write_close();
+		}
+	}
+
 	private function provideDownload()
 	{
 		$cs = $this->loadContextSection();
@@ -52,16 +60,19 @@ trait Controller
 
 		$file_name = basename($file);
 		header(Utils::getHTTPHeader(200));
-		header('Content-Type: "'.Utils::getMimeTypeByExtension($file_name).'"');
+		header('Content-Description: File Transfer');
+		header('Content-Type: '.Utils::getMimeTypeByExtension($file_name));
+		header('Content-Disposition: inline; filename="'.$file_name.'"');
 		header('Content-Length: '.filesize($file));
-		header('Content-Disposition: attachment; filename="'.$file_name.'"');
-
+    	
 		set_time_limit(0);
 		$file_handle = @fopen($file, "rb");// rb -> read as binary
 		$bytes_per_second = 0;
 
 		$begin = time();
 		$delta = 0;
+
+		$this->freeSession();
 
 		while (!feof($file_handle))
 		{

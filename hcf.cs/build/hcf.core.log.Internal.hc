@@ -1,13 +1,10 @@
-<?php #HYPERCELL hcf.core.log.Internal - BUILD 18.05.25#155
+<?php #HYPERCELL hcf.core.log.Internal - BUILD 21.01.27#177
 namespace hcf\core\log;
 class Internal {
-    use Internal\__EO__\Controller, \hcf\core\dryver\Log, \hcf\core\dryver\Internal;
+    use \hcf\core\dryver\Log, \hcf\core\dryver\Internal;
     const FQN = 'hcf.core.log.Internal';
     const NAME = 'Internal';
     public function __construct() {
-        if (method_exists($this, 'onConstruct')) {
-            call_user_func_array([$this, 'onConstruct'], func_get_args());
-        }
     }
     # BEGIN ASSEMBLY FRAME LOG.XML
     protected static function getLogAttachment() {
@@ -15,85 +12,10 @@ class Internal {
     }
     # END ASSEMBLY FRAME LOG.XML
     
-}
-namespace hcf\core\log\Internal\__EO__;
-# BEGIN EXECUTABLE FRAME OF CONTROLLER.PHP
-use \hcf\core\Utils as Utils;
-/**
- * Internal
- * This class is for uniform logging across the builder and engine packages.
- *
- * @category Logger
- * @package rmc.log
- * @author Philipp Kopf
- */
-trait Controller {
-    // use this method for set_exception_handler
-    public static function exceptionHandler($e) {
-        $ex_str = self::exStr($e);
-        self::log()->error($ex_str);
-        if (!headers_sent() && http_response_code() == 200) {
-            // this shouldn't be a 200
-            header(Utils::getHTTPHeader(500));
-        }
-        if (ini_get('display_errors') && isset($_SERVER['REQUEST_METHOD'])) {
-            echo '<pre>' . $ex_str . '</pre>';
-        }
     }
-    // and this for register_shutdown_function
-    public static function errorHandler($cwd) {
-        $err = error_get_last();
-        if (!isset($err)) {
-            return;
-        }
-        $handledErrorTypes = array(E_USER_ERROR => 'USER ERROR', E_ERROR => 'ERROR', E_PARSE => 'PARSE', E_CORE_ERROR => 'CORE_ERROR', E_CORE_WARNING => 'CORE_WARNING', E_COMPILE_ERROR => 'COMPILE_ERROR', E_COMPILE_WARNING => 'COMPILE_WARNING');
-        // If our last error wasn't fatal then this must be a normal shutdown.
-        if (!isset($handledErrorTypes[$err['type']])) {
-            return;
-        }
-        $err_str = self::errStr($err);
-        $now = getcwd();
-        chdir($cwd);
-        self::log()->error($err_str);
-        chdir($now);
-        if (!headers_sent() && http_response_code() == 200) {
-            // this shouldn't be a 200
-            header(Utils::getHTTPHeader(500));
-        }
-        if (ini_get('display_errors') && isset($_SERVER['REQUEST_METHOD'])) {
-            echo '<pre>' . $err_str . '</pre>';
-        }
-    }
-    private static function errStr($error) {
-        return $error["type"] . ' ' . $error["message"] . ' in ' . $error["file"] . ' at line ' . $error["line"];
-    }
-    private static function exStr($e) {
-        // source: http://php.net/manual/de/function.set-exception-handler.php#98201
-        // these are our templates
-        $traceline = "#%s %s(%s): %s(%s)";
-        $msg = "Uncaught exception '%s' with message '%s' in %s:%s\nStack trace:\n%s\n  thrown in %s on line %s";
-        // alter your trace as you please, here
-        $trace = $e->getTrace();
-        foreach ($trace as $key => $stackPoint) {
-            // I'm converting arguments to their type
-            // (prevents passwords from ever getting logged as anything other than 'string')
-            $trace[$key]['args'] = array_map('gettype', $trace[$key]['args']);
-        }
-        // build your tracelines
-        $result = array();
-        foreach ($trace as $key => $stackPoint) {
-            $result[] = sprintf($traceline, $key, ((isset($stackPoint['file'])) ? $stackPoint['file'] : 'INTERNAL'), ((isset($stackPoint['line'])) ? $stackPoint['line'] : '-'), $stackPoint['function'], implode(', ', $stackPoint['args']));
-        }
-        // trace always ends into main
-        $result[] = '#' . ++$key . ' {main}';
-        // write tracelines into main template
-        $msg = sprintf($msg, get_class($e), $e->getMessage(), $e->getFile(), $e->getLine(), implode("\n", $result), $e->getFile(), $e->getLine());
-        return $msg;
-    }
-}
-# END EXECUTABLE FRAME OF CONTROLLER.PHP
-__halt_compiler();
-#__COMPILER_HALT_OFFSET__
+    namespace hcf\core\log\Internal\__EO__;
+    __halt_compiler();
+    #__COMPILER_HALT_OFFSET__
 
 BEGIN[LOG.XML]
 

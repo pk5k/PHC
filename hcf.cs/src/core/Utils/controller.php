@@ -320,12 +320,21 @@ trait Controller
 	 * Converts a full-qualified-name of a hypercell to a (theoretical) file-path
 	 *
 	 * @param $hcfqn - string - the FQN which should be converted into a path
+	 * @param $cut_first - boolean - useful if path should be used for cellspaces
 	 *
 	 * @return string - the converted FQN as path
 	 */
-	public static function HCFQNtoPath($hcfqn)
+	public static function HCFQNtoPath($hcfqn, $cut_first = false)
 	{
 		$out = str_replace('.', '/', $hcfqn);
+
+		if ($cut_first)
+		{
+			$a = explode('/', $out);
+			$a = array_slice($a, 1);
+
+			$out = implode('/', $a);
+		}
 
 		return $out;
 	}

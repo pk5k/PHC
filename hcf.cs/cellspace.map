@@ -1,5 +1,6 @@
 hcf\cli\Colors=build/hcf.cli.Colors.hc
 hcf\cli\exec=build/hcf.cli.exec.hc
+hcf\core\ExceptionHandler=build/hcf.core.ExceptionHandler.hc
 hcf\core\Utils=build/hcf.core.Utils.hc
 hcf\core\log\Internal=build/hcf.core.log.Internal.hc
 hcf\core\remote\Invoker=build/hcf.core.remote.Invoker.hc
