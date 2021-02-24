@@ -184,7 +184,7 @@ trait Controller
 		$allowed_file_size = Utils::parseByteString($allowed_file_size);
 		$allowed_by_ini = Utils::parseByteString(ini_get('upload_max_filesize'));
 
-		if ($allowed_by_ini <= $allowed_file_size)
+		if ($allowed_by_ini < $allowed_file_size)
 		{
 			InternalLogger::log()->warn(self::FQN.' - the php.ini setting "upload_max_filesize" (= '.$allowed_by_ini.'bytes) is lower than the allowed size of the configuration tunnel "'.$tunnel_name.'" (= '.$allowed_file_size.'bytes) - this may lead to problems due to further file processing');
 		}
@@ -281,6 +281,8 @@ trait Controller
 		    $message = self::processFile($current_file, $current_tunnel, $message, $tunnel_name);
 		}
 		
+		InternalLogger::log()->info('File upload finished. Result: ' . json_encode($message));
+
 		return $message;
 	}
 }

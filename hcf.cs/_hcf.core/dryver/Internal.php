@@ -17,12 +17,44 @@ namespace hcf\core\dryver
   		return constant($__CLASS__.'::'.$name);
   	}
 
-		private static function _call($name, $__CLASS__, $_this)
+		private static function _call($name, $__CLASS__, $_this, $pass_func_args = null)
   	{
+      $pass_args = [];
   		$args = func_get_args();
-  		array_shift($args);//remove $name
-      array_shift($args);//remove $__CLASS__
-      array_shift($args);//remove $_this
+  		array_shift($args);// remove $name
+      array_shift($args);// remove $__CLASS__
+      array_shift($args);// remove $_this
+
+      if (strpos($name, '#') !== false)
+      {
+        array_shift($args);// remove $pass_func_args only if methodname uses # (due downwards compatibility, last arg could be used be tags like for-each etc.)
+
+        // methodname#1,2,3 -> numbers behind separator are argument-indexes for pass_func_args
+        $split = explode('#', $name);
+
+        if (!is_array($split) || count($split) != 2)
+        {
+          throw new \RuntimeException(self::FQN.' - invalid methodname: ' . $name);
+        }
+
+        $name = $split[0];
+        $pass_args_indexes = explode(',', $split[1]);
+
+        foreach ($pass_args_indexes as $arg_index) 
+        {
+          if (!is_numeric($arg_index))
+          {
+            throw new \RuntimeException(self::FQN.' - Argument index ' . $arg_index .' for method "'.$name.'" is invalid (not numeric)');
+          }
+
+          if (!is_array($pass_func_args) || !isset($pass_func_args[$arg_index]))
+          {
+            throw new \RuntimeException(self::FQN.' - Argument ' . $arg_index .' cannot be passed to method "'.$name.'". Argument was not passed to parent call');
+          }
+
+          $pass_args[] = $pass_func_args[$arg_index];
+        }
+      }
 
   		$method = new \ReflectionMethod(__CLASS__, $name);
 
@@ -32,11 +64,15 @@ namespace hcf\core\dryver
   			$method->setAccessible(true);
   		}
 
-  		if (count($args) > 0)
+  		if (count($args) > 0) // _call was called with additional arguments at the end -> prefer this due compatibility reasons
   		{
   			return $method->invokeArgs($_this, $args);
   		}
-  		else
+  		else if (count($pass_args) > 0) // if arguments should be passed do this
+      {
+        return $method->invokeArgs($_this, $pass_args);
+      }
+      else // or just call the method
   		{
   			return $method->invoke($_this);
   		}
