@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.template.Xml - BUILD 18.06.15#178
+<?php #HYPERCELL hcdk.assembly.template.Xml - BUILD 21.02.24#186
 namespace hcdk\assembly\template;
 class Xml extends \hcdk\assembly\template {
     use \hcf\core\dryver\Base, Xml\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
@@ -14,38 +14,48 @@ class Xml extends \hcdk\assembly\template {
     protected function buildTemplateMethod() {
         $__CLASS__ = __CLASS__;
         $_this = (isset($this)) ? $this : null;
+        $_func_args = \func_get_args();
         $output = "
 \$output = '';
-{$__CLASS__::_arg(\func_get_args(), 0, $__CLASS__, $_this) }
+{$__CLASS__::_arg($_func_args, 0, $__CLASS__, $_this) }
 
-return \$output;";
+return self::_cleanAttrs(\$output, [{$__CLASS__::_arg($_func_args, 1, $__CLASS__, $_this) }]);";
         return $output;
     }
     # END ASSEMBLY FRAME TEMPLATE.TEXT
     
-}
-namespace hcdk\assembly\template\Xml\__EO__;
-# BEGIN EXECUTABLE FRAME OF CONTROLLER.PHP
-use \hcdk\raw\Method as Method;
-use \hcdk\data\xml\Parser as XMLParser;
-trait Controller {
-    public function getType() {
-        return 'XML';
     }
-    public function buildTemplate($name, $data) {
-        // The Fragment-implementations inside hcdk.xml will process the placeholder by themselfes, because we can't detect, if the placeholder
-        // is added in- or outside of the output-variable (the $betweem_double_quotes flag for Placeholder::process)
-        // in further implementations, the placeholders should be processed here, to keep the Fragments "placeholder-independet"
-        // $ph_output  =
-        $output = XMLParser::parse($data['content'], $this->for_file);
-        $method = new Method($name, $data['mod']);
-        $method->setBody($this->prependControlSymbols($this->buildTemplateMethod($output)));
-        return $method->toString();
+    namespace hcdk\assembly\template\Xml\__EO__;
+    # BEGIN EXECUTABLE FRAME OF CONTROLLER.PHP
+    use \hcdk\raw\Method as Method;
+    use \hcdk\data\xml\Parser as XMLParser;
+    trait Controller {
+        public function getType() {
+            return 'XML';
+        }
+        public function buildTemplate($name, $data) {
+            // The Fragment-implementations inside hcdk.xml will process the placeholder by themselfes, because we can't detect, if the placeholder
+            // is added in- or outside of the output-variable (the $betweem_double_quotes flag for Placeholder::process)
+            // in further implementations, the placeholders should be processed here, to keep the Fragments "placeholder-independet"
+            // $ph_output  =
+            $input = $data['content'];
+            $opt_attrs = XMLParser::matchOptionalAttributes($input);
+            $output = XMLParser::parse($input, $this->for_file . ', template-section "' . $name . '"');
+            $method = new Method($name, $data['mod']);
+            $attrs = '';
+            if (count($opt_attrs) > 0) {
+                $attrs = "'" . implode("','", $opt_attrs) . "'";
+            }
+            $method->setBody($this->prependControlSymbols($this->buildTemplateMethod($output, $attrs)));
+            return $method->toString();
+        }
+        public function getTraits() {
+            return ['Template' => '\\hcf\\core\\dryver\\Template', 'TemplateXml' => '\\hcf\\core\\dryver\\Template\\Xml'];
+        }
     }
-}
-# END EXECUTABLE FRAME OF CONTROLLER.PHP
-__halt_compiler();
-#__COMPILER_HALT_OFFSET__
+    # END EXECUTABLE FRAME OF CONTROLLER.PHP
+    __halt_compiler();
+    #__COMPILER_HALT_OFFSET__
 
 ?>
 

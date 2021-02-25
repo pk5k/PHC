@@ -2,8 +2,12 @@
 /**
  * MethodProcessor
  * Translates a {{method:myMethod}} placeholder to an executable line of php-script
+ *
  * NOTICE: Method-placeholders can pass it's parent method-call arguments by listing 
  * the required arugment-indexes behind a hash: {{method:name#0,2,3}} 
+ * passing locale variables is possible by using their name: e.g. {{method:mymethod#local_var,another_locale}}
+ * mising indexes and locales is possible -> {{method:myMethod#1,locale_1,0,another_locale}}
+ *
  * NOTICE: You can request both, static and non-static methods with this placeholder.
  *
  * @category Placholder-processor-implementations
@@ -23,20 +27,23 @@ trait Controller
 	 */
 	public static function process($content, $between_double_quotes = true)
 	{
-		$content = self::cleanContent($content);
+		list ($content, $passtrough_map) = self::processContent($content);
 
 		if ($between_double_quotes)
 		{
-			return '{$__CLASS__::_call(\''.$content.'\', $__CLASS__, $_this, \func_get_args())}';
+			return '{$__CLASS__::_call(\''.$content.'\', $__CLASS__, $_this'.$passtrough_map.')}';
 		}
 		else
 		{
-			return '$__CLASS__::_call(\''.$content.'\', $__CLASS__, $_this, \func_get_args())';
+			return '$__CLASS__::_call(\''.$content.'\', $__CLASS__, $_this'.$passtrough_map.')';
 		}
 	}
 
-	private static function cleanContent($content)
+	private static function processContent($content)
 	{
+		$pt_map = '';
+		$content = trim($content);
+
 		if (strpos($content, '#') !== false)
 		{
 			$split = explode('#', $content);
@@ -48,22 +55,28 @@ trait Controller
 
 	        $content = trim($split[0]);
 	        $pass_args_indexes = explode(',', $split[1]);
-	        $cleaned = [];
+	        $mapped = [];
+	        
 
 	        foreach ($pass_args_indexes as $arg_index) 
 	        {
-	          if (!is_numeric($arg_index))
-	          {
-	            throw new \Exception(self::FQN.' - Argument index ' . $arg_index .' for method '.$content.' is invalid (not numeric)');
-	          }
+	        	$use_index = trim($arg_index);
 
-	          $cleaned[] = trim($arg_index);
+				if (is_numeric($use_index))// numerics are argument-indexes
+				{
+					$mapped[] = '\func_get_arg('.$use_index.')';
+				}
+				else
+				{
+					$mapped[] = '$'.$use_index;
+				}
 	        }
 
-	        $content .= '#'.implode(',', $cleaned);
+	        $content .= '#map';
+	        $pt_map = ', ['.implode(', ',$mapped).']';
 	    }
 
-	    return $content;
+	    return [$content, $pt_map];
 	}
 }
 ?>

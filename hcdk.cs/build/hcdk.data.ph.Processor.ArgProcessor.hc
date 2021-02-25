@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.data.ph.Processor.ArgProcessor - BUILD 18.06.15#59
+<?php #HYPERCELL hcdk.data.ph.Processor.ArgProcessor - BUILD 21.02.24#61
 namespace hcdk\data\ph\Processor;
 class ArgProcessor extends \hcdk\data\ph\Processor {
     use \hcf\core\dryver\Base, ArgProcessor\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -9,30 +9,30 @@ class ArgProcessor extends \hcdk\data\ph\Processor {
             call_user_func_array([$this, 'onConstruct'], func_get_args());
         }
     }
-}
-namespace hcdk\data\ph\Processor\ArgProcessor\__EO__;
-# BEGIN EXECUTABLE FRAME OF CONTROLLER.PHP
-trait Controller {
-    /**
-     * process
-     *
-     * @param $content - string - The index of the argument
-     * @param $between_double_quotes - boolean - if true, the return value will be optimized for evaluating inside a "double quoted string"
-     *
-     * @throws ReflectionException
-     * @return string - a line of php-script to get the requested argument inside a method
-     */
-    public static function process($content, $between_double_quotes = true) {
-        if ($between_double_quotes) {
-            return '{$__CLASS__::_arg(\func_get_args(), ' . $content . ', $__CLASS__, $_this)}';
-        } else {
-            return '$__CLASS__::_arg(\func_get_args(), ' . $content . ', $__CLASS__, $_this)';
+    }
+    namespace hcdk\data\ph\Processor\ArgProcessor\__EO__;
+    # BEGIN EXECUTABLE FRAME OF CONTROLLER.PHP
+    trait Controller {
+        /**
+         * process
+         *
+         * @param $content - string - The index of the argument
+         * @param $between_double_quotes - boolean - if true, the return value will be optimized for evaluating inside a "double quoted string"
+         *
+         * @throws ReflectionException
+         * @return string - a line of php-script to get the requested argument inside a method
+         */
+        public static function process($content, $between_double_quotes = true) {
+            if ($between_double_quotes) {
+                return '{$__CLASS__::_arg($_func_args, ' . $content . ', $__CLASS__, $_this)}';
+            } else {
+                return '$__CLASS__::_arg($_func_args, ' . $content . ', $__CLASS__, $_this)';
+            }
         }
     }
-}
-# END EXECUTABLE FRAME OF CONTROLLER.PHP
-__halt_compiler();
-#__COMPILER_HALT_OFFSET__
+    # END EXECUTABLE FRAME OF CONTROLLER.PHP
+    __halt_compiler();
+    #__COMPILER_HALT_OFFSET__
 
 ?>
 

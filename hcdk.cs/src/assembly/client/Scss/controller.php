@@ -19,7 +19,7 @@ trait Controller
 		$compiler = new scssc();
 		$import_path = dirname($this->for_file);
 
-		// add the channel-source's directory as import path, so we can use imports
+		// add the assemblies directory (hypercell folder) as import path, so we can use imports
 		$compiler->addImportPath($import_path);
 		$compiler->setFormatter('ScssPhp\ScssPhp\Formatter\Compressed');
 

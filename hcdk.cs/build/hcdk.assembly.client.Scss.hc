@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.client.Scss - BUILD 20.10.09#180
+<?php #HYPERCELL hcdk.assembly.client.Scss - BUILD 20.10.09#181
 namespace hcdk\assembly\client;
 class Scss extends \hcdk\assembly\client\Css {
     use \hcf\core\dryver\Base, Scss\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
@@ -41,7 +41,7 @@ if(\$as_array)
         private function compile($scss) {
             $compiler = new scssc();
             $import_path = dirname($this->for_file);
-            // add the channel-source's directory as import path, so we can use imports
+            // add the assemblies directory (hypercell folder) as import path, so we can use imports
             $compiler->addImportPath($import_path);
             $compiler->setFormatter('ScssPhp\ScssPhp\Formatter\Compressed');
             return $compiler->compile($scss);

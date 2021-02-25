@@ -2,4 +2,4 @@
 \$output = '';
 {{arg:0}}
 
-return \$output;
+return self::_cleanAttrs(\$output, [{{arg:1}}]);

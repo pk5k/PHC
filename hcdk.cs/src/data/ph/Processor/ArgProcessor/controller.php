@@ -14,11 +14,11 @@ trait Controller
 	{
 		if ($between_double_quotes)
 		{
-			return '{$__CLASS__::_arg(\func_get_args(), '.$content.', $__CLASS__, $_this)}';
+			return '{$__CLASS__::_arg($_func_args, '.$content.', $__CLASS__, $_this)}';
 		}
 		else
 		{
-			return '$__CLASS__::_arg(\func_get_args(), '.$content.', $__CLASS__, $_this)';
+			return '$__CLASS__::_arg($_func_args, '.$content.', $__CLASS__, $_this)';
 		}
 	}
 }

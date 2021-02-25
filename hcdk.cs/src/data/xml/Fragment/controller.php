@@ -29,12 +29,12 @@ trait Controller
 		$root_name 	= $node->getName();
 		$output 	= self::FRGMNT_OUTPUT_START().'<'.$root_name;
 
-		foreach($node->attributes() as $name=>$value)
+		foreach ($node->attributes() as $name=>$value)
 		{
 			$output .= ' '.$name.'=\"'.PlaceholderParser::parse($value).'\"';
 		}
 
-		if(XMLParser::isVoidTag($root_name))
+		if (XMLParser::isVoidTag($root_name))
 		{
 			$output .= '/>';
 		}
@@ -42,12 +42,12 @@ trait Controller
 		{
 			$output .= '>';
 
-			if(count($node->children())>0)
+			if (count($node->children())>0)
 			{
 				// End this output-line here, because we do not know what renderFragment will give us back
 				$output .= self::FRGMNT_OUTPUT_END();
 
-				foreach($node->children() as $child)
+				foreach ($node->children() as $child)
 				{
 					$output .= XMLParser::renderFragment($child, $file_scope);
 				}
@@ -58,7 +58,7 @@ trait Controller
 			{
 				$string_contents = PlaceholderParser::parse((string)$node);
 
-				if(self::$OUTPUT_STARTED)
+				if (self::$OUTPUT_STARTED)
 				{
 					$string_contents = str_replace('"', '\"', $string_contents);
 				}

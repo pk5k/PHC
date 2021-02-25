@@ -25,36 +25,37 @@ trait Controller
 	 */
 	public static function parse($xml_input = null, $file_scope = null)
 	{
-		if(is_null($xml_input))
+		if (is_null($xml_input))
 		{
 			throw new \XMLParseException('Cannot parse XML-input - XML-input is null');
 		}
 
-		if(!isset($file_scope))
+		if (!isset($file_scope))
 		{
 			$file_scope = 'unknown';
 		}
 
-		if(strpos($xml_input, '<?xml') === false)
+		if (strpos($xml_input, '<?xml') === false)
 		{
 			$xml_input = '<?xml version="1.0"?>'.$xml_input;
 		}
 
 		libxml_use_internal_errors(true);// Avoid direct printing of parser-errors
 
-		$xml = new \SimpleXMLElement(self::replaceSpecialChars($xml_input));
 		$errors = null;
+		$xml = '';
+		$xml_input = self::morphAttributes($xml_input);
 
 		try
 		{
+			$xml = new \SimpleXMLElement(self::replaceSpecialChars($xml_input));
 			self::processLibXMLErrors($file_scope);
+			$output = self::renderFragment($xml, $file_scope);
 		}
-		catch(\XMLParseException $e)
+		catch(\Exception $e)
 		{
 			$errors = $e->getMessage();
 		}
-
-		$output = self::renderFragment($xml, $file_scope);
 
 		try
 		{
@@ -65,14 +66,14 @@ trait Controller
 			$errors .= "\r\n".$e->getMessage();
 		}
 
-		if(isset($errors))
+		if (isset($errors))
 		{
 			throw new \XMLParseException($errors);
 		}
 
 		libxml_use_internal_errors(false);
 
-		return $output;
+		return self::demorphAttributes($output);
 	}
 
 	/**
@@ -86,11 +87,11 @@ trait Controller
 	{
 		$errors = libxml_get_errors();
 
-		if(count($errors) > 0)
+		if (count($errors) > 0)
 		{
 			$message = "Parse-errors: \n\r";
 
-			foreach($errors as $error)
+			foreach ($errors as $error)
 			{
 				$message .= $error->message.' ('.$error->code.') in '.$file_scope.' at line '.$error->line."\n\r";
 			}
@@ -229,6 +230,37 @@ trait Controller
 		{
 			throw new \RuntimeException('Fragment "'.$type_class.'" is not a '.self::config()->fragment->base.' generalisation.');
 		}
+	}
+
+	public static function matchOptionalAttributes($raw_xml_input)
+	{
+		$matches = [];
+		$attrs = [];
+
+		preg_match_all('/\s([\w\d_-]*)\s?=\?\s?"/i', $raw_xml_input, $matches, PREG_SET_ORDER);// search attriutename=?"value" (name goes to group 1)
+		
+		foreach ($matches as $match) 
+		{
+			if (!in_array($match[1], $attrs))
+			{
+				$attrs[] = $match[1];
+			}
+		}
+
+		return $attrs;
+	}
+
+	protected static function morphAttributes($raw_xml_input)
+	{
+		$cleaned = self::matchOptionalAttributes($raw_xml_input);
+		$raw_xml_input = str_replace('=?"', self::TMP_OPT_MARKER.'="', $raw_xml_input);// make xml valid but attribute name recognizable
+
+		return $raw_xml_input;
+	}
+
+	protected static function demorphAttributes($processed_input)
+	{
+		return str_replace(self::TMP_OPT_MARKER.'=', '=?', $processed_input);
 	}
 }
 ?>
