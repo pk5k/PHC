@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.data.ph.Processor.MethodProcessor - BUILD 21.02.24#78
+<?php #HYPERCELL hcdk.data.ph.Processor.MethodProcessor - BUILD 21.02.24#79
 namespace hcdk\data\ph\Processor;
 class MethodProcessor extends \hcdk\data\ph\Processor {
     use \hcf\core\dryver\Base, MethodProcessor\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -28,6 +28,8 @@ class MethodProcessor extends \hcdk\data\ph\Processor {
      * @package hcdk.placeholder.processor
      * @author Philipp Kopf
      */
+    use \hcdk\data\ph\Processor\LocalProcessor;
+    use \hcdk\data\ph\Processor\ArgProcessor;
     trait Controller {
         /**
          * process
@@ -59,11 +61,10 @@ class MethodProcessor extends \hcdk\data\ph\Processor {
                 $mapped = [];
                 foreach ($pass_args_indexes as $arg_index) {
                     $use_index = trim($arg_index);
-                    if (is_numeric($use_index)) // numerics are argument-indexes
-                    {
-                        $mapped[] = '\func_get_arg(' . $use_index . ')';
+                    if (is_numeric($use_index)) {
+                        $mapped[] = ArgProcessor::process($use_index, false);
                     } else {
-                        $mapped[] = '$' . $use_index;
+                        $mapped[] = LocalProcessor::process($use_index, false);
                     }
                 }
                 $content.= '#map';

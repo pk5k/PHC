@@ -14,6 +14,9 @@
  * @package hcdk.placeholder.processor
  * @author Philipp Kopf
  */
+use \hcdk\data\ph\Processor\LocalProcessor;
+use \hcdk\data\ph\Processor\ArgProcessor;
+
 trait Controller
 {
 	/**
@@ -62,13 +65,13 @@ trait Controller
 	        {
 	        	$use_index = trim($arg_index);
 
-				if (is_numeric($use_index))// numerics are argument-indexes
+				if (is_numeric($use_index))
 				{
-					$mapped[] = '\func_get_arg('.$use_index.')';
+					$mapped[] = ArgProcessor::process($use_index, false);
 				}
 				else
 				{
-					$mapped[] = '$'.$use_index;
+					$mapped[] = LocalProcessor::process($use_index, false);
 				}
 	        }
 
