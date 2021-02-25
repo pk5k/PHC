@@ -3,6 +3,14 @@ namespace hcf\core\dryver\Template
 {
 	trait Xml
 	{
+		protected static function _postProcess($in, $clean_attributes, $clean_tags)
+		{
+			$in = self::_cleanAttrs($in, $clean_attributes);
+			$in = self::_cleanTags($in, $clean_tags);
+
+			return $in;
+		}
+
 		protected static function _cleanAttrs($in, $to_clean)
 		{
 			if (count($to_clean) == 0)
@@ -10,12 +18,48 @@ namespace hcf\core\dryver\Template
 				return $in;
 			}
 
+			$remove_list = [];
+			$match = [];
+			$restore = [];
+
 			foreach ($to_clean as $attr) 
 			{
-				$in = str_replace($attr.'=?""', '', $in);// this removes empty attributes completely
+				$remove_list[] = $attr.'?=""';
+
+				$match[] = $attr.'?="';
+				$restore[] = $attr.'="';
 			}
 
-			return str_replace('=?"', '="', $in);// optional attributes that still exist here weren't empty and must changed back to a valid attribute expression
+			$in = str_replace($remove_list, '', $in);// this removes the empty attributes completely
+			$in = str_replace($match, $restore, $in);// optional attributes that still exist here weren't empty and must changed back to a valid attribute expression
+
+			return $in;
+		}
+
+		protected static function _cleanTags($in, $to_clean)
+		{
+			if (count($to_clean) == 0)
+			{
+				return $in;
+			}
+
+			$match = [];
+			$restore = [];
+			$remove_pattern = '/<([\w\s-_\.]+)\?.*><\/\1\?>/i';// we do not know the attributes of each tag so we have to use a regex here
+
+			foreach ($to_clean as $tag_name) 
+			{
+				$match[] = '<'.$tag_name.'?';
+				$restore[] = '<'.$tag_name;
+
+				$match[] = '</'.$tag_name.'?>';
+				$restore[] = '</'.$tag_name.'>';
+			}
+
+			$in = preg_replace($remove_pattern, '', $in); // this replaces all given optional tags that are empty
+			$in = str_replace($match, $restore, $in);// repair all remaining optional tags
+
+			return $in;
 		}
 	}
 }

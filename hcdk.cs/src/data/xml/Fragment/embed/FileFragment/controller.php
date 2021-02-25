@@ -48,12 +48,12 @@ trait Controller
 
 		if(count($root->children())>0)
 		{
-			throw new \XMLParseException('Fragment cannot have content');
+			throw new \XMLParseException(self::FQN.' - Fragment cannot have content. In '.$file_scope.' for element "'.str_replace(XMLParser::TMP_OPT_TAG_MARKER, '?', $root->getName()).'"');
 		}
 
 		if(!isset($src) || !is_string($src))
 		{
-			throw new \XMLParseException('No source-file specified - attribute "src" is non-optional');
+			throw new \XMLParseException(self::FQN.' - No source-file specified - attribute "src" is non-optional. In '.$file_scope.' for element "'.str_replace(XMLParser::TMP_OPT_TAG_MARKER, '?', $root->getName()).'"');
 		}
 
 		// if the source-path does not start with / it is relative...
@@ -65,7 +65,7 @@ trait Controller
 		
 		if(!file_exists($src) || !is_readable($src))
 		{
-			throw new \XMLParseException('File "'.$src.'" does not exist or has wrong permissions');
+			throw new \XMLParseException(self::FQN.' - File "'.$src.'" does not exist or has wrong permissions. In '.$file_scope.' for element "'.str_replace(XMLParser::TMP_OPT_TAG_MARKER, '?', $root->getName()).'"');
 		}
 
 		$file_contents = file_get_contents($src);

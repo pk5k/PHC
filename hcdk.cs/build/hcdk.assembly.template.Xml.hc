@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.template.Xml - BUILD 21.02.24#186
+<?php #HYPERCELL hcdk.assembly.template.Xml - BUILD 21.02.24#187
 namespace hcdk\assembly\template;
 class Xml extends \hcdk\assembly\template {
     use \hcf\core\dryver\Base, Xml\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
@@ -19,7 +19,7 @@ class Xml extends \hcdk\assembly\template {
 \$output = '';
 {$__CLASS__::_arg($_func_args, 0, $__CLASS__, $_this) }
 
-return self::_cleanAttrs(\$output, [{$__CLASS__::_arg($_func_args, 1, $__CLASS__, $_this) }]);";
+return self::_postProcess(\$output, [{$__CLASS__::_arg($_func_args, 1, $__CLASS__, $_this) }], [{$__CLASS__::_arg($_func_args, 2, $__CLASS__, $_this) }]);";
         return $output;
     }
     # END ASSEMBLY FRAME TEMPLATE.TEXT
@@ -40,13 +40,18 @@ return self::_cleanAttrs(\$output, [{$__CLASS__::_arg($_func_args, 1, $__CLASS__
             // $ph_output  =
             $input = $data['content'];
             $opt_attrs = XMLParser::matchOptionalAttributes($input);
+            $opt_tags = XMLParser::matchOptionalTags($input);
             $output = XMLParser::parse($input, $this->for_file . ', template-section "' . $name . '"');
             $method = new Method($name, $data['mod']);
             $attrs = '';
+            $tags = '';
             if (count($opt_attrs) > 0) {
                 $attrs = "'" . implode("','", $opt_attrs) . "'";
             }
-            $method->setBody($this->prependControlSymbols($this->buildTemplateMethod($output, $attrs)));
+            if (count($opt_tags) > 0) {
+                $tags = "'" . implode("','", $opt_tags) . "'";
+            }
+            $method->setBody($this->prependControlSymbols($this->buildTemplateMethod($output, $attrs, $tags)));
             return $method->toString();
         }
         public function getTraits() {

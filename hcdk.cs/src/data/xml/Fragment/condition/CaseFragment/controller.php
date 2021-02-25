@@ -32,7 +32,7 @@ trait Controller
 		else if(!is_numeric($value))
 		{
 			// If value isn't a string or numeric, it can't be a valid case-value
-			throw new \XMLParseException('Attribute "value" must be a string or numeric type');
+			throw new \XMLParseException(self::FQN.' - Attribute "value" must be a string or numeric type. In '.$file_scope.' for element "'.str_replace(XMLParser::TMP_OPT_TAG_MARKER, '?', $root->getName()).'"');
 		}
 
 		$output = null;
@@ -55,7 +55,7 @@ trait Controller
 		}
 		else
 		{
-			throw new \XMLParseException('Fragment cannot be empty');
+			throw new \XMLParseException(self::FQN.' - Fragment cannot be empty. In '.$file_scope.' for element "'.str_replace(XMLParser::TMP_OPT_TAG_MARKER, '?', $root->getName()).'"');
 		}
 
 		$output .= 'break;';

@@ -31,7 +31,7 @@ trait Controller
 		{
 			if(count($root->children())>0)
 			{
-				throw new \XMLParseException('Fragment cannot have children');
+				throw new \XMLParseException(self::FQN.'- Fragment cannot have children. In '.$file_scope.' for element "'.str_replace(XMLParser::TMP_OPT_TAG_MARKER, '?', $root->getName()));
 			}
 
 			$markdown_content = (string)$root;
@@ -47,7 +47,7 @@ trait Controller
 
 			if(!file_exists($src) || !is_readable($src))
 			{
-				throw new \XMLParseException('File "'.$src.'" does not exist or has wrong permissions');
+				throw new \XMLParseException(self::FQN.' - File "'.$src.'" does not exist or has wrong permissions. In '.$file_scope.' for element "'.str_replace(XMLParser::TMP_OPT_TAG_MARKER, '?', $root->getName()).'"');
 			}
 
 			$markdown_content = file_get_contents($src);

@@ -1,6 +1,7 @@
 <?php
 use \hcf\core\Utils as Utils;
 use \hcf\core\remote\Invoker as RemoteInvoker;
+use \hcf\core\log\Internal as InternalLogger;
 
 /**
  * Parser
@@ -44,7 +45,7 @@ trait Controller
 
 		$errors = null;
 		$xml = '';
-		$xml_input = self::morphAttributes($xml_input);
+		$xml_input = self::morph($xml_input);
 
 		try
 		{
@@ -73,7 +74,7 @@ trait Controller
 
 		libxml_use_internal_errors(false);
 
-		return self::demorphAttributes($output);
+		return self::demorph($output);
 	}
 
 	/**
@@ -116,6 +117,17 @@ trait Controller
 	{
 		$class = null;
 		$name = $xml_root->getName();
+		$is_optional = false;
+
+		if (strpos($name, self::TMP_OPT_TAG_MARKER) !== false)
+		{
+			// remove optional-tag-name for lookup of processor tags
+			// if a processor is found this way, it'll be executed anyway - the optional flag will be ignored
+			// the tag itself won't be present at the postProcessing stage after the template was rendered (this is where the optional tags/attrs are checked/removed)
+			$name = str_replace(self::TMP_OPT_TAG_MARKER, '', $name);
+			$is_optional = true;
+		}
+
 		$package = self::config()->fragment->package;
 		$suffix = self::config()->fragment->suffix;
 
@@ -151,13 +163,18 @@ trait Controller
 			
 			$type_class = $ri->getInstance();
 			self::validateProcessor($type_class);
+
+			if ($is_optional)
+			{
+				InternalLogger::log()->warn(self::FQN.' - processor tags cannot be flagged as optional. Processor will be executed anyway. In '.$file_scope.' for element "'.
+					str_replace(self::TMP_OPT_TAG_MARKER, '?', $xml_root->getName()).'"');
+			}
 		}
 		catch (\Exception $e)
 		{
 			// use the default-fragment
 			$type_class = Utils::HCFQN2PHPFQN(self::config()->fragment->base);
 		}
-
 
 		return $type_class::build($xml_root, $file_scope);
 	}
@@ -232,35 +249,101 @@ trait Controller
 		}
 	}
 
-	public static function matchOptionalAttributes($raw_xml_input)
+	protected static function match($pattern, $raw_xml_input)
 	{
 		$matches = [];
-		$attrs = [];
+		$values = [];
 
-		preg_match_all('/\s([\w\d_-]*)\s?=\?\s?"/i', $raw_xml_input, $matches, PREG_SET_ORDER);// search attriutename=?"value" (name goes to group 1)
+		preg_match_all($pattern, $raw_xml_input, $matches, PREG_SET_ORDER);
 		
 		foreach ($matches as $match) 
 		{
-			if (!in_array($match[1], $attrs))
+			if (!in_array($match[1], $values))
 			{
-				$attrs[] = $match[1];
+				$values[] = $match[1];
 			}
 		}
 
-		return $attrs;
+		return $values;		
+	}
+
+	public static function matchOptionalTags($raw_xml_input)
+	{
+		return self::match('/<([-_A-Za-z0-9\.]+)\?/i', $raw_xml_input);// search <tagname? (tagname goes to group 1)
+	}
+
+	protected static function morph($raw_xml_input)
+	{
+		$raw_xml_input = self::morphAttributes($raw_xml_input);
+		$raw_xml_input = self::morphTags($raw_xml_input);
+
+		return $raw_xml_input;
+	}
+
+	protected static function demorph($processed_input)
+	{
+		$processed_input = self::demorphAttributes($processed_input);
+		$processed_input = self::demorphTags($processed_input);
+
+		return $processed_input;
+	}
+
+	protected static function morphTags($raw_xml_input)
+	{
+		$cleaned = self::matchOptionalTags($raw_xml_input);
+
+		// always match values as explicit as possible to avoid side-effects. 
+
+		$from = [];
+		$to = [];
+		
+		foreach ($cleaned as $tag_name) 
+		{
+			$from[] = '<'.$tag_name.'?';
+			$to[] = '<'.$tag_name.self::TMP_OPT_TAG_MARKER;
+
+			$from[] = '</'.$tag_name.'?>';
+			$to[] = '</'.$tag_name.self::TMP_OPT_TAG_MARKER.'>';
+		}
+		
+		$raw_xml_input = str_replace($from, $to, $raw_xml_input);
+
+		return $raw_xml_input;
+	}
+
+	protected static function demorphTags($processed_input)
+	{
+		// TMP_OPT_TAG_MARKER is unique enough, so no explicit matching on tag-names should be required here
+		return str_replace(self::TMP_OPT_TAG_MARKER, '?', $processed_input);
+	}
+
+	public static function matchOptionalAttributes($raw_xml_input)
+	{
+		return self::match('/\s([\w\d_-]*)\s?\?=\s?"/i', $raw_xml_input);// search attributename?="value" (attributename goes to group 1)
 	}
 
 	protected static function morphAttributes($raw_xml_input)
 	{
 		$cleaned = self::matchOptionalAttributes($raw_xml_input);
-		$raw_xml_input = str_replace('=?"', self::TMP_OPT_MARKER.'="', $raw_xml_input);// make xml valid but attribute name recognizable
 
-		return $raw_xml_input;
+		// always match values as explicit as possible to avoid side-effects. 
+		
+		$from = [];
+		$to = [];
+
+		foreach ($cleaned as $attr_name) 
+		{
+			$from[] = $attr_name.'?="';
+			$to[] = $attr_name.self::TMP_OPT_ATTR_MARKER.'="';
+		}
+
+		return str_replace($from, $to, $raw_xml_input);
 	}
 
 	protected static function demorphAttributes($processed_input)
 	{
-		return str_replace(self::TMP_OPT_MARKER.'=', '=?', $processed_input);
+		// TMP_OPT_ATTR_MARKER is unique enough, so no explicit matching on attribute-names should be required here
+		return str_replace(self::TMP_OPT_ATTR_MARKER, '?', $processed_input);
 	}
 }
 ?>

@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.data.ph.Processor.MethodProcessor - BUILD 21.02.24#79
+<?php #HYPERCELL hcdk.data.ph.Processor.MethodProcessor - BUILD 21.02.24#80
 namespace hcdk\data\ph\Processor;
 class MethodProcessor extends \hcdk\data\ph\Processor {
     use \hcf\core\dryver\Base, MethodProcessor\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -18,9 +18,9 @@ class MethodProcessor extends \hcdk\data\ph\Processor {
      * Translates a {{method:myMethod}} placeholder to an executable line of php-script
      *
      * NOTICE: Method-placeholders can pass it's parent method-call arguments by listing
-     * the required arugment-indexes behind a hash: {{method:name#0,2,3}}
-     * passing locale variables is possible by using their name: e.g. {{method:mymethod#local_var,another_locale}}
-     * mising indexes and locales is possible -> {{method:myMethod#1,locale_1,0,another_locale}}
+     * the required arugment-indexes behind a pipe: {{method:name|0,2,3}}
+     * passing locale variables is possible by using their name: e.g. {{method:mymethod|local_var,another_locale}}
+     * mising indexes and locales is possible -> {{method:myMethod|1,locale_1,0,another_locale}}
      *
      * NOTICE: You can request both, static and non-static methods with this placeholder.
      *
@@ -41,18 +41,18 @@ class MethodProcessor extends \hcdk\data\ph\Processor {
          * @return string - a line of php-script to call the requested method from inside the raw-merge
          */
         public static function process($content, $between_double_quotes = true) {
-            list($content, $passtrough_map) = self::processContent($content);
+            list($content, $mirror_map) = self::processContent($content);
             if ($between_double_quotes) {
-                return '{$__CLASS__::_call(\'' . $content . '\', $__CLASS__, $_this' . $passtrough_map . ')}';
+                return '{$__CLASS__::_call(\'' . $content . '\', $__CLASS__, $_this' . $mirror_map . ')}';
             } else {
-                return '$__CLASS__::_call(\'' . $content . '\', $__CLASS__, $_this' . $passtrough_map . ')';
+                return '$__CLASS__::_call(\'' . $content . '\', $__CLASS__, $_this' . $mirror_map . ')';
             }
         }
         private static function processContent($content) {
-            $pt_map = '';
+            $mmap = '';
             $content = trim($content);
-            if (strpos($content, '#') !== false) {
-                $split = explode('#', $content);
+            if (strpos($content, '|') !== false) {
+                $split = explode('|', $content);
                 if (!is_array($split) || count($split) != 2) {
                     throw new \Exception(self::FQN . ' - invalid methodname: ' . $content);
                 }
@@ -67,10 +67,10 @@ class MethodProcessor extends \hcdk\data\ph\Processor {
                         $mapped[] = LocalProcessor::process($use_index, false);
                     }
                 }
-                $content.= '#map';
-                $pt_map = ', [' . implode(', ', $mapped) . ']';
+                $content.= '|map';
+                $mmap = ', [' . implode(', ', $mapped) . ']';
             }
-            return [$content, $pt_map];
+            return [$content, $mmap];
         }
     }
     # END EXECUTABLE FRAME OF CONTROLLER.PHP

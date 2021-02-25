@@ -25,7 +25,7 @@ trait Controller
       }
     }
 
-    throw new \XMLParseException('No condition set');
+    throw new \XMLParseException(self::FQN.' - No condition set');
   }
 
   public static function buildBody($root, $file_scope)
@@ -41,7 +41,7 @@ trait Controller
     }
     else
     {
-      throw new \XMLParseException('Fragment cannot be empty');
+      throw new \XMLParseException(self::FQN.' - Fragment cannot be empty. In '.$file_scope.' for element "'.str_replace(XMLParser::TMP_OPT_TAG_MARKER, '?', $root->getName()).'"');
     }
 
     return $body;

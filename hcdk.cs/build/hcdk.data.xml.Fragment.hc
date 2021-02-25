@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.data.xml.Fragment - BUILD 18.06.15#45
+<?php #HYPERCELL hcdk.data.xml.Fragment - BUILD 21.02.25#48
 namespace hcdk\data\xml;
 class Fragment {
     use \hcf\core\dryver\Config, Fragment\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -48,12 +48,15 @@ class Fragment {
          */
         public static function build($node, $file_scope) {
             $root_name = $node->getName();
+            $is_optional = (strpos($root_name, XMLParser::TMP_OPT_TAG_MARKER) !== false);
             $output = self::FRGMNT_OUTPUT_START() . '<' . $root_name;
             foreach ($node->attributes() as $name => $value) {
                 $output.= ' ' . $name . '=\"' . PlaceholderParser::parse($value) . '\"';
             }
             if (XMLParser::isVoidTag($root_name)) {
                 $output.= '/>';
+            } else if ($is_optional && XMLParser::isVoidTag(str_replace(XMLParser::TMP_OPT_TAG_MARKER, '', $root_name))) {
+                throw new \Exception(self::FQN . ' - self-closing tags cannot be optional. In ' . $file_scope . ' for element "' . str_replace(XMLParser::TMP_OPT_TAG_MARKER, '?', $root_name) . '"');
             } else {
                 $output.= '>';
                 if (count($node->children()) > 0) {

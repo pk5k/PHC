@@ -24,14 +24,14 @@ trait Controller
 
 		if(is_null($var))
 		{
-			throw new \AttributeNotFoundException('Non-optional attribute "var" is not set');
+			throw new \AttributeNotFoundException(self::FQN.' - Non-optional attribute "var" is not set. In '.$file_scope.' for element "'.str_replace(XMLParser::TMP_OPT_TAG_MARKER, '?', $root_name).'"');
 		}
 
 		$var = PlaceholderParser::parse($var, false);
 
 		if(is_null($as_val))
 		{
-			throw new \AttributeNotFoundException('Non-optional attribute "value" is not set');
+			throw new \AttributeNotFoundException(self::FQN. ' - Non-optional attribute "value" is not set. In '.$file_scope.' for element "'.str_replace(XMLParser::TMP_OPT_TAG_MARKER, '?', $root_name).'"');
 		}
 
 		$output = 'foreach('.$var.' as ';

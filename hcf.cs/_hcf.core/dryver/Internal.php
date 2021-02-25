@@ -17,7 +17,7 @@ namespace hcf\core\dryver
   		return constant($__CLASS__.'::'.$name);
   	}
 
-		private static function _call($name, $__CLASS__, $_this, $passtrough_map = null)
+		private static function _call($name, $__CLASS__, $_this, $mirror_map = null)
   	{
       $pass_args = [];
   		$args = func_get_args();
@@ -25,12 +25,12 @@ namespace hcf\core\dryver
       array_shift($args);// remove $__CLASS__
       array_shift($args);// remove $_this
 
-      if (strpos($name, '#map') !== false)
+      if (strpos($name, '|map') !== false)
       {
-        array_shift($args);// remove $passtrough_map only if methodname uses # (due downwards compatibility, last arg could be used be tags like for-each etc.)
+        array_shift($args);// remove $mirror_map only if methodname uses |map (due downwards compatibility, last arg could be used be tags like for-each etc.)
 
-        $name = str_replace('#map', '', $name);
-        $pass_args = $passtrough_map;
+        $name = str_replace('|map', '', $name);
+        $pass_args = $mirror_map;
       }
 
   		$method = new \ReflectionMethod(__CLASS__, $name);

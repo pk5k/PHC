@@ -23,7 +23,7 @@ trait Controller
 
 		if(is_null($value))
 		{
-			throw new \AttributeNotFoundException('Non-optional attribute "value" is not set');
+			throw new \AttributeNotFoundException(self::FQN.' - Non-optional attribute "value" is not set. In '.$file_scope.' for element "'.str_replace(XMLParser::TMP_OPT_TAG_MARKER, '?', $root->getName()).'"');
 		}
 
 		$output = 'switch('.$value.') {';
@@ -37,7 +37,7 @@ trait Controller
 		}
 		else
 		{
-			throw new \XMLParseException('Fragment cannot be empty');
+			throw new \XMLParseException(self::FQN.' - Fragment cannot be empty. In '.$file_scope.' for element "'.str_replace(XMLParser::TMP_OPT_TAG_MARKER, '?', $root->getName()).'"');
 		}
 
 		$output .= '}';

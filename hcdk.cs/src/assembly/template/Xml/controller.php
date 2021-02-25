@@ -17,16 +17,23 @@ trait Controller
 		// $ph_output  =
 		$input = $data['content'];
 		$opt_attrs = XMLParser::matchOptionalAttributes($input);
+		$opt_tags = XMLParser::matchOptionalTags($input);
 		$output = XMLParser::parse($input, $this->for_file.', template-section "'.$name.'"');
 		$method = new Method($name, $data['mod']);
 		$attrs = '';
+		$tags = '';
 
 		if (count($opt_attrs) > 0)
 		{
 			$attrs = "'".implode("','", $opt_attrs)."'";
 		}
 
-		$method->setBody($this->prependControlSymbols($this->buildTemplateMethod($output, $attrs)));
+		if (count($opt_tags) > 0)
+		{
+			$tags = "'".implode("','", $opt_tags)."'";
+		}
+
+		$method->setBody($this->prependControlSymbols($this->buildTemplateMethod($output, $attrs, $tags)));
 
 		return $method->toString();
 	}

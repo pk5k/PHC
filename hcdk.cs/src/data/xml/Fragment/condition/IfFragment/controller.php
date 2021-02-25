@@ -22,7 +22,7 @@ trait Controller
 
 		if(is_null($value))
 		{
-			throw new \XMLParseException('Value cannot be empty');
+			throw new \XMLParseException(self::FQN.' - Value cannot be empty. In '.$file_scope.' for element "'.str_replace(XMLParser::TMP_OPT_TAG_MARKER, '?', $root->getName()).'"');
 		}
 
 		$value = PlaceholderParser::parse($value, false);

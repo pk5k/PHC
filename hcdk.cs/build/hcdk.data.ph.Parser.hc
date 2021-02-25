@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.data.ph.Parser - BUILD 21.02.24#47
+<?php #HYPERCELL hcdk.data.ph.Parser - BUILD 21.02.24#48
 namespace hcdk\data\ph;
 class Parser {
     use \hcf\core\dryver\Config, Parser\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -158,7 +158,7 @@ class Parser {
 BEGIN[CONFIG.INI]
 
 [parser]
-regex = "/{{((?:[0-9a-zA-Z_])*):((?:[0-9a-zA-Z_$#,\. ])*)}}/i"; Regex to match placeholders
+regex = "/{{((?:[0-9a-zA-Z_])*):((?:[0-9a-zA-Z_$\|,\. ])*)}}/i"; Regex to match placeholders
 DOMT = true; Die-On-Missing-Type - if true, a PlaceholderException will be thrown, if type cannot be resolved to a Placeholder-Generalisation, on false the PH will be skipped
 recursive = true; re-run the parse method, until no placeholders can be found anymore. In case of nested placeholders, the regex will only match the inner-ph. After parsing this, the outter ph would be matched on a second run
 
