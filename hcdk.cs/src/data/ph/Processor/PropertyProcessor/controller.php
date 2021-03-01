@@ -19,7 +19,7 @@ trait Controller
 	 * @throws ReflectionException
 	 * @return string - a line of php-script to get the requested property from inside the raw-merge
 	 */
-	public static function process($content, $between_double_quotes = true)
+	public static function process($content, $between_double_quotes = true, $mirror_map = null)
 	{
 		if ($between_double_quotes)
 		{

@@ -19,7 +19,7 @@ trait Controller
 	 *
 	 * @return string - a line of php-script to get the requested $_SESSION-array-key from inside the raw-merge
 	 */
-	public static function process($content, $between_double_quotes = true)
+	public static function process($content, $between_double_quotes = true, $mirror_map = null)
 	{
 		if ($between_double_quotes)
 		{

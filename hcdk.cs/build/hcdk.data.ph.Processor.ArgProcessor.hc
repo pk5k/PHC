@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.data.ph.Processor.ArgProcessor - BUILD 21.02.24#61
+<?php #HYPERCELL hcdk.data.ph.Processor.ArgProcessor - BUILD 21.02.24#62
 namespace hcdk\data\ph\Processor;
 class ArgProcessor extends \hcdk\data\ph\Processor {
     use \hcf\core\dryver\Base, ArgProcessor\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -22,7 +22,7 @@ class ArgProcessor extends \hcdk\data\ph\Processor {
          * @throws ReflectionException
          * @return string - a line of php-script to get the requested argument inside a method
          */
-        public static function process($content, $between_double_quotes = true) {
+        public static function process($content, $between_double_quotes = true, $mirror_map = null) {
             if ($between_double_quotes) {
                 return '{$__CLASS__::_arg($_func_args, ' . $content . ', $__CLASS__, $_this)}';
             } else {

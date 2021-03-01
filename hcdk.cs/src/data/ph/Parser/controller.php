@@ -112,7 +112,7 @@ trait Controller
 	 * @throws PlaceholderException
 	 * @return string - the processed placeholder
 	 */
-	private static function processSingle($type, $value, $between_double_quotes)
+	public static function processSingle($type, $value, $between_double_quotes)
 	{
 		$type = ucfirst($type);
 		$package = self::config()->placeholder->package;
@@ -144,9 +144,169 @@ trait Controller
 			return null;
 		}
 
-		$parsed = $type_class::process($value, $between_double_quotes);
+		list ($value, $mirror_map) = self::dispatchMirrorMap($value);
+
+		$parsed = $type_class::process($value, $between_double_quotes, $mirror_map);
 
 		return $parsed;
+	}
+
+	private static function splitOfMirrorMap($content)
+	{
+		$content = trim($content);
+		
+		if (strpos($content, '|') === false)
+		{
+			return [$content, null];
+		}
+
+		$new_content = null;
+		$mmap = null;
+		$feed = '';
+		$brackets_open = 0;
+		$quotes_open = 0;
+
+		for ($i = 0; $i < strlen($content); $i++)
+		{
+			$c = $content[$i];
+
+			switch ($c) 
+			{
+				case "'":
+					$quotes_open = 1 - $quotes_open;// only one quote-level deep allowed, no escaping possible
+					$feed .= $c;
+					break;
+
+				case '(':
+					$brackets_open++;
+					$feed .= $c;
+					break;
+				
+				case ')':
+					$brackets_open--;
+					$feed .= $c;
+					break;
+
+				case '|':
+					if ($brackets_open == 0 && $quotes_open == 0)
+					{
+						if (!is_null($new_content))
+						{
+							throw new \Exception(self::FQN.' - only one mirror-map ( | symbol) allowed per placeholder. Found in '.$content);
+						}
+
+						if ($feed == '')
+						{
+							throw new \Exception(self::FQN.' - mirror-map cannot be used without preceeding content in '.$content);
+						}
+
+						$new_content = $feed;
+						$feed = '';
+						break;
+					}
+					// else: fall trough
+
+				default:
+					$feed .= $c;
+			}
+		}
+
+		if ($quotes_open != 0)
+		{
+			throw new \Exception(self::FQN.' - unexpected end of expression. Missing single-quote in '.$content);
+		}
+
+		if ($brackets_open != 0)
+		{
+			throw new \Exception(self::FQN.' - unexpected end of expression. Missing parantheses in '.$content);
+		}
+
+		if (is_null($new_content))
+		{
+			// no mirror-map was given
+			$new_content = $feed;
+		}
+		else 
+		{
+			$mmap = $feed;
+		}
+
+		if ($new_content == '')
+		{
+			throw new \Exception(self::FQN .' - missing content in '.$content);
+		}
+
+		return [$new_content, $mmap];
+	}
+
+	public static function detectArgumentType($for)
+	{
+		$type = null;
+		$val = null;
+		$for = trim($for);
+
+		if (substr($for, 0, 1) == "'" && substr($for, -1, 1) == "'")
+		{
+			// raw value
+			$type = 'raw';
+			$val = $for;
+		}
+		else if (strpos($for, ':') === false)
+		{
+			// autocast args and property references
+			if (is_numeric($for))
+			{
+				$type = 'arg';
+				$val = $for;
+			}
+			else 
+			{
+				$type = 'property';
+				$val = $for;
+			}
+			// for locales, constant, etc. use expilcit placeholder type as cast -> placeholdertype:content
+		}
+		else 
+		{
+			$split = explode(':', $for);
+
+			if (count($split) != 2)
+			{
+				throw new \Exception(self::FQN.' - invalid amount of colons, only one allowed in '.$for);
+			}
+
+			$type = $split[0];
+			$val = $split[1];
+		}
+
+		return [$type, $val];
+	}
+
+	private static function dispatchMirrorMap($content)
+	{
+		list ($content, $mmap) = self::splitOfMirrorMap($content);
+		$mirror_map = [];
+
+		if ($mmap != '')
+		{
+	        $pass_args_indexes = explode(',', $mmap);
+
+	        foreach ($pass_args_indexes as $arg_index) 
+	        {
+	        	list ($type, $val) = self::detectArgumentType($arg_index);
+
+	        	if ($type == 'raw')
+	        	{
+	        		$mirror_map[] = $val;// currently no placeholder-evaluation possible in static-strings (needs proper parser to detect placeholder nesting levels)
+	        	}
+	        	else 
+	        	{
+					$mirror_map[] = self::processSingle($type, $val, false);// always false, parent-placeholder decides if it's between double quotes
+	        	}
+	        }
+	    }
+
+	    return [$content, $mirror_map];
 	}
 
 	/**

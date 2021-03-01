@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.data.ph.Processor.ConstProcessor - BUILD 18.06.15#59
+<?php #HYPERCELL hcdk.data.ph.Processor.ConstProcessor - BUILD 18.06.15#60
 namespace hcdk\data\ph\Processor;
 class ConstProcessor extends \hcdk\data\ph\Processor {
     use \hcf\core\dryver\Base, ConstProcessor\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -9,38 +9,38 @@ class ConstProcessor extends \hcdk\data\ph\Processor {
             call_user_func_array([$this, 'onConstruct'], func_get_args());
         }
     }
-}
-namespace hcdk\data\ph\Processor\ConstProcessor\__EO__;
-# BEGIN EXECUTABLE FRAME OF CONTROLLER.PHP
-
-/**
- * ConstProcessor
- * Translates a {{const:MY_CONSTANT}} placeholder to an executable line of php-script
- *
- * @category Placholder-processor-implementations
- * @package hcdk.placeholder.processor
- * @author Philipp Kopf
- */
-trait Controller {
+    }
+    namespace hcdk\data\ph\Processor\ConstProcessor\__EO__;
+    # BEGIN EXECUTABLE FRAME OF CONTROLLER.PHP
+    
     /**
-     * process
+     * ConstProcessor
+     * Translates a {{const:MY_CONSTANT}} placeholder to an executable line of php-script
      *
-     * @param $content - string - The name of the constant inside your raw-merge component
-     * @param $between_double_quotes - boolean - if true, the return value will be optimized for evaluating inside a "double quoted string"
-     *
-     * @return string
+     * @category Placholder-processor-implementations
+     * @package hcdk.placeholder.processor
+     * @author Philipp Kopf
      */
-    public static function process($content, $between_double_quotes = true) {
-        if ($between_double_quotes) {
-            return '{$__CLASS__::_constant(\'' . $content . '\', $__CLASS__, $_this)}';
-        } else {
-            return '$__CLASS__::_constant(\'' . $content . '\', $__CLASS__, $_this)';
+    trait Controller {
+        /**
+         * process
+         *
+         * @param $content - string - The name of the constant inside your raw-merge component
+         * @param $between_double_quotes - boolean - if true, the return value will be optimized for evaluating inside a "double quoted string"
+         *
+         * @return string
+         */
+        public static function process($content, $between_double_quotes = true, $mirror_map = null) {
+            if ($between_double_quotes) {
+                return '{$__CLASS__::_constant(\'' . $content . '\', $__CLASS__, $_this)}';
+            } else {
+                return '$__CLASS__::_constant(\'' . $content . '\', $__CLASS__, $_this)';
+            }
         }
     }
-}
-# END EXECUTABLE FRAME OF CONTROLLER.PHP
-__halt_compiler();
-#__COMPILER_HALT_OFFSET__
+    # END EXECUTABLE FRAME OF CONTROLLER.PHP
+    __halt_compiler();
+    #__COMPILER_HALT_OFFSET__
 
 ?>
 

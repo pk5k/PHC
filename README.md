@@ -210,11 +210,12 @@ Folgende Platzhalter stehen zur Verfügung
 
 | Typ  | Wert | Bedeutung | Beispiel |
 |---|---|---|---|
-| method | *Methodenname* | Die angegebene Methode wird aufgerufen und deren Rückgabewert anstelle des Platzhalters verwendet. Die Methode muss sich innerhalb derselben Hypercell befinden. Eine Raute nach dem Methodennamen gefolgt von einer kommaseparierten Zahlenfolge ermöglicht das Weiterleiten von Funktionsvariablen anhand deren Index. | `{{method:myMethod}}` oder `{{method:myMethod#0,1,3}}` letzteres leitet die an die Hauptmethode übergebenen Parameter 0, 1 sowie 3 ihrer Reihenfolge entsprechend an die Methode "myMethod" weiter. | 
+| method | *Methodenname* | Die angegebene Methode wird aufgerufen und deren Rückgabewert anstelle des Platzhalters verwendet. Die Methode muss sich innerhalb derselben Hypercell befinden. Eine Pipe nach dem Methodennamen gefolgt von einer kommaseparierten Zahlenfolge ermöglicht das Weiterleiten von Funktionsvariablen anhand deren Index. Text wird als locale interpretiert und entsprechend weitergleitet. | `{{method:myMethod}}` oder `{{method:myMethod|0,1,my_locale_1}}` letzteres leitet die an die Hauptmethode übergebenen Parameter 0 und 1 sowie die locale `$my_locale_1` ihrer Reihenfolge entsprechend an die Methode `myMethod` weiter. | 
 | property | *Eigenschaftsname*  | Der Platzhalter wird durch den Wert der angegebenen Eigenschaft ersetzt. Die Eigenschaft muss sich innerhalb derselben Hypercell befinden. Handelt es sich bei der Eigenschaft um ein Objekt, so kann direkt über den Placeholder auf einen Schlüssel dieses Objekts zugegriffen werden. | `{{property:my_prop}}` <br/>  oder `{{property:my_obj_prop.my_key}}` |
 | const | *Konstante* | Wert einer Konstante mit welchem der Platzhalter ersetzt werden soll. | `{{const:HCFQN}}` |
 | arg | 0-n | Innerhalb der Methode in welchem der Platzhalter agiert kann hiermit ein Index der übergebenen Funktionsvariablen verwendet werden, durch deren Wert der Platzhalter ersetzt werden soll. | `{{arg:0}}` |
 | local | *Variablenname* | Wert einer lokalen Variable, welche in dieser Methode existiert und gültig ist. | `{{local:var}}` |
+| dict | *Schlüsselname* | Der Text hinter dem übergebenen hcf.db.Dict Schlüssel wird abgerufen. Mittels Pipe lassen sich Parameter an die `->apply()` Methode des Datensatzes übergeben. Mehr Informationen hierzu findet sich am Platzhalter `method` | `{{dict:key.in.Database}}` oder `{{dict:key.inDatabase|0,locale_1}}` |
 
 #### Sections
 
@@ -337,8 +338,6 @@ Mit der Constant Assembly lassen sich an einer Hypercell Konstanten definieren. 
 	MY_CONSTANT_VALUE_1 1001
 	MY_CONSTANT_VALUE_2 This is a string.
 
-
-
 Die hinzugefügten Konstanten können anschließend über den HCFQN der Komponente erreicht werden.
 
 	\rootNamespace\package\MyCell::MY_CONSTANT_VALUE
@@ -453,6 +452,15 @@ Im Falle von output.xml Assemblies gilt es zu beachten, dass Platzhalter erst na
 
 Will man dennoch einen XML-String auf diesem Wege erzeugen, bietet sich die output.text Assembly oder die Verwendung von [CDATA-Elementen](https://de.wikipedia.org/wiki/CDATA) an.
 
+
+##### Optionale Attribute & Elemente
+
+Regulären XML-Elementen sowie Attributen kann am Ende ihres Namens ein `?` angehängt werden. Ist das Element/Attribut nach dem ausführen der Methode leer wird es vollständig aus dem XML-String entfernt.
+
+	<b? optional-attr?="{{method:attrVal|0}}">{{arg0}}</b?>
+
+Bei optionalen Elementen ist zu beachten, dass diese im finalen XML-String von links nach rechts und nicht von innen nach außen entfernt werden. Bei mehreren ineinander verschachtelten optionalen Elementen werden die äußeren Elemente somit nicht entfernt wie es womöglich erwartet wird. Prozessor-Elemente können nicht optional sein, da diese nicht in Form von XML in die Methode kompiliert werden. 
+
 ##### Prozessor-Elemente
 
 Prozessor-Elemente unterscheiden sich in ihrem Aussehen nicht von anderen XML-Elementen innerhalb der Assembly. Ausschlaggebend ist hierbei der verwendete Element-Name selbst. Dabei wird in den Basis String `hcdk.data.xml.Fragment.[ELEMENT-NAME]Fragment` der aktuell zu verarbeitende Element-Name eingefügt. Dies ist das HCFQN-Muster, nach welchem die Prozessor-Komponenten innerhalb des hcdk-Cellspaces gespeichert sind. Wird nun z.B. das Element `<condition.if>...</condition.if>` verarbeitet, ergibt sich hierfür folgender HCFQN: `hcdk.data.xml.Fragment.condition.IfFragment`. Existiert unter dieser HCFQN eine Hypercell, wird diese zur Verarbeitung des Elements verwendet. Existiert keine Komponente, wird das Element so übernommen wie es in der Baugruppe geschrieben steht - dies übernimmt der XML-Prozessor `hcdk.data.xml.Fragment` von welchem sich die anderen Prozessoren ableiten.
@@ -464,7 +472,6 @@ Unter dem HCFQN `hcdk.data.xml.Fragment` existieren folgende Komponenten (= Proz
 Generiert anhand der im Attribut *length* angegebenen Länge einen Lorem-Ipsum Platzhalter-Text.
 
 	<dummy.text length="100"/>
-
 
 ##### `<dummy.container>`
 
@@ -533,7 +540,6 @@ Mithilfe dieses Elements lassen sich Schlüssel-Wert Paare eines Arrays in form 
 	<embed.data as="div" var="{{property:my_prop}}">
 		...
 	</embed.data>
-
 
 ### template
 

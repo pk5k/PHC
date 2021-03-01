@@ -1,5 +1,5 @@
 <?php
-define('HCDK_VERSION', '1.0.0');
+define('HCDK_VERSION', '1.1.0');
 
 require_once __DIR__.'/vendor/vendor.php';
 

@@ -62,14 +62,14 @@ trait Controller
 			}
 			else
 			{
-				$string_contents = PlaceholderParser::parse((string)$node);
+				$string_contents = (string)$node;
 
 				if (self::$OUTPUT_STARTED)
 				{
-					$string_contents = str_replace('"', '\"', $string_contents);
+					$string_contents = str_replace('"', '\"', $string_contents);// escape double-quotes in plain-text before processing placeholders -> keeps the quotes added by placeholders here as meant to be 
 				}
 
-				$output .= $string_contents;
+				$output .= PlaceholderParser::parse($string_contents);
 			}
 
 			$output .= '</'.$root_name.'>';

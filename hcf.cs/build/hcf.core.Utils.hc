@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.core.Utils - BUILD 21.01.27#166
+<?php #HYPERCELL hcf.core.Utils - BUILD 21.01.27#167
 namespace hcf\core;
 class Utils {
     use \hcf\core\dryver\Config, Utils\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -125,8 +125,11 @@ class Utils {
          *
          * @return string - the RMFQN converted to a PHPFQN
          */
-        public static function HCFQN2PHPFQN($hypercell_fqn) {
+        public static function HCFQN2PHPFQN($hypercell_fqn, $make_absolute = false) {
             $php_fqn = str_replace('.', '\\', $hypercell_fqn);
+            if ($make_absolute) {
+                $php_fqn = '\\' . $php_fqn;
+            }
             return $php_fqn;
         }
         /**

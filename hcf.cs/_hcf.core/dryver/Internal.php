@@ -2,6 +2,7 @@
 namespace hcf\core\dryver
 {
   use \hcf\core\Utils as Utils;
+  use \hcf\db\Dict;
 
   // The internal assembly is for providing basic methods for all other assemblys which can be used inside the whole Hypercell at runtime.
   // properties and methods defined here will always begin with an underscore (_), if the method is meant for internal-use only. This is due
@@ -16,6 +17,12 @@ namespace hcf\core\dryver
   	{
   		return constant($__CLASS__.'::'.$name);
   	}
+
+    private static function _dict($key, $args)
+    {
+      $key = Dict::get($key);
+      return call_user_func_array([$key, 'apply'], $args);
+    }
 
 		private static function _call($name, $__CLASS__, $_this, $mirror_map = null)
   	{

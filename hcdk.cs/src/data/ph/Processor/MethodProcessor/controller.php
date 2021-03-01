@@ -3,10 +3,11 @@
  * MethodProcessor
  * Translates a {{method:myMethod}} placeholder to an executable line of php-script
  *
- * NOTICE: Method-placeholders can pass it's parent method-call arguments by listing 
- * the required arugment-indexes behind a pipe: {{method:name|0,2,3}} 
- * passing locale variables is possible by using their name: e.g. {{method:mymethod|local_var,another_locale}}
- * mising indexes and locales is possible -> {{method:myMethod|1,locale_1,0,another_locale}}
+ * NOTICE: Method-placeholders can pass arguments by listing 
+ * the required arugments behind a pipe: {{method:name|arg:0,property:my_prop,local:variable}}
+ * The argument cast (value before : of each argument) can be omittet in case of argument-indexes
+ * (numeric-only value) or propertys (everything non-numeric will be interpreted as property reference if cast is missing)
+ * The argument-casts are identical to the avaiable placeholder-names and will be resolved by them.
  *
  * NOTICE: You can request both, static and non-static methods with this placeholder.
  *
@@ -14,8 +15,6 @@
  * @package hcdk.placeholder.processor
  * @author Philipp Kopf
  */
-use \hcdk\data\ph\Processor\LocalProcessor;
-use \hcdk\data\ph\Processor\ArgProcessor;
 
 trait Controller
 {
@@ -28,9 +27,9 @@ trait Controller
 	 * @throws ReflectionException
 	 * @return string - a line of php-script to call the requested method from inside the raw-merge
 	 */
-	public static function process($content, $between_double_quotes = true)
+	public static function process($content, $between_double_quotes = true, $mirror_map = null)
 	{
-		list ($content, $mirror_map) = self::processContent($content);
+		list ($content, $mirror_map) = self::processMirrorMap($content, $mirror_map);
 
 		if ($between_double_quotes)
 		{
@@ -42,41 +41,15 @@ trait Controller
 		}
 	}
 
-	private static function processContent($content)
+	public static function processMirrorMap($content, $mirror_map)
 	{
 		$mmap = '';
 		$content = trim($content);
 
-		if (strpos($content, '|') !== false)
+		if (!is_null($mirror_map) && is_array($mirror_map) && count($mirror_map) > 0)
 		{
-			$split = explode('|', $content);
-
-	        if (!is_array($split) || count($split) != 2)
-	        {
-	          throw new \Exception(self::FQN.' - invalid methodname: ' . $content);
-	        }
-
-	        $content = trim($split[0]);
-	        $pass_args_indexes = explode(',', $split[1]);
-	        $mapped = [];
-	        
-
-	        foreach ($pass_args_indexes as $arg_index) 
-	        {
-	        	$use_index = trim($arg_index);
-
-				if (is_numeric($use_index))
-				{
-					$mapped[] = ArgProcessor::process($use_index, false);
-				}
-				else
-				{
-					$mapped[] = LocalProcessor::process($use_index, false);
-				}
-	        }
-
-	        $content .= '|map';
-	        $mmap = ', ['.implode(', ',$mapped).']';
+			$content .= '|map'; // required for downwards compatibility
+	        $mmap = ', ['.implode(', ',$mirror_map).']';
 	    }
 
 	    return [$content, $mmap];

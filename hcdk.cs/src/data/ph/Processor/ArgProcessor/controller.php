@@ -10,7 +10,7 @@ trait Controller
 	 * @throws ReflectionException
 	 * @return string - a line of php-script to get the requested argument inside a method
 	 */
-	public static function process($content, $between_double_quotes = true)
+	public static function process($content, $between_double_quotes = true, $mirror_map = null)
 	{
 		if ($between_double_quotes)
 		{

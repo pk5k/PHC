@@ -127,9 +127,14 @@ trait Controller
 	 *
 	 * @return string - the RMFQN converted to a PHPFQN
 	 */
-	public static function HCFQN2PHPFQN($hypercell_fqn)
+	public static function HCFQN2PHPFQN($hypercell_fqn, $make_absolute = false)
 	{
 		$php_fqn = str_replace('.', '\\', $hypercell_fqn);
+
+		if ($make_absolute)
+		{
+			$php_fqn = '\\'.$php_fqn;
+		}
 
 		return $php_fqn;
 	}

@@ -2,4 +2,4 @@
 \$output = '';
 {{arg:0}}
 
-return \$output;
+return self::_postProcess(\$output, [{{arg:1}}], [{{arg:2}}]);
