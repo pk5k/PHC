@@ -247,14 +247,22 @@ trait Controller
 
 		if (substr($for, 0, 1) == "'" && substr($for, -1, 1) == "'")
 		{
-			// raw value
+			// raw string value
 			$type = 'raw';
 			$val = $for;
 		}
 		else if (strpos($for, ':') === false)
 		{
+			// NULL and true/false possible
+			$fl = strtolower($for);
+			if ($fl == 'null' || $fl == 'true' || $fl == 'false')
+			{
+				// NOTICE: null is problematic since methods like _arg or _property will throw an exception if the value is null -> maybe correct that
+				$type = 'raw';
+				$val = $for;
+			}
 			// autocast args and property references
-			if (is_numeric($for))
+			else if (is_numeric($for))
 			{
 				$type = 'arg';
 				$val = $for;
