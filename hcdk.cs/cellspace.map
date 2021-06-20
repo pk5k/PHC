@@ -10,6 +10,7 @@ hcdk\assembly\template=build/hcdk.assembly.template.hc
 hcdk\assembly\client\Css=build/hcdk.assembly.client.Css.hc
 hcdk\assembly\client\Js=build/hcdk.assembly.client.Js.hc
 hcdk\assembly\client\Scss=build/hcdk.assembly.client.Scss.hc
+hcdk\assembly\client\Ts=build/hcdk.assembly.client.Ts.hc
 hcdk\assembly\config\Ini=build/hcdk.assembly.config.Ini.hc
 hcdk\assembly\config\Json=build/hcdk.assembly.config.Json.hc
 hcdk\assembly\controller\Php=build/hcdk.assembly.controller.Php.hc

@@ -15,7 +15,7 @@ trait Controller
 			switch ($arg_i)
 			{
 				case 0:
-					continue;
+					continue 2;
 
 				case 1:
 					$__arg_hcfqn = $arg;

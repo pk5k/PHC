@@ -3,14 +3,16 @@
 __DIR__="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 lookup_file="cellspace.ini";
 
-while [ ! -f $lookup_file ]; do 
-	cd ..;
+if [ $1 != "create" ]; then
+	while [ ! -f $lookup_file ]; do 
+		cd ..;
 
-	if [ $PWD == "/" ]; then
-		echo 'no cellspace.ini - aborting';
-		exit;
-	fi; 
-done;
+		if [ $PWD == "/" ]; then
+			echo 'no cellspace.ini - aborting';
+			exit;
+		fi; 
+	done;
+fi 
 
 script=$1;
 

@@ -60,8 +60,9 @@ trait Controller
 		$backup_dir = null;
 		$cellspace = null;
 		$failed = false;
+		$update_build_info = [];
 
-		define('HCDK_TRANSITION_PREFIX', '#~');//directory-name prefix for the backup process
+		define('HCDK_TRANSITION_PREFIX', '.bak_');//directory-name prefix for the backup process
 
 		try 
 		{
@@ -70,6 +71,7 @@ trait Controller
 			InternalLogger::log()->info('Initialising Cellspace "'.$__arg_dir.'" from ."'.getcwd().'"...');
 
 			$cellspace = new Cellspace($__arg_dir);
+			$s = $cellspace->getSettings();
 
 			InternalLogger::log()->info('Collecting Hypercells...');
 
@@ -78,9 +80,10 @@ trait Controller
 			InternalLogger::log()->info('...finished - found '.count($hypercells).' possible Hypercells');
 			InternalLogger::log()->info('...initialisation for Cellspace "'.$__arg_dir.'" finished');
 			
-			$dirname = dirname($cellspace->getRoot());
-			$basename = HCDK_TRANSITION_PREFIX.basename($cellspace->getRoot());
+			$dirname = $cellspace->getRoot();
+			$basename = HCDK_TRANSITION_PREFIX.basename($s->target);
 			$backup_dir = $dirname.'/'.$basename;
+			$backup_src_dir = $dirname.'/'.basename($s->target);
 
 			InternalLogger::log()->info('Creating backup-directory of Cellspace at "'.$backup_dir.'"...');
 
@@ -89,12 +92,12 @@ trait Controller
 				$ba_dir_str = $backup_dir;
 				$backup_dir = null;//do not remove the existing backup-dir, because we do not know why it exists
 
-				throw new \Exception('Backup-directory "'.$ba_dir_str.'" already exists - ABORTING FOR SAFETY');
+				throw new \Exception('Backup-directory "'.$ba_dir_str.'" already exists - stopping');
 			}
 
 			try 
 			{
-				Utils::copyPath($__arg_dir, $backup_dir);// todo: just copy target + src dir
+				Utils::copyPath($backup_src_dir, $backup_dir);// todo: just copy target + src dir
 				InternalLogger::log()->info('...backup-directory successfully created');
 			}
 			catch (\Exception $e)
@@ -114,10 +117,10 @@ trait Controller
 			foreach($hypercells as $hypercell)
 			{
 				InternalLogger::log()->info($hypercell->getName()->long.
-											'[RR:'.($hypercell->rebuildRequired() ? 'true' : 'false').
-											', AB:'.($hypercell->isAbstract() ? 'true' : 'false').
-											', BA:'.($hypercell->isBuildable() ? 'true' : 'false').
-											', EX:'.($hypercell->isExecutable() ? 'true' : 'false').']:'
+											'(resuild-required: '.($hypercell->rebuildRequired() ? 'true' : 'false').
+											', abstract: '.($hypercell->isAbstract() ? 'true' : 'false').
+											', buildable: '.($hypercell->isBuildable() ? 'true' : 'false').
+											', executable: '.($hypercell->isExecutable() ? 'true' : 'false').'):'
 											);
 
 				foreach($hypercell->getAssemblies() as $assembly)
@@ -134,14 +137,12 @@ trait Controller
 					{
 						$ms = time();
 						InternalLogger::log()->info('Building '.$hypercell->getName()->long.'...');
-						InternalLogger::log()->info(' - writing Hypercell');
-
+						
 						$hypercell->write();
 
 						if (!$__arg_nu)
 						{
-							InternalLogger::log()->info(' - updating build information');
-							$hypercell->writeBuildInfo(true);
+							$update_build_info[] = $hypercell;
 						}
 					
 						$built++;
@@ -160,15 +161,20 @@ trait Controller
 					InternalLogger::log()->info($hypercell->getName()->long.' is not buildable and therefore was skipped');
 				}
 			}
+			
+			foreach ($update_build_info as $hc_info)
+			{
+				InternalLogger::log()->info('Updating build information for '.$hc_info->getName()->long);
+				$hc_info->writeBuildInfo(true);
+			}
 
+			InternalLogger::log()->info('Updating Cellspace map file "'.$cellspace->getRoot().Cellspace::config()->file->map.'"...');
+			$cellspace->writeMap(true);
+			InternalLogger::log()->info('...updating Cellspace map file done');
+			
 			$ms_total = time() - $ms_total;
 
 			InternalLogger::log()->info('Build process finished - built '.$built.', skipped '.$skipped.', took '.$ms_total.'ms');
-			InternalLogger::log()->info('Updating Cellspace map file "'.$cellspace->getRoot().Cellspace::config()->file->map.'"...');
-			
-			$cellspace->writeMap(true);
-
-			InternalLogger::log()->info('...updating Cellspace map file done');
 		}
 		catch (\Exception $e)
 		{
@@ -181,18 +187,18 @@ trait Controller
 				// rename the dirty cellspace before removeing it to do not lose data if the backup-directory can't be restored
 				$rm_name = dirname($cellspace->getRoot()).'/'.HCDK_TRANSITION_PREFIX.'trash-'.basename($cellspace->getRoot());
 
-				InternalLogger::log()->info('Rolling back Cellspace "'.$cellspace->getRoot().'" by backup-directory "'.$backup_dir.'"...');
-				InternalLogger::log()->info(' - renaming dirty Cellspace "'.$cellspace->getRoot().'" to "'.$rm_name.'"');
+				InternalLogger::log()->info('Rolling back Cellspace build files "'.$backup_src_dir.'" by backup-directory "'.$backup_dir.'"...');
+				InternalLogger::log()->info(' - renaming dirty Cellspace "'.$backup_src_dir.'" to "'.$rm_name.'"');
 
-				if (!rename($cellspace->getRoot(), $rm_name))
+				if (!rename($backup_src_dir, $rm_name))
 				{
 					InternalLogger::log()->error('Unable to rename - cannot restore backup automatically - abort');
 					die();
 				}
 
-				InternalLogger::log()->info(' - renaming backup-directory "'.$backup_dir.'" to original Cellspace "'.$cellspace->getRoot().'"');
+				InternalLogger::log()->info(' - renaming backup-directory "'.$backup_dir.'" to original Cellspace build "'.$backup_src_dir.'"');
 
-				if (!rename($backup_dir, $cellspace->getRoot()))
+				if (!rename($backup_dir, $backup_src_dir))
 				{
 					InternalLogger::log()->error('Unable to rename - cannot restore backup automatically - abort');
 					die();	

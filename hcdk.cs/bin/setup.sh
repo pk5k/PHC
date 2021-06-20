@@ -14,7 +14,9 @@ elif [ -f ~/.bashrc ]; then
 elif [ -f ~/.bash_profile ]; then
 	target=~/.bash_profile
 else
-	echo "Unable to locate bash-initialisation file - neither ~/.bashrc nor ~/.bash_profile were found"
+	echo "Unable to locate bash-initialisation file - neither ~/.bashrc nor ~/.bash_profile were found - trying it with creating ~/.bash_profile"
+	target=~/.bash_profile
+	touch $target
 fi
 
 hcdk_alias="alias hcdk=\"bash $__DIR__/hcdk.sh\""

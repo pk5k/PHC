@@ -19,12 +19,12 @@ trait Controller
 	{
 		$cellspace_root = realpath($cellspace_root).'/';
 
-		if(!is_dir($cellspace_root))
+		if (!is_dir($cellspace_root))
 		{
 			throw new \Exception('Given cellspace-root "'.$cellspace_root.'" is not a directory');
 		}
 
-		if(!is_writable($cellspace_root))
+		if (!is_writable($cellspace_root))
 		{
 			throw new \Exception('Given cellspace-root "'.$cellspace_root.'" is not writeable - check your directory permissions');
 		}
@@ -41,41 +41,41 @@ trait Controller
 		$setup_file = $root.self::config()->file->setup;
 		$map_file = $root.self::config()->file->map;
 
-		if(!is_dir($root))
+		if (!is_dir($root))
 		{
 			throw new \Exception($es.' - not a valid directory');
 		}
-		else if(!is_writable($root))
+		else if (!is_writable($root))
 		{
 			throw new \Exception($es.' - directory is not writeable');
 		}
-		else if(!Utils::isEmptyDirectory($root))
+		else if (!Utils::isEmptyDirectory($root))
 		{
 			throw new \Exception('Cannot create Cellspace at "'.$root.'" - given directory is not empty');
 		}
 
 		// apply default setup file values if necessary
-		if(!isset($nsroot) || !is_string($nsroot))
+		if (!isset($nsroot) || !is_string($nsroot))
 		{
 			throw new \Exception('Given namespace-root (nsroot) is not a valid string');
 		}
 
-		if(!isset($source) || !is_string($source))
+		if (!isset($source) || !is_string($source))
 		{
 			$source = self::config()->default->source;
 		}
 
-		if(!isset($target) || !is_string($target))
+		if (!isset($target) || !is_string($target))
 		{
 			$target = self::config()->default->target;
 		}
 
-		if(!isset($ignore) || !is_array($ignore))
+		if (!isset($ignore) || !is_array($ignore))
 		{
 			$ignore = [];
 		}
 
-		if(!isset($format) || !is_bool($format))
+		if (!isset($format) || !is_bool($format))
 		{
 			$format = (bool)self::config()->default->format;
 		}
@@ -83,7 +83,7 @@ trait Controller
 		$setup_file = $root.self::config()->file->setup;
 		$config_str = self::configStr($nsroot, $source, $target, $format, $ignore);
 
-		if(!file_put_contents($setup_file, $config_str))
+		if (!file_put_contents($setup_file, $config_str))
 		{
 			throw new \Exception('Writing setup file "'.$setup_file.'" failed');
 		}
@@ -103,17 +103,17 @@ trait Controller
 		$hcfqn = trim($hcfqn, '.');
 		$hcfqn_split = explode('.', $hcfqn);
 
-		if(!isset($this->settings->source))
+		if (!isset($this->settings->source))
 		{
 			throw new \Exception('No source-directory specified');
 		}
 
-		if(!isset($this->settings->target))
+		if (!isset($this->settings->target))
 		{
 			throw new \Exception('No target-directory specified');
 		}
 
-		if(!is_string($hcfqn))
+		if (!is_string($hcfqn))
 		{
 			throw new \Exception('Given HCFQN is not a valid string');
 		}
@@ -121,7 +121,7 @@ trait Controller
 		$source_dir = realpath($this->root.'/'.$this->settings->source).'/';
 		$target_dir = realpath($this->root.'/'.$this->settings->target).'/';
 
-		if($hcfqn_split[0] == $nsroot)
+		if ($hcfqn_split[0] == $nsroot)
 		{
 			// remove the leading nsroot to create the correct offset below
 			array_shift($hcfqn_split);
@@ -133,14 +133,14 @@ trait Controller
 
 		$offset = implode('/', $hcfqn_split).'/';
 
-		if(is_dir($source_dir.$offset))
+		if (is_dir($source_dir.$offset))
 		{
 			throw new \Exception('Hypercell '.$hcfqn.' already exists');
 		}
 
 		Utils::buildPath($source_dir.$offset, 0777);
 
-		if(is_array($assemblies))
+		if (is_array($assemblies))
 		{
 			foreach($assemblies as $assembly)
 			{
@@ -166,7 +166,7 @@ trait Controller
 		$this->hypercells = [];
 		$source_dir = $this->root;
 
-		if(!isset($this->settings->source))
+		if (!isset($this->settings->source))
 		{
 			throw new \Exception('No source-directory specified');
 		}
@@ -181,7 +181,7 @@ trait Controller
 			$offset = Utils::getOffset($dir, $source_dir);
 			$hypercell = null;
 
-			if(!is_string($offset) || !strlen($offset) || $offset == '.' || $offset == '..')
+			if (!is_string($offset) || !strlen($offset) || $offset == '.' || $offset == '..')
 			{
 				continue;
 			}
@@ -191,7 +191,7 @@ trait Controller
 				// Hypercells will check themselfes on instantination if they are valid
 				$hypercell = new Hypercell($this, $offset);
 			}
-			catch(\Exception $e)
+			catch (\Exception $e)
 			{
 				InternalLogger::log()->warn(self::FQN.'@'.$this->root.' - skipped directory "'.$dir.'" due following exception:');
 				InternalLogger::log()->warn($e);
@@ -204,7 +204,7 @@ trait Controller
 
 	public function getHypercells($force_reread = false)
 	{
-		if(!isset($this->hypercells) || $force_reread)
+		if (!isset($this->hypercells) || $force_reread)
 		{
 			$this->readHypercells();
 		}
@@ -226,7 +226,7 @@ trait Controller
 	{
 		$map_file = $this->root.self::config()->file->map;
 
-		if($rewrite_before)
+		if ($rewrite_before)
 		{
 			$this->writeMap(true);
 		}
@@ -236,19 +236,19 @@ trait Controller
 
 	public function writeMap($force_reread = false)
 	{
-		if($force_reread)
+		if ($force_reread)
 		{
 			$this->readHypercells();
 		}
 
-		if(!is_writable($this->root))
+		if (!is_writable($this->root))
 		{
 			throw new \Exception('Cannot write map to cellspace-root "'.$this->root.'" directory is not writeable');
 		}
 
 		$map_file = $this->root.self::config()->file->map;
 
-		if(file_exists($this->root.$map_file) && !is_writable($this->root.$map_file))
+		if (file_exists($this->root.$map_file) && !is_writable($this->root.$map_file))
 		{
 			throw new \Exception('Map file "'.$map_file.'" is not writeable');
 		}
@@ -257,7 +257,7 @@ trait Controller
 
 		foreach($this->hypercells as $hypercell)
 		{
-			if($hypercell->isExecutable())
+			if ($hypercell->isExecutable())
 			{
 				$path = $this->settings->target.'/'.$hypercell->getName()->long.'.'.Hypercell::config()->extension;
 				$map .= Utils::HCFQN2PHPFQN($hypercell->getName()->long).'='.$path.Utils::newLine();
@@ -276,7 +276,7 @@ trait Controller
 	{
 		$setup_file = self::config()->file->setup;
 
-		if(!file_exists($this->root.$setup_file))
+		if (!file_exists($this->root.$setup_file))
 		{
 			throw new \FileNotFoundException('Setup file "'.$setup_file.'" does not exist at cellspace-root "'.$this->root.'"');
 		}
@@ -302,7 +302,7 @@ trait Controller
 		// IGNORE
 		$config_str .= 'ignore = [';
 
-		if(is_array($ignore))
+		if (is_array($ignore))
 		{
 			foreach ($ignore as $ignore_dir)
 			{
