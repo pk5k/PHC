@@ -1,10 +1,12 @@
 <?php
 use \hcdk\data\ph\Parser as PlaceholderParser;
+use \hcdk\raw\Hypercell;
 
 trait Controller
 {
 	protected $raw_input = null;
 	protected $for_file  = null;
+	protected $for_hypercell = null;
 	protected $name = null;
 
 	/**
@@ -29,6 +31,23 @@ trait Controller
 
 		$this->checkInput();
 	}
+
+	/**
+	 * forHypercell
+	 * hcdk.raw.Hypercell instance of the 
+	 *
+	 *
+	 * @return hcdk.raw.Hypercell instance if $for wasnt set
+	 */
+	public function forHypercell(Hypercell $for = null)
+	{
+		if (!isset($for))
+		{
+			return $this->for_hypercell;
+		}
+
+		$this->for_hypercell = $for;
+	}	
 
 	/**
 	 * fileInfo

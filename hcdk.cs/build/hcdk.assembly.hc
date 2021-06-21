@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly - BUILD 21.02.24#119
+<?php #HYPERCELL hcdk.assembly - BUILD 21.02.24#120
 namespace hcdk;
 abstract class assembly {
     use assembly\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
@@ -23,9 +23,11 @@ abstract class assembly {
     namespace hcdk\assembly\__EO__;
     # BEGIN EXECUTABLE FRAME OF CONTROLLER.PHP
     use \hcdk\data\ph\Parser as PlaceholderParser;
+    use \hcdk\raw\Hypercell;
     trait Controller {
         protected $raw_input = null;
         protected $for_file = null;
+        protected $for_hypercell = null;
         protected $name = null;
         /**
          * __construct
@@ -42,6 +44,19 @@ abstract class assembly {
                 $this->raw_input = $this->defaultInput();
             }
             $this->checkInput();
+        }
+        /**
+         * forHypercell
+         * hcdk.raw.Hypercell instance of the
+         *
+         *
+         * @return hcdk.raw.Hypercell instance if $for wasnt set
+         */
+        public function forHypercell(Hypercell $for = null) {
+            if (!isset($for)) {
+                return $this->for_hypercell;
+            }
+            $this->for_hypercell = $for;
         }
         /**
          * fileInfo

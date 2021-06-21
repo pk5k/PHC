@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.client.Ts - BUILD 21.06.20#188
+<?php #HYPERCELL hcdk.assembly.client.Ts - BUILD 21.06.20#197
 namespace hcdk\assembly\client;
 class Ts extends \hcdk\assembly\client {
     use \hcf\core\dryver\Base, \hcf\core\dryver\Config, Ts\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
@@ -54,9 +54,12 @@ return \$js;";
             return $js_data;
         }
         public function buildClient() {
-            $temp_name = basename($this->for_file, '.ts') . '.compiled.js';
             $file_path = dirname($this->for_file);
+            $temp_name = basename($this->for_file, '.ts') . '.js';
             $temp_file = $file_path . '/' . $temp_name;
+            if (file_exists($temp_file)) {
+                throw new \Exception(self::FQN . ' - ' . $temp_name . ' already exists at ' . $temp_path . '. This file is required for storing compiled typescript.');
+            }
             $windows = strpos(PHP_OS, 'WIN') === 0;
             $test = $windows ? 'where' : 'command -v';
             if (!is_executable(trim(shell_exec("$test tsc")))) {

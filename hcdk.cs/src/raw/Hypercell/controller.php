@@ -234,6 +234,7 @@ trait Controller
 			try
 			{
 				$assembly_instance = self::getAssemblyInstance($file);
+				$assembly_instance->forHypercell($this);
 			}
 			catch(\Exception $e)
 			{

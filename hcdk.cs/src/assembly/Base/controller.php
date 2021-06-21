@@ -14,17 +14,49 @@ trait Controller
 	protected function getBaseClass()
 	{
 		$split = explode(' ', $this->rawInput());
-
 		$raw = trim($split[0]);
-		$php_fqn = Utils::HCFQN2PHPFQN($raw);
 
-		if(substr($php_fqn, 1) !== '\\')
+		if (strpos($raw, self::TOKEN_INHERIT) === 0)
 		{
-			// prepend \ to refer to the global namespace
-			$php_fqn = '\\'.$php_fqn;
+			//parent-0 -> HCFQN to parent directory, parent-1 -> HCFQN to parents parent-directory, parent-2 -> ...
+			$padding = 0;// parent = parent-0
+
+			if (strpos($raw, '-') !== false)
+			{
+				$psplit = explode('-', $raw);
+				$padding = (int)$psplit[1];
+			}
+
+			if ($padding < 0)
+			{
+				throw new \Exception(self::FQN.' - padding cannot be lower than 0');
+			}
+
+			// current Hypercells name without 
+			$hc = $this->forHypercell();
+
+			if (is_null($hc))
+			{
+				throw new \Exception(self::FQN.' - cannot determine parent HCFQN. Target hypercell of this assembly is not set (hcdk.assembly->forHypercell() returned null).');
+			}
+
+			$raw = $hc->getName()->long;
+			$parts = explode('.', $raw);
+
+			for ($i = -1; $i < $padding; $i++) 
+			{
+				array_pop($parts);
+			}
+
+			$raw = implode('.', $parts);
+			
+			if ($raw === '')
+			{
+				throw new \Exception(self::FQN.' - inherit-'.$padding.' relative to '.$hc->getName()->long.' results in empty name - inherit padding is too high.');
+			}
 		}
 
-		return $php_fqn;
+		return Utils::HCFQN2PHPFQN($raw, true);
 	}
 
 	public function getType()
@@ -67,6 +99,6 @@ trait Controller
 	}
 
 	public function checkInput() {}
-	public function defaultInput() { return ''; }
+	public function defaultInput() { return 'inherit implicit'; }
 }
 ?>
