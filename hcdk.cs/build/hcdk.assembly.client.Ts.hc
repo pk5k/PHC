@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.client.Ts - BUILD 21.06.22#267
+<?php #HYPERCELL hcdk.assembly.client.Ts - BUILD 21.06.22#268
 namespace hcdk\assembly\client;
 class Ts extends \hcdk\assembly\client\Js {
     use \hcf\core\dryver\Base, \hcf\core\dryver\Config, Ts\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
@@ -74,11 +74,6 @@ return \$js;";
                 }
             }
         }
-        protected function tscSupportExists() {
-            $windows = strpos(PHP_OS, 'WIN') === 0;
-            $test = $windows ? 'where' : 'command -v';
-            return (is_executable(trim(shell_exec("$test tsc"))));
-        }
         protected function refreshNodeModules($to, $cs) {
             $this->createNodeModules($to, $cs);
             // to refer to other modules in the cellspace
@@ -86,19 +81,24 @@ return \$js;";
             // will be merged to it's own
             $css = $cs->getSettings();
             $includes = [];
-            if (is_string($css->include)) {
-                $includes = [$css->include];
-            } else if (is_array($css->include)) {
-                $includes = $css->include;
+            if (is_string($css->link)) {
+                $includes = [$css->link];
+            } else if (is_array($css->link)) {
+                $includes = $css->link;
             }
             foreach ($includes as $include) {
                 if (!is_dir($include . self::$node_modules)) {
-                    InternalLogger::log()->info(self::FQN . ' - include directory does not contain a ' . self::$node_modules . ' directory - possible typescript-modules will not be found.');
+                    InternalLogger::log()->info(self::FQN . ' - link directory does not contain a ' . self::$node_modules . ' folder - possible typescript-modules will not be found.');
                 } else {
                     InternalLogger::log()->info(self::FQN . ' - copying ' . $include . self::$node_modules . '.');
                     Utils::copyPath($include . self::$node_modules, $to);
                 }
             }
+        }
+        protected function tscSupportExists() {
+            $windows = strpos(PHP_OS, 'WIN') === 0;
+            $test = $windows ? 'where' : 'command -v';
+            return (is_executable(trim(shell_exec("$test tsc"))));
         }
         public function buildClient() {
             $file_path = dirname($this->for_file);

@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.raw.Cellspace - BUILD 21.06.22#165
+<?php #HYPERCELL hcdk.raw.Cellspace - BUILD 21.06.22#166
 namespace hcdk\raw;
 class Cellspace {
     use \hcf\core\dryver\Config, Cellspace\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -277,10 +277,10 @@ file.map = "cellspace.map"
 	; set this value to false for the affected cellspace.
 	format = true
 
-	; include cellspaces while building
+	; link cellspaces for building
 	; useful for e.g. importing client.ts dependencies of another cellspace 
-	; to avoid build errors.
-	include = []
+	; to avoid build errors. hcf is always included
+	link = []
 
 
 END[CONFIG.INI]
