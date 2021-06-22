@@ -33,7 +33,7 @@ trait Controller
 		$this->readSetup();
 	}
 
-	public static function create($root, $nsroot, $source = null, $target = null, $format = null, $ignore = null, $include = null)
+	public static function create($root, $nsroot, $source = null, $target = null, $format = null, $ignore = null, $link = null)
 	{
 		$es = 'Unable to create new Cellspace at "'.$root.'"';
 
@@ -81,7 +81,7 @@ trait Controller
 		}
 
 		$setup_file = $root.self::config()->file->setup;
-		$config_str = self::configStr($nsroot, $source, $target, $format, $ignore, $include);
+		$config_str = self::configStr($nsroot, $source, $target, $format, $ignore, $link);
 
 		if (!file_put_contents($setup_file, $config_str))
 		{
@@ -305,7 +305,7 @@ trait Controller
 		}
 	}
 
-	private static function configStr($nsroot, $source = null, $target = null, $format = null, $ignore = null, $include = null)
+	private static function configStr($nsroot, $source = null, $target = null, $format = null, $ignore = null, $link = null)
 	{
 		$config_str = 'nsroot = "'.$nsroot.'"'.Utils::newLine();
 
@@ -331,16 +331,18 @@ trait Controller
 
 		$config_str = trim($config_str, ',').']'.Utils::newLine();
 
-		if (is_array($include))
+		// LINK
+		$config_str .= 'link = [';
+
+		if (is_array($link))
 		{
-			foreach ($include as $include_dir)
+			foreach ($link as $link_dir)
 			{
-				$config_str .= '"'.$include_dir.'",';
+				$config_str .= '"'.$link_dir.'",';
 			}
 		}
 
 		$config_str = trim($config_str, ',').']'.Utils::newLine();
-
 
 		return $config_str;
 	}

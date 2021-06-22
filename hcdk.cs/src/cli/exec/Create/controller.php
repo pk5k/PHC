@@ -12,7 +12,7 @@ trait Controller
 		$__arg_target = null;
 		$__arg_format = null;
 		$__arg_ignore = [];
-		$__arg_include = [];
+		$__arg_link = [];
 		$__arg_verbose = null;
 
 		foreach ($argv as $arg_i => $arg) 
@@ -59,7 +59,7 @@ trait Controller
 		try 
 		{
 			InternalLogger::log()->info('Creating new Cellspace at "'.$__arg_dir.'"...');
-			Cellspace::create($__arg_dir, $__arg_nsroot, $__arg_source, $__arg_target, $__arg_format, $__arg_ignore, $__arg_include);
+			Cellspace::create($__arg_dir, $__arg_nsroot, $__arg_source, $__arg_target, $__arg_format, $__arg_ignore, $__arg_link);
 			InternalLogger::log()->info('...Cellspace "'.$__arg_nsroot.'" created successfully');
 		}
 		catch(\Exception $e)

@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.raw.Cellspace - BUILD 21.06.22#166
+<?php #HYPERCELL hcdk.raw.Cellspace - BUILD 21.06.22#167
 namespace hcdk\raw;
 class Cellspace {
     use \hcf\core\dryver\Config, Cellspace\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -44,7 +44,7 @@ class Cellspace {
             $this->root = $cellspace_root;
             $this->readSetup();
         }
-        public static function create($root, $nsroot, $source = null, $target = null, $format = null, $ignore = null, $include = null) {
+        public static function create($root, $nsroot, $source = null, $target = null, $format = null, $ignore = null, $link = null) {
             $es = 'Unable to create new Cellspace at "' . $root . '"';
             $root = realpath($root) . '/';
             $setup_file = $root . self::config()->file->setup;
@@ -73,7 +73,7 @@ class Cellspace {
                 $format = (bool)self::config()->default->format;
             }
             $setup_file = $root . self::config()->file->setup;
-            $config_str = self::configStr($nsroot, $source, $target, $format, $ignore, $include);
+            $config_str = self::configStr($nsroot, $source, $target, $format, $ignore, $link);
             if (!file_put_contents($setup_file, $config_str)) {
                 throw new \Exception('Writing setup file "' . $setup_file . '" failed');
             }
@@ -210,7 +210,7 @@ class Cellspace {
                 }
             }
         }
-        private static function configStr($nsroot, $source = null, $target = null, $format = null, $ignore = null, $include = null) {
+        private static function configStr($nsroot, $source = null, $target = null, $format = null, $ignore = null, $link = null) {
             $config_str = 'nsroot = "' . $nsroot . '"' . Utils::newLine();
             // SOURCE DIRECTORY
             $config_str.= 'source = "' . $source . '"' . Utils::newLine();
@@ -226,9 +226,11 @@ class Cellspace {
                 }
             }
             $config_str = trim($config_str, ',') . ']' . Utils::newLine();
-            if (is_array($include)) {
-                foreach ($include as $include_dir) {
-                    $config_str.= '"' . $include_dir . '",';
+            // LINK
+            $config_str.= 'link = [';
+            if (is_array($link)) {
+                foreach ($link as $link_dir) {
+                    $config_str.= '"' . $link_dir . '",';
                 }
             }
             $config_str = trim($config_str, ',') . ']' . Utils::newLine();

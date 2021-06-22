@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.cli.exec.Create - BUILD 18.06.15#59
+<?php #HYPERCELL hcdk.cli.exec.Create - BUILD 21.06.22#60
 namespace hcdk\cli\exec;
 class Create extends \hcf\cli\exec {
     use \hcf\core\dryver\Base, Create\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -23,7 +23,7 @@ class Create extends \hcf\cli\exec {
             $__arg_target = null;
             $__arg_format = null;
             $__arg_ignore = [];
-            $__arg_include = [];
+            $__arg_link = [];
             $__arg_verbose = null;
             foreach ($argv as $arg_i => $arg) {
                 switch ($arg) {
@@ -59,7 +59,7 @@ class Create extends \hcf\cli\exec {
             }
             try {
                 InternalLogger::log()->info('Creating new Cellspace at "' . $__arg_dir . '"...');
-                Cellspace::create($__arg_dir, $__arg_nsroot, $__arg_source, $__arg_target, $__arg_format, $__arg_ignore, $__arg_include);
+                Cellspace::create($__arg_dir, $__arg_nsroot, $__arg_source, $__arg_target, $__arg_format, $__arg_ignore, $__arg_link);
                 InternalLogger::log()->info('...Cellspace "' . $__arg_nsroot . '" created successfully');
             }
             catch(\Exception $e) {
