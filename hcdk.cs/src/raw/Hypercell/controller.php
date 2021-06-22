@@ -31,6 +31,11 @@ trait Controller
 		return $this->name;
 	}
 
+	public function getCellspace()
+	{
+		return $this->cellspace;
+	}
+
 	public function getOffset()
 	{
 		return $this->offset;

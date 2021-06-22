@@ -2,6 +2,7 @@
 define('HCF_VERSION', '1.1.0');// version of this copy
 define('HCF_INI_FILE', 'surface.ini');// name of the cores initialisation file
 define('CS_MAP_NAME', 'cellspace.map');// name of the cellspace's map file - also set inside the hcdk.cellspace.DataMapper
+define('HCF_ROOT', __DIR__);// publish root directory of this cellspace (mainly for cellspace.ini include in hcdk)
 ob_start();// buffer all output before hcf.web.Router calls the echo for the output
 
 require_once __DIR__.'/_hcf.core/_hcf.core.php';

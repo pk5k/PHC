@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.client.Css - BUILD 18.06.15#179
+<?php #HYPERCELL hcdk.assembly.client.Css - BUILD 18.06.15#180
 namespace hcdk\assembly\client;
 class Css extends \hcdk\assembly\client {
     use \hcf\core\dryver\Base, Css\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
@@ -14,6 +14,7 @@ class Css extends \hcdk\assembly\client {
     protected function tplBuildStyle() {
         $__CLASS__ = __CLASS__;
         $_this = (isset($this)) ? $this : null;
+        $_func_args = \func_get_args();
         $output = "
 if(\$as_array)
 {
@@ -26,37 +27,37 @@ return self::_attachment(__FILE__, __COMPILER_HALT_OFFSET__, '{$__CLASS__::_call
     }
     # END ASSEMBLY FRAME TEMPLATE.TEXT
     
-}
-namespace hcdk\assembly\client\Css\__EO__;
-# BEGIN EXECUTABLE FRAME OF CONTROLLER.PHP
-use \hcdk\raw\Method as Method;
-trait Controller {
-    public function getType() {
-        return 'CSS';
     }
-    public function sourceIsAttachment() {
-        return true;
+    namespace hcdk\assembly\client\Css\__EO__;
+    # BEGIN EXECUTABLE FRAME OF CONTROLLER.PHP
+    use \hcdk\raw\Method as Method;
+    trait Controller {
+        public function getType() {
+            return 'CSS';
+        }
+        public function sourceIsAttachment() {
+            return true;
+        }
+        public function buildClient() {
+            $method = new Method('style', ['public', 'static'], ['as_array' => false]);
+            $method->setBody($this->tplBuildStyle());
+            return $method->toString();
+        }
+        public function getStaticMethods() {
+            $methods = [];
+            $methods['style'] = $this->buildClient();
+            return $methods;
+        }
+        public function defaultInput() {
+            return '';
+        }
+        public function getTraits() {
+            return ['Client' => '\\hcf\\core\\dryver\\Client', 'ClientCss' => '\\hcf\\core\\dryver\\Client\\Css'];
+        }
     }
-    public function buildClient() {
-        $method = new Method('style', ['public', 'static'], ['as_array' => false]);
-        $method->setBody($this->tplBuildStyle());
-        return $method->toString();
-    }
-    public function getStaticMethods() {
-        $methods = [];
-        $methods['style'] = $this->buildClient();
-        return $methods;
-    }
-    public function defaultInput() {
-        return '';
-    }
-    public function getTraits() {
-        return ['Client' => '\\hcf\\core\\dryver\\Client', 'ClientCss' => '\\hcf\\core\\dryver\\Client\\Css'];
-    }
-}
-# END EXECUTABLE FRAME OF CONTROLLER.PHP
-__halt_compiler();
-#__COMPILER_HALT_OFFSET__
+    # END EXECUTABLE FRAME OF CONTROLLER.PHP
+    __halt_compiler();
+    #__COMPILER_HALT_OFFSET__
 
 ?>
 

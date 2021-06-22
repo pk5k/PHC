@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.Base - BUILD 21.06.21#191
+<?php #HYPERCELL hcdk.assembly.Base - BUILD 21.06.22#193
 namespace hcdk\assembly;
 class Base extends \hcdk\assembly {
     use \hcf\core\dryver\Base, \hcf\core\dryver\Constant, Base\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -98,7 +98,7 @@ class Base extends \hcdk\assembly {
         public function checkInput() {
         }
         public function defaultInput() {
-            return 'inherit implicit';
+            return 'parent implicit';
         }
     }
     # END EXECUTABLE FRAME OF CONTROLLER.PHP

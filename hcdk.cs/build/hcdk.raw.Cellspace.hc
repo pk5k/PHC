@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.raw.Cellspace - BUILD 18.06.15#163
+<?php #HYPERCELL hcdk.raw.Cellspace - BUILD 21.06.22#165
 namespace hcdk\raw;
 class Cellspace {
     use \hcf\core\dryver\Config, Cellspace\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -44,7 +44,7 @@ class Cellspace {
             $this->root = $cellspace_root;
             $this->readSetup();
         }
-        public static function create($root, $nsroot, $source = null, $target = null, $format = null, $ignore = null) {
+        public static function create($root, $nsroot, $source = null, $target = null, $format = null, $ignore = null, $include = null) {
             $es = 'Unable to create new Cellspace at "' . $root . '"';
             $root = realpath($root) . '/';
             $setup_file = $root . self::config()->file->setup;
@@ -73,7 +73,7 @@ class Cellspace {
                 $format = (bool)self::config()->default->format;
             }
             $setup_file = $root . self::config()->file->setup;
-            $config_str = self::configStr($nsroot, $source, $target, $format, $ignore);
+            $config_str = self::configStr($nsroot, $source, $target, $format, $ignore, $include);
             if (!file_put_contents($setup_file, $config_str)) {
                 throw new \Exception('Writing setup file "' . $setup_file . '" failed');
             }
@@ -198,8 +198,19 @@ class Cellspace {
             }
             $parser = new \IniParser($this->root . $setup_file);
             $this->settings = $parser->parse();
+            if (!isset($this->settings->link)) {
+                $this->settings->link = [];
+            } else if (is_string($this->settings->link)) {
+                $this->settings->link = [$this->settings->link];
+            }
+            $this->settings->link[] = HCF_ROOT; //hcf is always active
+            foreach ($this->settings->link as $link) {
+                if (!is_dir($link)) {
+                    throw new \Exception(self::FQN . ' - link directory ' . $link . ' is not a directory.');
+                }
+            }
         }
-        private static function configStr($nsroot, $source = null, $target = null, $format = null, $ignore = null) {
+        private static function configStr($nsroot, $source = null, $target = null, $format = null, $ignore = null, $include = null) {
             $config_str = 'nsroot = "' . $nsroot . '"' . Utils::newLine();
             // SOURCE DIRECTORY
             $config_str.= 'source = "' . $source . '"' . Utils::newLine();
@@ -212,6 +223,12 @@ class Cellspace {
             if (is_array($ignore)) {
                 foreach ($ignore as $ignore_dir) {
                     $config_str.= '"' . $ignore_dir . '",';
+                }
+            }
+            $config_str = trim($config_str, ',') . ']' . Utils::newLine();
+            if (is_array($include)) {
+                foreach ($include as $include_dir) {
+                    $config_str.= '"' . $include_dir . '",';
                 }
             }
             $config_str = trim($config_str, ',') . ']' . Utils::newLine();
@@ -259,6 +276,11 @@ file.map = "cellspace.map"
 	; if you are encountering problems with 'PEAR.php' that cannot be found
 	; set this value to false for the affected cellspace.
 	format = true
+
+	; include cellspaces while building
+	; useful for e.g. importing client.ts dependencies of another cellspace 
+	; to avoid build errors.
+	include = []
 
 
 END[CONFIG.INI]

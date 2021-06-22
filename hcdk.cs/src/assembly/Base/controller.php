@@ -99,6 +99,6 @@ trait Controller
 	}
 
 	public function checkInput() {}
-	public function defaultInput() { return 'inherit implicit'; }
+	public function defaultInput() { return 'parent implicit'; }
 }
 ?>

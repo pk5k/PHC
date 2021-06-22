@@ -33,7 +33,7 @@ trait Controller
 		$this->readSetup();
 	}
 
-	public static function create($root, $nsroot, $source = null, $target = null, $format = null, $ignore = null)
+	public static function create($root, $nsroot, $source = null, $target = null, $format = null, $ignore = null, $include = null)
 	{
 		$es = 'Unable to create new Cellspace at "'.$root.'"';
 
@@ -81,7 +81,7 @@ trait Controller
 		}
 
 		$setup_file = $root.self::config()->file->setup;
-		$config_str = self::configStr($nsroot, $source, $target, $format, $ignore);
+		$config_str = self::configStr($nsroot, $source, $target, $format, $ignore, $include);
 
 		if (!file_put_contents($setup_file, $config_str))
 		{
@@ -284,9 +284,28 @@ trait Controller
 		$parser = new \IniParser($this->root.$setup_file);
 
 		$this->settings = $parser->parse();
+
+		if (!isset($this->settings->link))
+		{
+			$this->settings->link = [];
+		}
+		else if (is_string($this->settings->link))
+		{
+			$this->settings->link = [$this->settings->link];
+		}
+
+		$this->settings->link[] = HCF_ROOT;//hcf is always active
+
+		foreach ($this->settings->link as $link)
+		{
+			if (!is_dir($link))
+			{
+				throw new \Exception(self::FQN.' - link directory '.$link.' is not a directory.');
+			}
+		}
 	}
 
-	private static function configStr($nsroot, $source = null, $target = null, $format = null, $ignore = null)
+	private static function configStr($nsroot, $source = null, $target = null, $format = null, $ignore = null, $include = null)
 	{
 		$config_str = 'nsroot = "'.$nsroot.'"'.Utils::newLine();
 
@@ -311,6 +330,17 @@ trait Controller
 		}
 
 		$config_str = trim($config_str, ',').']'.Utils::newLine();
+
+		if (is_array($include))
+		{
+			foreach ($include as $include_dir)
+			{
+				$config_str .= '"'.$include_dir.'",';
+			}
+		}
+
+		$config_str = trim($config_str, ',').']'.Utils::newLine();
+
 
 		return $config_str;
 	}

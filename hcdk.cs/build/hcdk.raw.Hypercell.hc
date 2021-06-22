@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.raw.Hypercell - BUILD 20.07.24#202
+<?php #HYPERCELL hcdk.raw.Hypercell - BUILD 21.06.21#203
 namespace hcdk\raw;
 class Hypercell {
     use \hcf\core\dryver\Config, Hypercell\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
@@ -120,6 +120,9 @@ __halt_compiler();#__COMPILER_HALT_OFFSET__
         }
         public function getName() {
             return $this->name;
+        }
+        public function getCellspace() {
+            return $this->cellspace;
         }
         public function getOffset() {
             return $this->offset;

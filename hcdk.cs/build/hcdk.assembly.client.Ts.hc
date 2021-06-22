@@ -1,6 +1,6 @@
-<?php #HYPERCELL hcdk.assembly.client.Ts - BUILD 21.06.20#197
+<?php #HYPERCELL hcdk.assembly.client.Ts - BUILD 21.06.22#267
 namespace hcdk\assembly\client;
-class Ts extends \hcdk\assembly\client {
+class Ts extends \hcdk\assembly\client\Js {
     use \hcf\core\dryver\Base, \hcf\core\dryver\Config, Ts\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
     const FQN = 'hcdk.assembly.client.Ts';
     const NAME = 'Ts';
@@ -36,9 +36,12 @@ return \$js;";
     }
     namespace hcdk\assembly\client\Ts\__EO__;
     # BEGIN EXECUTABLE FRAME OF CONTROLLER.PHP
+    use \hcf\core\Utils;
     use \hcdk\raw\Method as Method;
     use \hcf\core\log\Internal as InternalLogger;
     trait Controller {
+        private static $nm_refreshed = false;
+        private static $node_modules = '/node_modules/';
         public function getType() {
             return 'TS';
         }
@@ -53,19 +56,68 @@ return \$js;";
             }
             return $js_data;
         }
+        protected function createNodeModules($at, $cs) {
+            // Required to use
+            //			import bla from "hcfqn.of.Hypercell"
+            // npm install removes them so refreshing per build is neccessary
+            // (also to keep them updated)
+            $css = $cs->getSettings();
+            if (!is_dir($at)) {
+                mkdir($at);
+            }
+            foreach ($cs->getHypercells() as $hc) {
+                foreach ($hc->getAssemblies() as $ass) {
+                    if ($ass instanceof self) {
+                        $t = $at . $hc->getName()->long . '.' . strtolower($this->getType());
+                        file_put_contents($t, $ass->rawInput());
+                    }
+                }
+            }
+        }
+        protected function tscSupportExists() {
+            $windows = strpos(PHP_OS, 'WIN') === 0;
+            $test = $windows ? 'where' : 'command -v';
+            return (is_executable(trim(shell_exec("$test tsc"))));
+        }
+        protected function refreshNodeModules($to, $cs) {
+            $this->createNodeModules($to, $cs);
+            // to refer to other modules in the cellspace
+            // the node_modules directory of each included cellspace
+            // will be merged to it's own
+            $css = $cs->getSettings();
+            $includes = [];
+            if (is_string($css->include)) {
+                $includes = [$css->include];
+            } else if (is_array($css->include)) {
+                $includes = $css->include;
+            }
+            foreach ($includes as $include) {
+                if (!is_dir($include . self::$node_modules)) {
+                    InternalLogger::log()->info(self::FQN . ' - include directory does not contain a ' . self::$node_modules . ' directory - possible typescript-modules will not be found.');
+                } else {
+                    InternalLogger::log()->info(self::FQN . ' - copying ' . $include . self::$node_modules . '.');
+                    Utils::copyPath($include . self::$node_modules, $to);
+                }
+            }
+        }
         public function buildClient() {
             $file_path = dirname($this->for_file);
             $temp_name = basename($this->for_file, '.ts') . '.js';
             $temp_file = $file_path . '/' . $temp_name;
             if (file_exists($temp_file)) {
-                throw new \Exception(self::FQN . ' - ' . $temp_name . ' already exists at ' . $temp_path . '. This file is required for storing compiled typescript.');
+                throw new \Exception(self::FQN . ' - file ' . $temp_file . ' already exists. Contents will be overridden and removed while compiling assembly ' . $this->for_file);
             }
-            $windows = strpos(PHP_OS, 'WIN') === 0;
-            $test = $windows ? 'where' : 'command -v';
-            if (!is_executable(trim(shell_exec("$test tsc")))) {
+            if (!$this->tscSupportExists()) {
                 throw new \Exception(self::FQN . ' -  typescript compiler (tsc) seems to be missing: https://github.com/microsoft/TypeScript/#installing');
             }
-            $tsc_out = shell_exec('tsc ' . $this->for_file . ' --outFile ' . $temp_file);
+            $hc = $this->forHypercell();
+            $cs = $hc->getCellspace();
+            $nmp = $cs->getRoot() . self::$node_modules;
+            if (!self::$nm_refreshed) {
+                $this->refreshNodeModules($nmp, $cs);
+                self::$nm_refreshed = true;
+            }
+            $tsc_out = shell_exec('tsc ' . $this->for_file . ' --baseUrl ' . $cs->getRoot() . ' --allowJs --checkJs --module amd --moduleResolution node');
             if ($tsc_out != '') {
                 if (file_exists($temp_file)) {
                     unlink($temp_file);
@@ -105,6 +157,7 @@ BEGIN[CONFIG.INI]
 [jshrink]
 minify = true; if false, keep-doc-blocks will be true
 keep-doc-blocks = false;
+
 
 END[CONFIG.INI]
 

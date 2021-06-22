@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.template.Xml - BUILD 21.02.24#187
+<?php #HYPERCELL hcdk.assembly.template.Xml - BUILD 21.02.25#188
 namespace hcdk\assembly\template;
 class Xml extends \hcdk\assembly\template {
     use \hcf\core\dryver\Base, Xml\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;

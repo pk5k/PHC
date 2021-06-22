@@ -1,5 +1,6 @@
 <?php
 use \hcdk\raw\Method as Method;
+use \hcf\core\log\Internal as InternalLogger;
 
 trait Controller
 {
@@ -10,7 +11,7 @@ trait Controller
 
 	protected function sourceIsAttachment()
 	{
-		return false;
+		return true;
 	}
 
 	protected function minifyJS($js_data)
@@ -29,7 +30,9 @@ trait Controller
 
 	public function buildClient()
 	{
-		$client_data = str_replace('"', '\\"', $this->minifyJS($this->rawInput()));
+		$js = $this->minifyJS($this->rawInput());
+
+		$client_data = str_replace('"', '\\"', $js);
 		$client_data = str_replace('$', '\\$', $client_data);//Escape the $ for e.g. jQuery
 
 		$method = new Method('script', ['public', 'static']);
