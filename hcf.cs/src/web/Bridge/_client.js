@@ -1,4 +1,4 @@
-function (to)
+document.Bridge = function (to)
 {
 	var self = this;
 	var _internal_route = '?!=-bridge';
@@ -24,7 +24,7 @@ function (to)
 		console.warn('Your Browser does not support WebWorkers - all requests will be executed on the main-thread.');
 	}
 
-	if (document[_worker_store] == undefined)
+	if (document[_worker_store] == undefined) 
 	{
 		document[_worker_store] = {};// store data here, that can't be serialized, until worker calls back
 	}
