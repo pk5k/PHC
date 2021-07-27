@@ -1,12 +1,12 @@
-<?php #HYPERCELL hcdk.data.xml.Fragment.condition.CaseFragment - BUILD 18.06.15#59
+<?php #HYPERCELL hcdk.data.xml.Fragment.condition.CaseFragment - BUILD 21.07.08#69
 namespace hcdk\data\xml\Fragment\condition;
 class CaseFragment extends \hcdk\data\xml\Fragment\condition {
     use \hcf\core\dryver\Base, CaseFragment\__EO__\Controller, \hcf\core\dryver\Internal;
     const FQN = 'hcdk.data.xml.Fragment.condition.CaseFragment';
     const NAME = 'CaseFragment';
     public function __construct() {
-        if (method_exists($this, 'onConstruct')) {
-            call_user_func_array([$this, 'onConstruct'], func_get_args());
+        if (method_exists($this, 'hcdkdataxmlFragmentconditionCaseFragment_onConstruct')) {
+            call_user_func_array([$this, 'hcdkdataxmlFragmentconditionCaseFragment_onConstruct'], func_get_args());
         }
     }
     }

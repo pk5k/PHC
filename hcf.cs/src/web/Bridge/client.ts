@@ -1,8 +1,6 @@
-export default function setup(to: string) 
+export default function setup(to: string): BridgeRequest
 {
-	console.log(to);
-
-	return (new BridgeRequest()).to(to);
+	return new BridgeRequest(to);
 }
 
 export type BridgeConfig = {
@@ -20,7 +18,7 @@ export type BridgeConfig = {
 	before?: Function;
 }
 
-export type BridgeCallbacks = {
+type BridgeCallbacks = {
 	success?: Function;
 	error?: Function;
 	timeout?: Function;
@@ -31,12 +29,19 @@ export type BridgeCallbacks = {
 
 type BridgePreparedData = {
 	callbacks: BridgeCallbacks,
-	overwrites: object,
+	overwrites: BridgeOverwrites,
 	passed_files: Array<any>
 	url_args: object
 }
 
-export class BridgeRequest extends XMLHttpRequest
+type BridgeOverwrites = {
+	xhr?: XMLHttpRequest,
+	method?: string,
+	timeoutSeconds?: number,
+	eval?: boolean
+}
+
+export class BridgeRequest extends XMLHttpRequest implements BridgeRequest
 {
 	internal_route = '?!=-bridge';
 	_target: string = '';
@@ -47,9 +52,10 @@ export class BridgeRequest extends XMLHttpRequest
 		method: "X-Bridge-Method"
 	};
 
-	constructor()
+	constructor(to: string)
 	{
 		super();
+		this.to(to);
 	}
 
 	to(hypercell: string): BridgeRequest
@@ -210,7 +216,7 @@ export class BridgeRequest extends XMLHttpRequest
     	An object, containing the overwrites for the xmlhttprequest-settings
 	*/
 
-	getOverwrites(p_obj: BridgeConfig): object
+	getOverwrites(p_obj: BridgeConfig): BridgeOverwrites
 	{
 		return {
 			xhr: p_obj.xhr,
@@ -224,7 +230,7 @@ export class BridgeRequest extends XMLHttpRequest
 	{
 		var fd = new FormData();
 
-		for(var key in args)
+		for (var key in args)
 		{
 			if (args.hasOwnProperty(key))
 			{
@@ -255,15 +261,14 @@ export class BridgeRequest extends XMLHttpRequest
 		return fd;
 	}
 
-	executeRequest(args: object, files: Array<any>, overwrites: object, callbacks: BridgeCallbacks): BridgeRequest
+	executeRequest(args: object, files: Array<any>, overwrites: BridgeOverwrites, callbacks: BridgeCallbacks): BridgeRequest
 	{
 		var http_request = false;
 		var async = true;
-		var req_method = 'POST';//use POST so the POST-HOOK will be executed
-		var timeout = 4000;// 4 seconds for timeout as default
-		var eval_reponse = false;//eval http-response on success for possible javascript content
+		var req_method = overwrites.method || 'POST';//use POST so the POST-HOOK will be executed
+		var timeout = overwrites.timeoutSeconds || 0;// disaable timeout by default
+		var eval_reponse = overwrites.eval || true;//eval http-response on success for possible javascript content
 		var info = false;//log infos to console
-		var eval_enabled = true; 
 
 		if (this.ontimeout === undefined || this.ontimeout === null) //if a given XHR-Object already contains a ontimeout function, don't add ours
 		{
@@ -358,14 +363,14 @@ export class BridgeRequest extends XMLHttpRequest
 			}
 		}
 
-		var target_xhr: XMLHttpRequest = this;
+		let target_xhr: XMLHttpRequest = this;
 		
 		if (callbacks.before)
 		{
 			// the http-request must be returned from the before-callback to overwrite it. There you have the possibility to manipulate or abort the request before sending it
 			// return an XMLHttpRequest Object to override and false to abort it
-			var before_ret = callbacks.before(http_request);
-			var override = null;
+			let before_ret = callbacks.before(http_request);
+			let override = null;
 
 			if (before_ret !== undefined)
 			{
@@ -381,7 +386,7 @@ export class BridgeRequest extends XMLHttpRequest
 			}
 		}
 
-		var data = this.argsToFormData(args, files);
+		let data = this.argsToFormData(args, files);
 		
 		//Send request here
 		target_xhr.open(req_method, this.internal_route, async);// if you override config.ini@hcf.web.Router, don't forget to add the internal -bridge route

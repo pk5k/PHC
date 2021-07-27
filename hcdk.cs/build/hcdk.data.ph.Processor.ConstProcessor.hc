@@ -1,12 +1,12 @@
-<?php #HYPERCELL hcdk.data.ph.Processor.ConstProcessor - BUILD 18.06.15#60
+<?php #HYPERCELL hcdk.data.ph.Processor.ConstProcessor - BUILD 21.07.08#70
 namespace hcdk\data\ph\Processor;
 class ConstProcessor extends \hcdk\data\ph\Processor {
     use \hcf\core\dryver\Base, ConstProcessor\__EO__\Controller, \hcf\core\dryver\Internal;
     const FQN = 'hcdk.data.ph.Processor.ConstProcessor';
     const NAME = 'ConstProcessor';
     public function __construct() {
-        if (method_exists($this, 'onConstruct')) {
-            call_user_func_array([$this, 'onConstruct'], func_get_args());
+        if (method_exists($this, 'hcdkdataphProcessorConstProcessor_onConstruct')) {
+            call_user_func_array([$this, 'hcdkdataphProcessorConstProcessor_onConstruct'], func_get_args());
         }
     }
     }

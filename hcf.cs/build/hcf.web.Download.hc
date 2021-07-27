@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.web.Download - BUILD 21.01.22#24
+<?php #HYPERCELL hcf.web.Download - BUILD 21.07.04#140
 namespace hcf\web;
 class Download {
     use \hcf\core\dryver\Config, Download\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Internal;
@@ -8,8 +8,8 @@ class Download {
         if (!isset(self::$config)) {
             self::loadConfig();
         }
-        if (method_exists($this, 'onConstruct')) {
-            call_user_func_array([$this, 'onConstruct'], func_get_args());
+        if (method_exists($this, 'hcfwebDownload_onConstruct')) {
+            call_user_func_array([$this, 'hcfwebDownload_onConstruct'], func_get_args());
         }
     }
     # BEGIN ASSEMBLY FRAME CONFIG.INI
@@ -23,6 +23,7 @@ class Download {
     public function __toString() {
         $__CLASS__ = __CLASS__;
         $_this = (isset($this)) ? $this : null;
+        $_func_args = \func_get_args();
         $output = "{$__CLASS__::_call('provideDownload', $__CLASS__, $_this) }";
         return $output;
     }
@@ -38,7 +39,7 @@ class Download {
     trait Controller {
         private $file = null;
         private $context = null;
-        public function onConstruct($file = null, $context = null) {
+        public function hcfwebDownload_onConstruct($file = null, $context = null) {
             // if no arguments were passed, hcf.http.Download will try to initialize itself by the $_GET array
             if (!is_string($file) || !is_string($context)) {
                 list($file, $context) = self::readGetArgs();

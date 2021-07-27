@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.core.Utils - BUILD 21.01.27#167
+<?php #HYPERCELL hcf.core.Utils - BUILD 21.06.27#174
 namespace hcf\core;
 class Utils {
     use \hcf\core\dryver\Config, Utils\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -8,8 +8,8 @@ class Utils {
         if (!isset(self::$config)) {
             self::loadConfig();
         }
-        if (method_exists($this, 'onConstruct')) {
-            call_user_func_array([$this, 'onConstruct'], func_get_args());
+        if (method_exists($this, 'hcfcoreUtils_onConstruct')) {
+            call_user_func_array([$this, 'hcfcoreUtils_onConstruct'], func_get_args());
         }
     }
     # BEGIN ASSEMBLY FRAME CONFIG.INI
@@ -163,12 +163,14 @@ class Utils {
          *
          * @return array - an array, filled with all found directories inside $directory
          */
-        public static function getAllSubDirectories($directory, $directory_seperator = '/') {
+        public static function getAllSubDirectories($directory, $directory_seperator = '/', $flat = false) {
             $dirs = array_map(function ($item) use ($directory_seperator) {
                 return $item . $directory_seperator;
             }, array_filter(glob($directory . '*'), 'is_dir'));
-            foreach ($dirs as $dir) {
-                $dirs = array_merge($dirs, self::getAllSubDirectories($dir, $directory_seperator));
+            if (!$flat) {
+                foreach ($dirs as $dir) {
+                    $dirs = array_merge($dirs, self::getAllSubDirectories($dir, $directory_seperator));
+                }
             }
             return $dirs;
         }
@@ -294,7 +296,7 @@ class Utils {
          * @return string - the MIME-type the given file-extension is associated with
          */
         public static function getMimeTypeByExtension($filename) {
-            $extension = substr($filename, strpos($filename, '.') + 1);
+            $extension = substr($filename, strrpos($filename, '.') + 1);
             $extension = strtolower($extension);
             if (isset(self::config()->MIME->{$extension})) {
                 return self::config()->MIME->{$extension};
@@ -374,6 +376,7 @@ class Utils {
         public static function copyPath($src, $dst, $exc = null) {
             $exc = $exc ? : [];
             $dir = opendir($src);
+            $new_files = [];
             @mkdir($dst);
             while (false !== ($file = readdir($dir))) {
                 if (($file != '.') && ($file != '..') && !in_array($file, $exc)) {
@@ -381,10 +384,12 @@ class Utils {
                         self::copyPath($src . '/' . $file, $dst . '/' . $file);
                     } else {
                         copy($src . '/' . $file, $dst . '/' . $file);
+                        $new_files[] = $dst . '/' . $file;
                     }
                 }
             }
             closedir($dir);
+            return $new_files;
         }
         /**
          * isEmptyDirectory

@@ -1,12 +1,12 @@
-<?php #HYPERCELL hcdk.data.xml.Fragment.render.InstructionFragment - BUILD 21.02.26#1
+<?php #HYPERCELL hcdk.data.xml.Fragment.render.InstructionFragment - BUILD 21.07.08#11
 namespace hcdk\data\xml\Fragment\render;
 class InstructionFragment extends \hcdk\data\xml\Fragment {
     use \hcf\core\dryver\Base, InstructionFragment\__EO__\Controller, \hcf\core\dryver\Internal;
     const FQN = 'hcdk.data.xml.Fragment.render.InstructionFragment';
     const NAME = 'InstructionFragment';
     public function __construct() {
-        if (method_exists($this, 'onConstruct')) {
-            call_user_func_array([$this, 'onConstruct'], func_get_args());
+        if (method_exists($this, 'hcdkdataxmlFragmentrenderInstructionFragment_onConstruct')) {
+            call_user_func_array([$this, 'hcdkdataxmlFragmentrenderInstructionFragment_onConstruct'], func_get_args());
         }
     }
     }

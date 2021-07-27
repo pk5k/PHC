@@ -175,13 +175,16 @@ trait Controller
 	 *
 	 * @return array - an array, filled with all found directories inside $directory
 	 */
-	public static function getAllSubDirectories($directory, $directory_seperator = '/')
+	public static function getAllSubDirectories($directory, $directory_seperator = '/', $flat = false)
 	{
 		$dirs = array_map(function($item) use ($directory_seperator) { return $item . $directory_seperator;}, array_filter( glob( $directory . '*' ), 'is_dir') );
 
-		foreach($dirs as $dir)
+		if (!$flat)
 		{
-			$dirs = array_merge($dirs, self::getAllSubDirectories($dir, $directory_seperator));
+			foreach($dirs as $dir)
+			{
+				$dirs = array_merge($dirs, self::getAllSubDirectories($dir, $directory_seperator));
+			}
 		}
 
 		return $dirs;
@@ -354,7 +357,7 @@ trait Controller
 	 */
 	public static function getMimeTypeByExtension($filename)
 	{
-		$extension = substr($filename, strpos($filename, '.')+1);
+		$extension = substr($filename, strrpos($filename, '.')+1);
     	$extension = strtolower($extension);
 
 		if(isset(self::config()->MIME->{$extension}))
@@ -460,6 +463,7 @@ trait Controller
 	{
 		$exc = $exc ?: [];
     	$dir = opendir($src);
+    	$new_files = [];
 
     	@mkdir($dst);
 
@@ -474,11 +478,14 @@ trait Controller
 	            else
 	            {
 	                copy($src . '/' . $file, $dst . '/' . $file);
+	                $new_files[] = $dst . '/' . $file;
 	            }
 	        }
 	    }
 
 	    closedir($dir);
+
+	    return $new_files;
     }
 
 	/**

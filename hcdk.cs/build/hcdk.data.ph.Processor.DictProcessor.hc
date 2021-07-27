@@ -1,12 +1,12 @@
-<?php #HYPERCELL hcdk.data.ph.Processor.DictProcessor - BUILD 21.02.26#84
+<?php #HYPERCELL hcdk.data.ph.Processor.DictProcessor - BUILD 21.07.08#94
 namespace hcdk\data\ph\Processor;
 class DictProcessor extends \hcdk\data\ph\Processor {
     use \hcf\core\dryver\Base, DictProcessor\__EO__\Controller, \hcf\core\dryver\Internal;
     const FQN = 'hcdk.data.ph.Processor.DictProcessor';
     const NAME = 'DictProcessor';
     public function __construct() {
-        if (method_exists($this, 'onConstruct')) {
-            call_user_func_array([$this, 'onConstruct'], func_get_args());
+        if (method_exists($this, 'hcdkdataphProcessorDictProcessor_onConstruct')) {
+            call_user_func_array([$this, 'hcdkdataphProcessorDictProcessor_onConstruct'], func_get_args());
         }
     }
     }

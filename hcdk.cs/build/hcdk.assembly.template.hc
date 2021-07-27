@@ -1,12 +1,12 @@
-<?php #HYPERCELL hcdk.assembly.template - BUILD 18.06.15#235
+<?php #HYPERCELL hcdk.assembly.template - BUILD 21.07.08#245
 namespace hcdk\assembly;
 abstract class template extends \hcdk\assembly {
     use \hcf\core\dryver\Base, template\__EO__\Controller, \hcf\core\dryver\Internal;
     const FQN = 'hcdk.assembly.template';
     const NAME = 'template';
     public function __construct() {
-        if (method_exists($this, 'onConstruct')) {
-            call_user_func_array([$this, 'onConstruct'], func_get_args());
+        if (method_exists($this, 'hcdkassemblytemplate_onConstruct')) {
+            call_user_func_array([$this, 'hcdkassemblytemplate_onConstruct'], func_get_args());
         }
         call_user_func_array('parent::__construct', func_get_args());
     }

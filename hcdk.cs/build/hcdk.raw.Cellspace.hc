@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.raw.Cellspace - BUILD 21.06.22#167
+<?php #HYPERCELL hcdk.raw.Cellspace - BUILD 21.07.08#282
 namespace hcdk\raw;
 class Cellspace {
     use \hcf\core\dryver\Config, Cellspace\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -8,8 +8,8 @@ class Cellspace {
         if (!isset(self::$config)) {
             self::loadConfig();
         }
-        if (method_exists($this, 'onConstruct')) {
-            call_user_func_array([$this, 'onConstruct'], func_get_args());
+        if (method_exists($this, 'hcdkrawCellspace_onConstruct')) {
+            call_user_func_array([$this, 'hcdkrawCellspace_onConstruct'], func_get_args());
         }
     }
     # BEGIN ASSEMBLY FRAME CONFIG.INI
@@ -30,7 +30,7 @@ class Cellspace {
         protected $root = null;
         protected $settings = null;
         private $hypercells = null;
-        public function onConstruct($cellspace_root) {
+        public function hcdkrawCellspace_onConstruct($cellspace_root) {
             $this->init($cellspace_root);
         }
         private function init($cellspace_root) {

@@ -53,24 +53,59 @@ trait Controller
 			throw new \AttributeNotFoundException(self::FQN.' - Non-optional attribute "target" is not set. In '.$file_scope.' for element "'.str_replace(XMLParser::TMP_OPT_TAG_MARKER, '?', $root_name).'"');
 		}
 
-		$instance_token = uniqid('$instance_');
-		$target = PlaceholderParser::parse(trim((string)$root['target']), false);
-		$constructor_args = self::collectArgumentsFromNode($root);
+		$template = null;
 
-		$fqn = Utils::HCFQN2PHPFQN($target, true);
+		if (isset($root['template']) && count($root->children()) > 0)
+		{
+			throw new \AttributeNotFoundException(self::FQN.' - render.pipeline cannot have children if template-method is given for element "'.str_replace(XMLParser::TMP_OPT_TAG_MARKER, '?', $root_name).'"');
+		}
+		else if (isset($root['template']))
+		{
+			$template = PlaceholderParser::parse(trim((string)$root['template']), false);
+		}
+
+		$instance_token = uniqid('$instance_');
+		$target_raw = trim((string)$root['target']);
+		$target = PlaceholderParser::parse($target_raw, false);
+		$is_placeholder_target = ($target_raw != $target);
+		$constructor_args = self::collectArgumentsFromNode($root);
+		$fqn = $target;
+		
+		if (!$is_placeholder_target)
+		{
+			$fqn = Utils::HCFQN2PHPFQN($target, true);
+		}
 
 		self::setActivePipeline($instance_token);
 		self::setActivePipelineTarget($fqn);
+		
+		$output = '';
 
-		$output = $instance_token.' = new '.$fqn.'('.implode(',',$constructor_args).');';
-
-		foreach ($root->children() as $instruction) 
+		if (is_null($template))
 		{
-			$output .= XMLParser::renderFragment($instruction, $file_scope);
+			$output = $instance_token.' = new '.$fqn.'('.implode(',',$constructor_args).');';
+
+			foreach ($root->children() as $instruction) 
+			{
+				$output .= XMLParser::renderFragment($instruction, $file_scope);
+			}
+
+			$output .= parent::FRGMNT_OUTPUT_START().$instance_token.parent::FRGMNT_OUTPUT_END(); // implicit toString call
 		}
+		else
+		{
+			if ($is_placeholder_target)
+			{
+				$output .= $instance_token.' = '.$fqn.'->'.$template.'('.implode(',',$constructor_args).');';
+			}
+			else
+			{
+				$output .= $instance_token.' = '.$fqn.'::'.$template.'('.implode(',',$constructor_args).');';
+			}
 
-		$output .= parent::FRGMNT_OUTPUT_START().$instance_token.parent::FRGMNT_OUTPUT_END(); // implicit toString call
-
+			$output .= parent::FRGMNT_OUTPUT_START().$instance_token.parent::FRGMNT_OUTPUT_END();
+		}
+		
 		self::setActivePipeline(null);
 		self::setActivePipelineTarget(null);
 

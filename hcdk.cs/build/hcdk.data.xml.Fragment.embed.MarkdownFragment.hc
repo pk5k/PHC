@@ -1,12 +1,12 @@
-<?php #HYPERCELL hcdk.data.xml.Fragment.embed.MarkdownFragment - BUILD 18.06.15#59
+<?php #HYPERCELL hcdk.data.xml.Fragment.embed.MarkdownFragment - BUILD 21.07.08#69
 namespace hcdk\data\xml\Fragment\embed;
 class MarkdownFragment extends \hcdk\data\xml\Fragment {
     use \hcf\core\dryver\Base, MarkdownFragment\__EO__\Controller, \hcf\core\dryver\Internal;
     const FQN = 'hcdk.data.xml.Fragment.embed.MarkdownFragment';
     const NAME = 'MarkdownFragment';
     public function __construct() {
-        if (method_exists($this, 'onConstruct')) {
-            call_user_func_array([$this, 'onConstruct'], func_get_args());
+        if (method_exists($this, 'hcdkdataxmlFragmentembedMarkdownFragment_onConstruct')) {
+            call_user_func_array([$this, 'hcdkdataxmlFragmentembedMarkdownFragment_onConstruct'], func_get_args());
         }
     }
     }

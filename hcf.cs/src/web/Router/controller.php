@@ -153,7 +153,7 @@ trait Controller
 		}
 		catch (\Exception $e)
 		{
-      return self::catchException($e, $output_hc, $route_section);
+      		return self::catchException($e, $output_hc, $route_section);
 		}
 	}
 

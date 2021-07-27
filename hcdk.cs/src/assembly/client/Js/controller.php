@@ -11,7 +11,7 @@ trait Controller
 
 	protected function sourceIsAttachment()
 	{
-		return true;
+		return false;
 	}
 
 	protected function minifyJS($js_data)

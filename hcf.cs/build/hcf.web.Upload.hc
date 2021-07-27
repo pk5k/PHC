@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.web.Upload - BUILD 21.02.16#41
+<?php #HYPERCELL hcf.web.Upload - BUILD 21.07.04#114
 namespace hcf\web;
 class Upload {
     use \hcf\core\dryver\Config, Upload\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Internal;
@@ -8,8 +8,8 @@ class Upload {
         if (!isset(self::$config)) {
             self::loadConfig();
         }
-        if (method_exists($this, 'onConstruct')) {
-            call_user_func_array([$this, 'onConstruct'], func_get_args());
+        if (method_exists($this, 'hcfwebUpload_onConstruct')) {
+            call_user_func_array([$this, 'hcfwebUpload_onConstruct'], func_get_args());
         }
     }
     # BEGIN ASSEMBLY FRAME CONFIG.INI
@@ -23,6 +23,7 @@ class Upload {
     public function __toString() {
         $__CLASS__ = __CLASS__;
         $_this = (isset($this)) ? $this : null;
+        $_func_args = \func_get_args();
         $output = "{
 	\"state\": \"{$__CLASS__::_property('state_indicator', $__CLASS__, $_this) }\",
 	\"data\": {$__CLASS__::_call('getMessage', $__CLASS__, $_this) }
@@ -40,7 +41,7 @@ class Upload {
     trait Controller {
         public $message = array();
         public $state_indicator = null; //determinates, if upload was successful or not
-        public function onConstruct($tunnel = null) {
+        public function hcfwebUpload_onConstruct($tunnel = null) {
             if (!self::uploadingAllowed()) {
                 throw new \Exception(self::FQN . ' - unable to proceed, php.ini setting "file_uploads" is set to false');
             }

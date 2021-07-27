@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.raw.Hypercell - BUILD 21.06.21#203
+<?php #HYPERCELL hcdk.raw.Hypercell - BUILD 21.07.08#320
 namespace hcdk\raw;
 class Hypercell {
     use \hcf\core\dryver\Config, Hypercell\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
@@ -8,8 +8,8 @@ class Hypercell {
         if (!isset(self::$config)) {
             self::loadConfig();
         }
-        if (method_exists($this, 'onConstruct')) {
-            call_user_func_array([$this, 'onConstruct'], func_get_args());
+        if (method_exists($this, 'hcdkrawHypercell_onConstruct')) {
+            call_user_func_array([$this, 'hcdkrawHypercell_onConstruct'], func_get_args());
         }
     }
     # BEGIN ASSEMBLY FRAME CONFIG.INI
@@ -112,7 +112,7 @@ __halt_compiler();#__COMPILER_HALT_OFFSET__
         private $buildable = false;
         private $executable = false;
         private $abstract = false;
-        public function onConstruct($cellspace, $offset) {
+        public function hcdkrawHypercell_onConstruct($cellspace, $offset) {
             $this->init($cellspace, $offset);
         }
         public function getAssemblies() {
@@ -190,8 +190,8 @@ __halt_compiler();#__COMPILER_HALT_OFFSET__
             }
             $this->cellspace = $cellspace;
             $this->resolveName($offset);
-            $this->readBuildInfo();
             $this->collectAssemblies();
+            $this->readBuildInfo();
             $this->checkBuildable();
             $this->checkExecutable();
             $this->checkAbstract();
@@ -253,8 +253,7 @@ __halt_compiler();#__COMPILER_HALT_OFFSET__
                     continue;
                 }
                 try {
-                    $assembly_instance = self::getAssemblyInstance($file);
-                    $assembly_instance->forHypercell($this);
+                    $assembly_instance = self::getAssemblyInstance($file, true, $this);
                 }
                 catch(\Exception $e) {
                     InternalLogger::log()->info($this->name->long . ' - cannot resolve assembly for file "' . $file . '" due following exception:');
@@ -279,10 +278,10 @@ __halt_compiler();#__COMPILER_HALT_OFFSET__
             }
             return $base_ns . $assembly;
         }
-        public static function getAssemblyInstance($file, $check = true) {
+        public static function getAssemblyInstance($file, $check = true, $_this = null) {
             $assembly = self::resolveAssemblyHCFQN($file);
             RemoteInvoker::implicitConstructor(true);
-            $invoker = new RemoteInvoker($assembly, [file_get_contents($file), $file]);
+            $invoker = new RemoteInvoker($assembly, [file_get_contents($file), $file, $_this]);
             $instance = $invoker->getInstance();
             if (!($instance instanceof \hcdk\assembly)) {
                 throw new \Exception('Created instance of assembly ' . $assembly . ' is not an ' . self::FQN . ' generalisation and therefore can\'t be used');

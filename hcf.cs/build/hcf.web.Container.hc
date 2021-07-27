@@ -1,15 +1,15 @@
-<?php #HYPERCELL hcf.web.Container - BUILD 20.08.14#3134
+<?php #HYPERCELL hcf.web.Container - BUILD 21.07.04#3250
 namespace hcf\web;
 class Container {
-    use \hcf\core\dryver\Client, \hcf\core\dryver\Client\Js, \hcf\core\dryver\Config, Container\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
+    use \hcf\core\dryver\Client, \hcf\core\dryver\Client\Js, \hcf\core\dryver\Config, Container\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Template, \hcf\core\dryver\Template\Xml, \hcf\core\dryver\Internal;
     const FQN = 'hcf.web.Container';
     const NAME = 'Container';
     public function __construct() {
         if (!isset(self::$config)) {
             self::loadConfig();
         }
-        if (method_exists($this, 'onConstruct')) {
-            call_user_func_array([$this, 'onConstruct'], func_get_args());
+        if (method_exists($this, 'hcfwebContainer_onConstruct')) {
+            call_user_func_array([$this, 'hcfwebContainer_onConstruct'], func_get_args());
         }
     }
     # BEGIN ASSEMBLY FRAME CLIENT.JS
@@ -178,6 +178,7 @@ if(typeof define==='function'&&define.amd){define(function(){return md5})}else i
     public function __toString() {
         $__CLASS__ = __CLASS__;
         $_this = (isset($this)) ? $this : null;
+        $_func_args = \func_get_args();
         $output = "<!DOCTYPE html>
 {$__CLASS__::_call('stdTpl', $__CLASS__, $_this) }
 ";
@@ -188,6 +189,7 @@ if(typeof define==='function'&&define.amd){define(function(){return md5})}else i
     public function stdTpl() {
         $__CLASS__ = __CLASS__;
         $_this = (isset($this)) ? $this : null;
+        $_func_args = \func_get_args();
         $output = '';
         $output.= "<html lang=\"{$__CLASS__::_property('content_language', $__CLASS__, $_this) }\">";
         $output.= "<head>";
@@ -223,7 +225,7 @@ if(typeof define==='function'&&define.amd){define(function(){return md5})}else i
         $output.= "</head>";
         $output.= "<body>{$__CLASS__::_property('content', $__CLASS__, $_this) }</body>";
         $output.= "</html>";
-        return $output;
+        return self::_postProcess($output, [], []);
     }
     # END ASSEMBLY FRAME TEMPLATE.XML
     
@@ -261,7 +263,7 @@ if(typeof define==='function'&&define.amd){define(function(){return md5})}else i
          *
          * @param autoload - boolean - optional - enable the autoloader for this instance (true) or not (false)
          */
-        public function onConstruct($autoload = null) {
+        public function hcfwebContainer_onConstruct($autoload = null) {
             $config = self::config();
             if (isset($config)) {
                 if (isset($config->font) && is_object($config->font)) {

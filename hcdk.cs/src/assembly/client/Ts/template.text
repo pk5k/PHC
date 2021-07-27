@@ -2,3 +2,26 @@
 \$js = "{{arg:0}}";
 
 return \$js;
+
+#~amdModuleName:
+/// <amd-module name="{{arg:0}}"/>
+
+#~tsConfig:
+{
+	"files": ["{{arg:0}}"],
+	"compilerOptions": {
+		"baseUrl":"{{arg:3}}",
+		"rootDirs":["{{arg:3}}"],
+		"paths": {"*": ["./{{arg:2}}/*"]},
+		"allowSyntheticDefaultImports": true,
+		"allowUmdGlobalAccess": true,
+		"lib": ["es6", "dom"],
+		"target":"es6",
+		"strict": true,
+		"allowJs": true,
+		"checkJs": false,
+		"module": "amd",
+		"moduleResolution": "node",
+		"outFile": "{{arg:1}}"
+	}
+}

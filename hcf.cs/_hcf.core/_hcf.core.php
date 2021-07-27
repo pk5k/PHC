@@ -39,7 +39,7 @@ $hcf_config_parser = new IniParser($hcf_ini_path);
 $hcf_config = $hcf_config_parser->parse();
 
 // check if the configuration uses document-sections
-if (!array_key_exists('include', $hcf_config))
+if (!array_key_exists('include', (array)$hcf_config))
 {
 	// if the include array does not exist on the highest node-level of the parsed configuration, it must be an ini with document sections
 	$sec = basename($_SERVER['PHP_SELF'], '.php');// resolve the section name by the called document

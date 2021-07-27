@@ -1,12 +1,12 @@
-<?php #HYPERCELL hcdk.data.xml.Fragment.condition - BUILD 18.06.15#59
+<?php #HYPERCELL hcdk.data.xml.Fragment.condition - BUILD 21.07.08#69
 namespace hcdk\data\xml\Fragment;
 abstract class condition extends \hcdk\data\xml\Fragment {
     use \hcf\core\dryver\Base, condition\__EO__\Controller, \hcf\core\dryver\Internal;
     const FQN = 'hcdk.data.xml.Fragment.condition';
     const NAME = 'condition';
     public function __construct() {
-        if (method_exists($this, 'onConstruct')) {
-            call_user_func_array([$this, 'onConstruct'], func_get_args());
+        if (method_exists($this, 'hcdkdataxmlFragmentcondition_onConstruct')) {
+            call_user_func_array([$this, 'hcdkdataxmlFragmentcondition_onConstruct'], func_get_args());
         }
     }
     }

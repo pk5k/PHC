@@ -1,12 +1,12 @@
-<?php #HYPERCELL hcdk.assembly.output.Xml - BUILD 21.02.26#178
+<?php #HYPERCELL hcdk.assembly.output.Xml - BUILD 21.07.08#188
 namespace hcdk\assembly\output;
 class Xml extends \hcdk\assembly\output {
     use \hcf\core\dryver\Base, Xml\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
     const FQN = 'hcdk.assembly.output.Xml';
     const NAME = 'Xml';
     public function __construct() {
-        if (method_exists($this, 'onConstruct')) {
-            call_user_func_array([$this, 'onConstruct'], func_get_args());
+        if (method_exists($this, 'hcdkassemblyoutputXml_onConstruct')) {
+            call_user_func_array([$this, 'hcdkassemblyoutputXml_onConstruct'], func_get_args());
         }
         call_user_func_array('parent::__construct', func_get_args());
     }

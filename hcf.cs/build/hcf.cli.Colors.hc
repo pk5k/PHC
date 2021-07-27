@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.cli.Colors - BUILD 18.05.25#39
+<?php #HYPERCELL hcf.cli.Colors - BUILD 21.06.27#43
 namespace hcf\cli;
 class Colors {
     use \hcf\core\dryver\Config, Colors\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -8,8 +8,8 @@ class Colors {
         if (!isset(self::$config)) {
             self::loadConfig();
         }
-        if (method_exists($this, 'onConstruct')) {
-            call_user_func_array([$this, 'onConstruct'], func_get_args());
+        if (method_exists($this, 'hcfcliColors_onConstruct')) {
+            call_user_func_array([$this, 'hcfcliColors_onConstruct'], func_get_args());
         }
     }
     # BEGIN ASSEMBLY FRAME CONFIG.INI
@@ -20,37 +20,37 @@ class Colors {
     }
     # END ASSEMBLY FRAME CONFIG.INI
     
-}
-namespace hcf\cli\Colors\__EO__;
-# BEGIN EXECUTABLE FRAME OF CONTROLLER.PHP
-trait Controller {
-    // Returns colored string
-    public static function apply($string, $foreground_color = null, $background_color = null) {
-        $colored_string = "";
-        // Check if given foreground color found
-        if (isset($foreground_color) && isset(self::config()->foreground[$foreground_color])) {
-            $colored_string.= "\033[" . self::config()->foreground[$foreground_color] . "m";
+    }
+    namespace hcf\cli\Colors\__EO__;
+    # BEGIN EXECUTABLE FRAME OF CONTROLLER.PHP
+    trait Controller {
+        // Returns colored string
+        public static function apply($string, $foreground_color = null, $background_color = null) {
+            $colored_string = "";
+            // Check if given foreground color found
+            if (isset($foreground_color) && isset(self::config()->foreground[$foreground_color])) {
+                $colored_string.= "\033[" . self::config()->foreground[$foreground_color] . "m";
+            }
+            // Check if given background color found
+            if (isset($background_color) && isset(self::config()->background[$background_color])) {
+                $colored_string.= "\033[" . self::config()->background[$background_color] . "m";
+            }
+            // Add string and end coloring
+            $colored_string.= $string . "\033[0m";
+            return $colored_string;
         }
-        // Check if given background color found
-        if (isset($background_color) && isset(self::config()->background[$background_color])) {
-            $colored_string.= "\033[" . self::config()->background[$background_color] . "m";
+        // Returns all foreground color names
+        public static function getForegroundColors() {
+            return array_keys(self::config()->foreground);
         }
-        // Add string and end coloring
-        $colored_string.= $string . "\033[0m";
-        return $colored_string;
+        // Returns all background color names
+        public static function getBackgroundColors() {
+            return array_keys(self::config()->background);
+        }
     }
-    // Returns all foreground color names
-    public static function getForegroundColors() {
-        return array_keys(self::config()->foreground);
-    }
-    // Returns all background color names
-    public static function getBackgroundColors() {
-        return array_keys(self::config()->background);
-    }
-}
-# END EXECUTABLE FRAME OF CONTROLLER.PHP
-__halt_compiler();
-#__COMPILER_HALT_OFFSET__
+    # END EXECUTABLE FRAME OF CONTROLLER.PHP
+    __halt_compiler();
+    #__COMPILER_HALT_OFFSET__
 
 BEGIN[CONFIG.INI]
 

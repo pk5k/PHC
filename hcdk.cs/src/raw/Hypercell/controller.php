@@ -142,8 +142,8 @@ trait Controller
 		$this->cellspace = $cellspace;
 
 		$this->resolveName($offset);
-		$this->readBuildInfo();
 		$this->collectAssemblies();
+		$this->readBuildInfo();
 		$this->checkBuildable();
 		$this->checkExecutable();
 		$this->checkAbstract();
@@ -238,8 +238,7 @@ trait Controller
 
 			try
 			{
-				$assembly_instance = self::getAssemblyInstance($file);
-				$assembly_instance->forHypercell($this);
+				$assembly_instance = self::getAssemblyInstance($file, true, $this);
 			}
 			catch(\Exception $e)
 			{
@@ -278,12 +277,12 @@ trait Controller
 		return $base_ns.$assembly;
 	}
 
-	public static function getAssemblyInstance($file, $check = true)
+	public static function getAssemblyInstance($file, $check = true, $_this = null)
 	{
 		$assembly = self::resolveAssemblyHCFQN($file);
 
 		RemoteInvoker::implicitConstructor(true);
-		$invoker = new RemoteInvoker($assembly, [file_get_contents($file), $file]);
+		$invoker = new RemoteInvoker($assembly, [file_get_contents($file), $file, $_this]);
 		$instance = $invoker->getInstance();
 
 		if (!($instance instanceof \hcdk\assembly))

@@ -1,12 +1,12 @@
-<?php #HYPERCELL hcdk.data.ph.Processor.PropertyProcessor - BUILD 18.06.15#60
+<?php #HYPERCELL hcdk.data.ph.Processor.PropertyProcessor - BUILD 21.07.08#70
 namespace hcdk\data\ph\Processor;
 class PropertyProcessor extends \hcdk\data\ph\Processor {
     use \hcf\core\dryver\Base, PropertyProcessor\__EO__\Controller, \hcf\core\dryver\Internal;
     const FQN = 'hcdk.data.ph.Processor.PropertyProcessor';
     const NAME = 'PropertyProcessor';
     public function __construct() {
-        if (method_exists($this, 'onConstruct')) {
-            call_user_func_array([$this, 'onConstruct'], func_get_args());
+        if (method_exists($this, 'hcdkdataphProcessorPropertyProcessor_onConstruct')) {
+            call_user_func_array([$this, 'hcdkdataphProcessorPropertyProcessor_onConstruct'], func_get_args());
         }
     }
     }

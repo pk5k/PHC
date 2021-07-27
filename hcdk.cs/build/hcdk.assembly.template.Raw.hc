@@ -1,12 +1,12 @@
-<?php #HYPERCELL hcdk.assembly.template.Raw - BUILD 18.06.15#177
+<?php #HYPERCELL hcdk.assembly.template.Raw - BUILD 21.07.08#187
 namespace hcdk\assembly\template;
 class Raw extends \hcdk\assembly\template {
     use \hcf\core\dryver\Base, Raw\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
     const FQN = 'hcdk.assembly.template.Raw';
     const NAME = 'Raw';
     public function __construct() {
-        if (method_exists($this, 'onConstruct')) {
-            call_user_func_array([$this, 'onConstruct'], func_get_args());
+        if (method_exists($this, 'hcdkassemblytemplateRaw_onConstruct')) {
+            call_user_func_array([$this, 'hcdkassemblytemplateRaw_onConstruct'], func_get_args());
         }
         call_user_func_array('parent::__construct', func_get_args());
     }

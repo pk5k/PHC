@@ -21,7 +21,7 @@ trait Controller
 		$__arg_nu = false;
 		$__arg_verbose = false;
 
-		foreach ($argv as $arg_i => $arg) 
+		foreach  ($argv as $arg_i => $arg) 
 		{
 			switch ($arg) 
 			{
@@ -113,8 +113,9 @@ trait Controller
 			
 			$built = 0;
 			$skipped = 0;
+			$build_start = time();
 
-			foreach($hypercells as $hypercell)
+			foreach ($hypercells as $hypercell)
 			{
 				InternalLogger::log()->info($hypercell->getName()->long.
 											'(resuild-required: '.($hypercell->rebuildRequired() ? 'true' : 'false').
@@ -123,7 +124,7 @@ trait Controller
 											', executable: '.($hypercell->isExecutable() ? 'true' : 'false').'):'
 											);
 
-				foreach($hypercell->getAssemblies() as $assembly)
+				foreach ($hypercell->getAssemblies() as $assembly)
 				{
 					$an = $assembly->getName();
 					$an .= ($assembly->getType() != '') ? ('.'.$assembly->getType()) : '';
@@ -162,7 +163,7 @@ trait Controller
 				}
 			}
 			
-			foreach ($update_build_info as $hc_info)
+			foreach  ($update_build_info as $hc_info)
 			{
 				InternalLogger::log()->info('Updating build information for '.$hc_info->getName()->long);
 				$hc_info->writeBuildInfo(true);
@@ -172,7 +173,7 @@ trait Controller
 			$cellspace->writeMap(true);
 			InternalLogger::log()->info('...updating Cellspace map file done');
 			
-			$ms_total = time() - $ms_total;
+			$ms_total = time() - $build_start;
 
 			InternalLogger::log()->info('Build process finished - built '.$built.', skipped '.$skipped.', took '.$ms_total.'ms');
 		}
@@ -223,6 +224,8 @@ trait Controller
 			{
 				InternalLogger::log()->info('No backup-directory was created during this execution - NO ROLLBACK WILL BE PERFORMED');
 			}
+
+			InternalLogger::log()->info('[BUILD FAILED]');
 		}
 
 		if (!$failed && is_string($backup_dir))
@@ -241,6 +244,7 @@ trait Controller
 			}
 
 			InternalLogger::log()->info('...done');
+			InternalLogger::log()->info('[BUILD SUCCESS]');
 		}
 
 		$this->backupFix($origin);

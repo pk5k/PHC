@@ -14,6 +14,7 @@ namespace hcf\core\loader
 	 */
 	class AutoLoader
 	{
+		private $directory = null;
 		private $classes = [];
 		private static $instances = [];
 
@@ -34,6 +35,7 @@ namespace hcf\core\loader
 				throw new \RuntimeException('Map file "'.$map_file.'" not found in "'.$for_directory.'".');
 			}
 
+			$this->directory = $for_directory;
 			$lines = file($map_file);
 
 			foreach($lines as $line)
@@ -139,6 +141,16 @@ namespace hcf\core\loader
 			//InternalLogger::log()->info(__CLASS__.' class "'.$class_name.'" was mapped to "'.$file.'" and loaded successfully');
 
 			return $found_files;
+		}
+
+		public function getDirectory()
+		{
+			return $this->directory;
+		}
+
+		public static function getInstances()
+		{
+			return self::$instances;
 		}
 	}
 }

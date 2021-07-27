@@ -3,6 +3,8 @@ use \hcf\core\Utils as Utils;
 
 trait Controller
 {
+	private $parent = null;
+
 	protected function implicitConstructor()
 	{
 		$split = explode(' ', $this->rawInput());
@@ -56,7 +58,9 @@ trait Controller
 			}
 		}
 
-		return Utils::HCFQN2PHPFQN($raw, true);
+		$this->parent = Utils::HCFQN2PHPFQN($raw, true);
+
+		return $this->parent;
 	}
 
 	public function getType()

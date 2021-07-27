@@ -1,12 +1,12 @@
-<?php #HYPERCELL hcdk.cli.exec.Create - BUILD 21.06.22#60
+<?php #HYPERCELL hcdk.cli.exec.Create - BUILD 21.07.08#70
 namespace hcdk\cli\exec;
 class Create extends \hcf\cli\exec {
     use \hcf\core\dryver\Base, Create\__EO__\Controller, \hcf\core\dryver\Internal;
     const FQN = 'hcdk.cli.exec.Create';
     const NAME = 'Create';
     public function __construct() {
-        if (method_exists($this, 'onConstruct')) {
-            call_user_func_array([$this, 'onConstruct'], func_get_args());
+        if (method_exists($this, 'hcdkcliexecCreate_onConstruct')) {
+            call_user_func_array([$this, 'hcdkcliexecCreate_onConstruct'], func_get_args());
         }
         call_user_func_array('parent::__construct', func_get_args());
     }

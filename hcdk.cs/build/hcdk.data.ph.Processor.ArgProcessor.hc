@@ -1,12 +1,12 @@
-<?php #HYPERCELL hcdk.data.ph.Processor.ArgProcessor - BUILD 21.02.24#62
+<?php #HYPERCELL hcdk.data.ph.Processor.ArgProcessor - BUILD 21.07.08#72
 namespace hcdk\data\ph\Processor;
 class ArgProcessor extends \hcdk\data\ph\Processor {
     use \hcf\core\dryver\Base, ArgProcessor\__EO__\Controller, \hcf\core\dryver\Internal;
     const FQN = 'hcdk.data.ph.Processor.ArgProcessor';
     const NAME = 'ArgProcessor';
     public function __construct() {
-        if (method_exists($this, 'onConstruct')) {
-            call_user_func_array([$this, 'onConstruct'], func_get_args());
+        if (method_exists($this, 'hcdkdataphProcessorArgProcessor_onConstruct')) {
+            call_user_func_array([$this, 'hcdkdataphProcessorArgProcessor_onConstruct'], func_get_args());
         }
     }
     }

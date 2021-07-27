@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.client.Js - BUILD 21.06.22#181
+<?php #HYPERCELL hcdk.assembly.client.Js - BUILD 21.07.08#192
 namespace hcdk\assembly\client;
 class Js extends \hcdk\assembly\client {
     use \hcf\core\dryver\Base, \hcf\core\dryver\Config, Js\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
@@ -8,8 +8,8 @@ class Js extends \hcdk\assembly\client {
         if (!isset(self::$config)) {
             self::loadConfig();
         }
-        if (method_exists($this, 'onConstruct')) {
-            call_user_func_array([$this, 'onConstruct'], func_get_args());
+        if (method_exists($this, 'hcdkassemblyclientJs_onConstruct')) {
+            call_user_func_array([$this, 'hcdkassemblyclientJs_onConstruct'], func_get_args());
         }
         call_user_func_array('parent::__construct', func_get_args());
     }
@@ -43,7 +43,7 @@ return \$js;";
             return 'JS';
         }
         protected function sourceIsAttachment() {
-            return true;
+            return false;
         }
         protected function minifyJS($js_data) {
             if (self::config()->jshrink->minify) {

@@ -1,12 +1,12 @@
-<?php #HYPERCELL hcdk.assembly.output - BUILD 18.06.15#185
+<?php #HYPERCELL hcdk.assembly.output - BUILD 21.07.08#195
 namespace hcdk\assembly;
 abstract class output extends \hcdk\assembly {
     use \hcf\core\dryver\Base, output\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
     const FQN = 'hcdk.assembly.output';
     const NAME = 'output';
     public function __construct() {
-        if (method_exists($this, 'onConstruct')) {
-            call_user_func_array([$this, 'onConstruct'], func_get_args());
+        if (method_exists($this, 'hcdkassemblyoutput_onConstruct')) {
+            call_user_func_array([$this, 'hcdkassemblyoutput_onConstruct'], func_get_args());
         }
         call_user_func_array('parent::__construct', func_get_args());
     }

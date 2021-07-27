@@ -1,12 +1,12 @@
-<?php #HYPERCELL hcdk.assembly.Base - BUILD 21.06.22#193
+<?php #HYPERCELL hcdk.assembly.Base - BUILD 21.07.08#210
 namespace hcdk\assembly;
 class Base extends \hcdk\assembly {
     use \hcf\core\dryver\Base, \hcf\core\dryver\Constant, Base\__EO__\Controller, \hcf\core\dryver\Internal;
     const FQN = 'hcdk.assembly.Base';
     const NAME = 'Base';
     public function __construct() {
-        if (method_exists($this, 'onConstruct')) {
-            call_user_func_array([$this, 'onConstruct'], func_get_args());
+        if (method_exists($this, 'hcdkassemblyBase_onConstruct')) {
+            call_user_func_array([$this, 'hcdkassemblyBase_onConstruct'], func_get_args());
         }
         call_user_func_array('parent::__construct', func_get_args());
     }
@@ -20,6 +20,7 @@ class Base extends \hcdk\assembly {
     # BEGIN EXECUTABLE FRAME OF CONTROLLER.PHP
     use \hcf\core\Utils as Utils;
     trait Controller {
+        private $parent = null;
         protected function implicitConstructor() {
             $split = explode(' ', $this->rawInput());
             $implicit = (isset($split[1]) && trim($split[1]) == 'implicit') ? true : false;
@@ -53,7 +54,8 @@ class Base extends \hcdk\assembly {
                     throw new \Exception(self::FQN . ' - inherit-' . $padding . ' relative to ' . $hc->getName()->long . ' results in empty name - inherit padding is too high.');
                 }
             }
-            return Utils::HCFQN2PHPFQN($raw, true);
+            $this->parent = Utils::HCFQN2PHPFQN($raw, true);
+            return $this->parent;
         }
         public function getType() {
             return '';

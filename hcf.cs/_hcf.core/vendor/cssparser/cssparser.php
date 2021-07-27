@@ -54,7 +54,7 @@ class CSSParser {
           while($idx < $codeLen) {
             //missing ; with a following } leads to "Notice: Uninitialized string offset" - guess the regex above is wrong
             //For debugging: echo "IDX: $idx  CL: $codeLen <br/>";
-            $c = @$code{$idx};//supress the notice for strict-modes sake
+            $c = substr($code, $idx, 1);
             $idx++;
             if($inQuote !== false) {
               if($inQuote === $c) {

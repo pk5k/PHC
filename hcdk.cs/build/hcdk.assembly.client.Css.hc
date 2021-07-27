@@ -1,12 +1,12 @@
-<?php #HYPERCELL hcdk.assembly.client.Css - BUILD 18.06.15#180
+<?php #HYPERCELL hcdk.assembly.client.Css - BUILD 21.07.08#190
 namespace hcdk\assembly\client;
 class Css extends \hcdk\assembly\client {
     use \hcf\core\dryver\Base, Css\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
     const FQN = 'hcdk.assembly.client.Css';
     const NAME = 'Css';
     public function __construct() {
-        if (method_exists($this, 'onConstruct')) {
-            call_user_func_array([$this, 'onConstruct'], func_get_args());
+        if (method_exists($this, 'hcdkassemblyclientCss_onConstruct')) {
+            call_user_func_array([$this, 'hcdkassemblyclientCss_onConstruct'], func_get_args());
         }
         call_user_func_array('parent::__construct', func_get_args());
     }

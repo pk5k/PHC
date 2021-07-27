@@ -1,12 +1,12 @@
-<?php #HYPERCELL hcdk.cli.exec.Help - BUILD 18.06.15#58
+<?php #HYPERCELL hcdk.cli.exec.Help - BUILD 21.07.08#68
 namespace hcdk\cli\exec;
 class Help extends \hcf\cli\exec {
     use \hcf\core\dryver\Base, Help\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Internal;
     const FQN = 'hcdk.cli.exec.Help';
     const NAME = 'Help';
     public function __construct() {
-        if (method_exists($this, 'onConstruct')) {
-            call_user_func_array([$this, 'onConstruct'], func_get_args());
+        if (method_exists($this, 'hcdkcliexecHelp_onConstruct')) {
+            call_user_func_array([$this, 'hcdkcliexecHelp_onConstruct'], func_get_args());
         }
         call_user_func_array('parent::__construct', func_get_args());
     }
@@ -14,6 +14,7 @@ class Help extends \hcf\cli\exec {
     public function __toString() {
         $__CLASS__ = __CLASS__;
         $_this = (isset($this)) ? $this : null;
+        $_func_args = \func_get_args();
         $output = "* * * * * * * * * * * * * * *
 * HYPERCELL DEVELOPMENT KIT 
 * COMMAND LINE INTERFACE HELP
@@ -107,17 +108,17 @@ class Help extends \hcf\cli\exec {
     }
     # END ASSEMBLY FRAME OUTPUT.TEXT
     
-}
-namespace hcdk\cli\exec\Help\__EO__;
-# BEGIN EXECUTABLE FRAME OF CONTROLLER.PHP
-trait Controller {
-    public function execute($argv, $argc) {
-        echo $this;
     }
-}
-# END EXECUTABLE FRAME OF CONTROLLER.PHP
-__halt_compiler();
-#__COMPILER_HALT_OFFSET__
+    namespace hcdk\cli\exec\Help\__EO__;
+    # BEGIN EXECUTABLE FRAME OF CONTROLLER.PHP
+    trait Controller {
+        public function execute($argv, $argc) {
+            echo $this;
+        }
+    }
+    # END EXECUTABLE FRAME OF CONTROLLER.PHP
+    __halt_compiler();
+    #__COMPILER_HALT_OFFSET__
 
 ?>
 

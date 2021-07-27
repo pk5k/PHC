@@ -1,12 +1,12 @@
-<?php #HYPERCELL hcdk.cli.exec.Build - BUILD 21.06.20#73
+<?php #HYPERCELL hcdk.cli.exec.Build - BUILD 21.07.08#86
 namespace hcdk\cli\exec;
 class Build extends \hcf\cli\exec {
     use \hcf\core\dryver\Base, Build\__EO__\Controller, \hcf\core\dryver\Internal;
     const FQN = 'hcdk.cli.exec.Build';
     const NAME = 'Build';
     public function __construct() {
-        if (method_exists($this, 'onConstruct')) {
-            call_user_func_array([$this, 'onConstruct'], func_get_args());
+        if (method_exists($this, 'hcdkcliexecBuild_onConstruct')) {
+            call_user_func_array([$this, 'hcdkcliexecBuild_onConstruct'], func_get_args());
         }
         call_user_func_array('parent::__construct', func_get_args());
     }
@@ -95,6 +95,7 @@ class Build extends \hcf\cli\exec {
                 InternalLogger::log()->info('Build process begins');
                 $built = 0;
                 $skipped = 0;
+                $build_start = time();
                 foreach ($hypercells as $hypercell) {
                     InternalLogger::log()->info($hypercell->getName()->long . '(resuild-required: ' . ($hypercell->rebuildRequired() ? 'true' : 'false') . ', abstract: ' . ($hypercell->isAbstract() ? 'true' : 'false') . ', buildable: ' . ($hypercell->isBuildable() ? 'true' : 'false') . ', executable: ' . ($hypercell->isExecutable() ? 'true' : 'false') . '):');
                     foreach ($hypercell->getAssemblies() as $assembly) {
@@ -129,7 +130,7 @@ class Build extends \hcf\cli\exec {
                 InternalLogger::log()->info('Updating Cellspace map file "' . $cellspace->getRoot() . Cellspace::config()->file->map . '"...');
                 $cellspace->writeMap(true);
                 InternalLogger::log()->info('...updating Cellspace map file done');
-                $ms_total = time() - $ms_total;
+                $ms_total = time() - $build_start;
                 InternalLogger::log()->info('Build process finished - built ' . $built . ', skipped ' . $skipped . ', took ' . $ms_total . 'ms');
             }
             catch(\Exception $e) {
@@ -163,6 +164,7 @@ class Build extends \hcf\cli\exec {
                 } else {
                     InternalLogger::log()->info('No backup-directory was created during this execution - NO ROLLBACK WILL BE PERFORMED');
                 }
+                InternalLogger::log()->info('[BUILD FAILED]');
             }
             if (!$failed && is_string($backup_dir)) {
                 InternalLogger::log()->info('Removing backup Cellspace "' . $backup_dir . '"...');
@@ -175,6 +177,7 @@ class Build extends \hcf\cli\exec {
                     die();
                 }
                 InternalLogger::log()->info('...done');
+                InternalLogger::log()->info('[BUILD SUCCESS]');
             }
             $this->backupFix($origin);
         }

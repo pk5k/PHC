@@ -16,9 +16,10 @@ trait Controller
 	 * @param $raw_input - string - the raw data out of the source file
 	 * @param $for_file - string - the filepath to the source, the $raw_input belongs to
 	 */
-	public function onConstruct($raw_input, $for_file)
+	public function onConstruct($raw_input, $for_file, Hypercell $for_hc)
 	{
 		$this->for_file	= $for_file;
+		$this->forHypercell($for_hc);
 
 		if (strlen(trim($raw_input)))
 		{

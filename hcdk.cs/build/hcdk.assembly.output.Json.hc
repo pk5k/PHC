@@ -1,12 +1,12 @@
-<?php #HYPERCELL hcdk.assembly.output.Json - BUILD 18.06.15#175
+<?php #HYPERCELL hcdk.assembly.output.Json - BUILD 21.07.08#185
 namespace hcdk\assembly\output;
 class Json extends \hcdk\assembly\output {
     use \hcf\core\dryver\Base, Json\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Internal;
     const FQN = 'hcdk.assembly.output.Json';
     const NAME = 'Json';
     public function __construct() {
-        if (method_exists($this, 'onConstruct')) {
-            call_user_func_array([$this, 'onConstruct'], func_get_args());
+        if (method_exists($this, 'hcdkassemblyoutputJson_onConstruct')) {
+            call_user_func_array([$this, 'hcdkassemblyoutputJson_onConstruct'], func_get_args());
         }
         call_user_func_array('parent::__construct', func_get_args());
     }
