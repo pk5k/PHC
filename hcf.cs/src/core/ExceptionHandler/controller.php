@@ -128,7 +128,7 @@ trait Controller
             // I'm converting arguments to their type
             // (prevents passwords from ever getting logged as anything other than 'string')
             if (!isset($trace[$key]['args']))
-            {
+            {  
                 $trace[$key]['args'] = [];// if php.ini's exception_ignore_args is Off/false no args will exist (default in PHP 7.4)
             }
             else 
