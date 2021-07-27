@@ -127,7 +127,14 @@ trait Controller
     	{
             // I'm converting arguments to their type
             // (prevents passwords from ever getting logged as anything other than 'string')
-            $trace[$key]['args'] = array_map('gettype', $trace[$key]['args']);
+            if (!isset($trace[$key]['args']))
+            {
+                $trace[$key]['args'] = [];// if php.ini's exception_ignore_args is Off/false no args will exist (default in PHP 7.4)
+            }
+            else 
+            {
+                $trace[$key]['args'] = array_map('gettype', $trace[$key]['args']);
+            }
         }
 
         // build your tracelines
@@ -262,7 +269,7 @@ trait Controller
         $line_no = $_line;
         $path = $_file;
         $fc = file($path);
-        $fc_full = implode($fc, "\n");
+        $fc_full = implode("\n", $fc);
         $fc = array_slice($fc, 0, $line_no);
         $fc = array_reverse($fc);
         $line_str = isset($fc[0]) ? trim($fc[0]) : null;
