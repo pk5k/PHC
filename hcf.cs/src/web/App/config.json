@@ -1,0 +1,8 @@
+{
+  "encoding":"utf-8",
+  "enable-autoloader": true,
+  "font":{
+    "family":"robotoregular",
+    "size":16
+  }
+}

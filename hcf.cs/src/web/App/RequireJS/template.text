@@ -1,0 +1,2 @@
+@~requireAsync:
+require([{{arg:0}}]);
