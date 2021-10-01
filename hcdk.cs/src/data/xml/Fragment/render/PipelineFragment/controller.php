@@ -16,6 +16,20 @@ trait Controller
 {
 	private static $active_pipeline = null;
 	private static $active_pipeline_target = null;
+	private static $instance_counter = 0;
+
+	public static function resetInstanceCounter()
+	{
+		self::$instance_counter = 0;
+	}
+
+	private static function nextInstanceCount()
+	{
+		$current = self::$instance_counter;
+		self::$instance_counter += 1;
+
+		return $current;
+	}
 
 	public static function getActivePipeline()
 	{
@@ -64,7 +78,7 @@ trait Controller
 			$template = PlaceholderParser::parse(trim((string)$root['template']), false);
 		}
 
-		$instance_token = uniqid('$instance_');
+		$instance_token = '$instance_'.self::nextInstanceCount();
 		$target_raw = trim((string)$root['target']);
 		$target = PlaceholderParser::parse($target_raw, false);
 		$is_placeholder_target = ($target_raw != $target);
@@ -84,6 +98,14 @@ trait Controller
 		if (is_null($template))
 		{
 			$output = $instance_token.' = new '.$fqn.'('.implode(',',$constructor_args).');';
+			$fast_instructions = self::collectFastInstructionsFromNode($root);
+
+			foreach ($fast_instructions as $method => $_0)
+			{
+				$fast_instruction = $root->addChild('render.instruction');
+				$fast_instruction->setAttribute('method', $method);
+				$fast_instruction->setAttribute('_0', $_0);
+			}
 
 			foreach ($root->children() as $instruction) 
 			{
@@ -110,6 +132,24 @@ trait Controller
 		self::setActivePipelineTarget(null);
 
 		return $output;
+	}
+
+	private static function collectFastInstructionsFromNode($node)
+	{
+		$fi = [];
+
+		foreach ($node->attributes() as $name => $value)
+		{
+			// all Attributes of render.pipline (except target, template and everything beginning with an underscore _ ) will be converted to an <render.instruction method="$name" _0="$value"/> child of this pipeline
+			if (substr($name, 0, 1) == '_' || $name == 'template' || $name == 'target')
+			{
+				continue;
+			}
+
+			$fi[$name] = [$value];
+		}
+
+		return $fi;
 	}
 
 	public static function collectArgumentsFromNode($node)

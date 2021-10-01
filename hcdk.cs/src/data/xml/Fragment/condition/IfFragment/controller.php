@@ -20,23 +20,36 @@ trait Controller
 		$value = (isset($root['value'])) ? (string)$root['value'] : null;
 		$condition = self::getConditionAttribute($root);
 
-		if(is_null($value))
+		if (strpos($condition[0], '#') !== false)
 		{
-			throw new \XMLParseException(self::FQN.' - Value cannot be empty. In '.$file_scope.' for element "'.str_replace(XMLParser::TMP_OPT_TAG_MARKER, '?', $root->getName()).'"');
+			if(!is_null($value))
+			{
+				throw new \XMLParseException(self::FQN.' - attribute "value" cannot be set on '.$condition[0].' condition. The attribute contains already the value that should be checked. In '.$file_scope.' for element "'.str_replace(XMLParser::TMP_OPT_TAG_MARKER, '?', $root->getName()).'"');
+			}
+
+			$output = 'if('.str_replace('#', $condition[1], $condition[0]);
+		}
+		else 
+		{
+			if(is_null($value))
+			{
+				throw new \XMLParseException(self::FQN.' - Value cannot be empty. In '.$file_scope.' for element "'.str_replace(XMLParser::TMP_OPT_TAG_MARKER, '?', $root->getName()).'"');
+			}
+
+			$value = PlaceholderParser::parse($value, false);
+
+			$output = 'if('.$value.' '.$condition[0];
+			
+			if(!is_numeric($condition[1]))
+			{
+				$output .= ' "'.$condition[1].'"';
+			}
+			else
+			{
+				$output .= ' '.$condition[1];
+			}
 		}
 
-		$value = PlaceholderParser::parse($value, false);
-
-		$output = 'if('.$value.' '.$condition[0];
-
-		if(!is_numeric($condition[1]))
-		{
-			$output .= ' "'.$condition[1].'"';
-		}
-		else
-		{
-			$output .= ' '.$condition[1];
-		}
 
 		$output .= ') { '.self::buildBody($root, $file_scope).' }';
 

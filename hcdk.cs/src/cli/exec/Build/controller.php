@@ -118,7 +118,7 @@ trait Controller
 			foreach ($hypercells as $hypercell)
 			{
 				InternalLogger::log()->info($hypercell->getName()->long.
-											'(resuild-required: '.($hypercell->rebuildRequired() ? 'true' : 'false').
+											'(rebuild-required: '.($hypercell->rebuildRequired() ? 'true' : 'false').
 											', abstract: '.($hypercell->isAbstract() ? 'true' : 'false').
 											', buildable: '.($hypercell->isBuildable() ? 'true' : 'false').
 											', executable: '.($hypercell->isExecutable() ? 'true' : 'false').'):'

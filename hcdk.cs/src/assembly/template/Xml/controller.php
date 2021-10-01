@@ -1,6 +1,7 @@
 <?php
 use \hcdk\raw\Method as Method;
 use \hcdk\data\xml\Parser as XMLParser;
+use \hcdk\data\xml\Fragment\render\PipelineFragment;
 
 trait Controller
 {
@@ -15,6 +16,8 @@ trait Controller
 		// is added in- or outside of the output-variable (the $betweem_double_quotes flag for Placeholder::process)
 		// in further implementations, the placeholders should be processed here, to keep the Fragments "placeholder-independet"
 		// $ph_output  =
+		PipelineFragment::resetInstanceCounter();// begin at $instance_0 in each template-method
+
 		$input = $data['content'];
 		$opt_attrs = XMLParser::matchOptionalAttributes($input);
 		$opt_tags = XMLParser::matchOptionalTags($input);

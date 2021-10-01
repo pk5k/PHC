@@ -12,7 +12,7 @@ use \hcdk\data\ph\Parser as PlaceholderParser;
 	 */
 trait Controller
 {
-	protected static $possible_conditions = ['is' => '==', 'is-not' => '!=', 'gt' => '>', 'lt' => '<', 'gte' => '>=', 'lte' => '<='];// key = attribute name to use this condition, value = the condition in php
+	protected static $possible_conditions = ['is-not-set' => '!isset(#)', 'is-set' => 'isset(#)' , 'isset' => 'isset(#)', 'is' => '==', 'is-not' => '!=', 'gt' => '>', 'lt' => '<', 'gte' => '>=', 'lte' => '<='];// key = attribute name to use this condition, value = the condition in php
 
   public static function getConditionAttribute($root)
   {
@@ -21,8 +21,15 @@ trait Controller
     {
       if(isset(self::$possible_conditions[$attr_name]))
       {
-        return [self::$possible_conditions[$attr_name], PlaceholderParser::parse($value, true)];
-      }
+        $between_double_quotes = true;
+
+        if (strpos(self::$possible_conditions[$attr_name], '#') !== false)
+        {
+          $between_double_quotes = false;// no quotes for direct function pass
+        }
+        
+        return [self::$possible_conditions[$attr_name], PlaceholderParser::parse($value, $between_double_quotes)];
+      } 
     }
 
     throw new \XMLParseException(self::FQN.' - No condition set');

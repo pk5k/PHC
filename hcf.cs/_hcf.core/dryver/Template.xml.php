@@ -45,7 +45,7 @@ namespace hcf\core\dryver\Template
 
 			$match = [];
 			$restore = [];
-			$remove_pattern = '/<([\w\s-_\.]+)\?.*><\/\1\?>/i';// we do not know the attributes of each tag so we have to use a regex here
+			$remove_pattern = '/<([\w\s\-_\.]+)\?.*><\/\1\?>/i';// we do not know the attributes of each tag so we have to use a regex here
 
 			foreach ($to_clean as $tag_name) 
 			{
