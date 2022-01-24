@@ -1,7 +1,7 @@
 <?php
 use \hcdk\data\xml\Parser as XMLParser;
+use \hcdk\data\xml\Fragment\condition\IfFragment as F_If;
 use \hcdk\data\ph\Parser as PlaceholderParser;
-
 /**
  * (F_)Else
  * Else-Fragment for \hcf\core.xml.Parser

@@ -7,7 +7,8 @@ document.Bridge = function (to)
 
 	var _header = {
 		action: "X-Bridge-Action",
-		target: "X-Bridge-Target"
+		target: "X-Bridge-Target",
+		method: "X-Bridge-Method"
 	};
 
 	self._target = to;
@@ -57,7 +58,8 @@ document.Bridge = function (to)
 				route: _internal_route,
 				header: _header,
 				target: self.target(),
-				action: self.action()
+				action: self.action(),
+				method: self.method()
 			},
 			// user-data
 			overwrites: prepared_data.overwrites,
@@ -600,6 +602,7 @@ document.Bridge = function (to)
 		http_request.open(req_method, _internal_route, async);// if you override config.ini@hcf.web.Router, don't forget to add the internal -bridge route
 		http_request.setRequestHeader(_header.action, self.action());
 		http_request.setRequestHeader(_header.target, self.target());
+		http_request.setRequestHeader(_header.method, self.method());
 
 		if (async)
 		{

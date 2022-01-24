@@ -50,6 +50,7 @@ onmessage = function(e)
 	http_request.open('POST', data._.route, true);
 	http_request.setRequestHeader(data._.header.action, data._.action);
 	http_request.setRequestHeader(data._.header.target, data._.target);
+	http_request.setRequestHeader(data._.header.method, data._.method);
 	http_request.timeout = timeout;
 	http_request.send(send_data);
 
