@@ -176,7 +176,7 @@ document.Bridge = function (to)
 
 	self.render = function()
 	{
-		return self.action('render').method(null);
+		return self.action('render').method('toString');
 	}
 
 	self.action = function(action)
