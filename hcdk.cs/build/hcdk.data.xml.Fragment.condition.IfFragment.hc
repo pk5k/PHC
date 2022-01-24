@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.data.xml.Fragment.condition.IfFragment - BUILD 21.07.08#69
+<?php #HYPERCELL hcdk.data.xml.Fragment.condition.IfFragment - BUILD 22.01.24#71
 namespace hcdk\data\xml\Fragment\condition;
 class IfFragment extends \hcdk\data\xml\Fragment\condition {
     use \hcf\core\dryver\Base, IfFragment\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -28,15 +28,22 @@ class IfFragment extends \hcdk\data\xml\Fragment\condition {
             $root_name = $root->getName();
             $value = (isset($root['value'])) ? (string)$root['value'] : null;
             $condition = self::getConditionAttribute($root);
-            if (is_null($value)) {
-                throw new \XMLParseException(self::FQN . ' - Value cannot be empty. In ' . $file_scope . ' for element "' . str_replace(XMLParser::TMP_OPT_TAG_MARKER, '?', $root->getName()) . '"');
-            }
-            $value = PlaceholderParser::parse($value, false);
-            $output = 'if(' . $value . ' ' . $condition[0];
-            if (!is_numeric($condition[1])) {
-                $output.= ' "' . $condition[1] . '"';
+            if (strpos($condition[0], '#') !== false) {
+                if (!is_null($value)) {
+                    throw new \XMLParseException(self::FQN . ' - attribute "value" cannot be set on ' . $condition[0] . ' condition. The attribute contains already the value that should be checked. In ' . $file_scope . ' for element "' . str_replace(XMLParser::TMP_OPT_TAG_MARKER, '?', $root->getName()) . '"');
+                }
+                $output = 'if(' . str_replace('#', $condition[1], $condition[0]);
             } else {
-                $output.= ' ' . $condition[1];
+                if (is_null($value)) {
+                    throw new \XMLParseException(self::FQN . ' - Value cannot be empty. In ' . $file_scope . ' for element "' . str_replace(XMLParser::TMP_OPT_TAG_MARKER, '?', $root->getName()) . '"');
+                }
+                $value = PlaceholderParser::parse($value, false);
+                $output = 'if(' . $value . ' ' . $condition[0];
+                if (!is_numeric($condition[1])) {
+                    $output.= ' "' . $condition[1] . '"';
+                } else {
+                    $output.= ' ' . $condition[1];
+                }
             }
             $output.= ') { ' . self::buildBody($root, $file_scope) . ' }';
             return $output;

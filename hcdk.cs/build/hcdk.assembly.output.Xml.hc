@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.output.Xml - BUILD 21.07.08#188
+<?php #HYPERCELL hcdk.assembly.output.Xml - BUILD 22.01.24#190
 namespace hcdk\assembly\output;
 class Xml extends \hcdk\assembly\output {
     use \hcf\core\dryver\Base, Xml\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;

@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.log.Xml - BUILD 21.07.08#184
+<?php #HYPERCELL hcdk.assembly.log.Xml - BUILD 22.01.24#186
 namespace hcdk\assembly\log;
 class Xml extends \hcdk\assembly\log {
     use \hcf\core\dryver\Base, Xml\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;

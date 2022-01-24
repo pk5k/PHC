@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.web.App.RequireJS - BUILD 21.07.03#114
+<?php #HYPERCELL hcf.web.App.RequireJS - BUILD 21.07.03#115
 namespace hcf\web\App;
 class RequireJS {
     use \hcf\core\dryver\Client, \hcf\core\dryver\Client\Js, \hcf\core\dryver\Constant, RequireJS\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;

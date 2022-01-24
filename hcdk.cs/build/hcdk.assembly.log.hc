@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.log - BUILD 21.07.08#197
+<?php #HYPERCELL hcdk.assembly.log - BUILD 22.01.24#199
 namespace hcdk\assembly;
 abstract class log extends \hcdk\assembly {
     use \hcf\core\dryver\Base, log\__EO__\Controller, \hcf\core\dryver\Internal;

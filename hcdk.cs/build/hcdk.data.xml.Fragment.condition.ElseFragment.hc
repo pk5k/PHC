@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.data.xml.Fragment.condition.ElseFragment - BUILD 21.07.08#68
+<?php #HYPERCELL hcdk.data.xml.Fragment.condition.ElseFragment - BUILD 22.01.24#70
 namespace hcdk\data\xml\Fragment\condition;
 class ElseFragment extends \hcdk\data\xml\Fragment\condition {
     use \hcf\core\dryver\Base, ElseFragment\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -13,6 +13,7 @@ class ElseFragment extends \hcdk\data\xml\Fragment\condition {
     namespace hcdk\data\xml\Fragment\condition\ElseFragment\__EO__;
     # BEGIN EXECUTABLE FRAME OF CONTROLLER.PHP
     use \hcdk\data\xml\Parser as XMLParser;
+    use \hcdk\data\xml\Fragment\condition\IfFragment as F_If;
     use \hcdk\data\ph\Parser as PlaceholderParser;
     /**
      * (F_)Else

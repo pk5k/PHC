@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.data.ph.Processor.LocalProcessor - BUILD 21.07.08#69
+<?php #HYPERCELL hcdk.data.ph.Processor.LocalProcessor - BUILD 22.01.24#71
 namespace hcdk\data\ph\Processor;
 class LocalProcessor extends \hcdk\data\ph\Processor {
     use \hcf\core\dryver\Base, LocalProcessor\__EO__\Controller, \hcf\core\dryver\Internal;

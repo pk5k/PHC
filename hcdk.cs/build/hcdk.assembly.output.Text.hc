@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.output.Text - BUILD 21.07.08#185
+<?php #HYPERCELL hcdk.assembly.output.Text - BUILD 22.01.24#187
 namespace hcdk\assembly\output;
 class Text extends \hcdk\assembly\output {
     use \hcf\core\dryver\Base, Text\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;

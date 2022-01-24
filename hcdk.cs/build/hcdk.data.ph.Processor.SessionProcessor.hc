@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.data.ph.Processor.SessionProcessor - BUILD 21.07.08#69
+<?php #HYPERCELL hcdk.data.ph.Processor.SessionProcessor - BUILD 22.01.24#71
 namespace hcdk\data\ph\Processor;
 class SessionProcessor extends \hcdk\data\ph\Processor {
     use \hcf\core\dryver\Base, SessionProcessor\__EO__\Controller, \hcf\core\dryver\Internal;

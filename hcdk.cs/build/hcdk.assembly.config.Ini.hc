@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.config.Ini - BUILD 21.07.08#186
+<?php #HYPERCELL hcdk.assembly.config.Ini - BUILD 22.01.24#188
 namespace hcdk\assembly\config;
 class Ini extends \hcdk\assembly\config {
     use \hcf\core\dryver\Base, Ini\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;

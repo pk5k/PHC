@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.template.Sql - BUILD 21.07.08#192
+<?php #HYPERCELL hcdk.assembly.template.Sql - BUILD 22.01.24#194
 namespace hcdk\assembly\template;
 class Sql extends \hcdk\assembly\template {
     use \hcf\core\dryver\Base, Sql\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;

@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.db.Connection - BUILD 21.06.27#37
+<?php #HYPERCELL hcf.db.Connection - BUILD 21.06.27#38
 namespace hcf\db;
 class Connection {
     use \hcf\core\dryver\Config, Connection\__EO__\Controller, \hcf\core\dryver\Internal;

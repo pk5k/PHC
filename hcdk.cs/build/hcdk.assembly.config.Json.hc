@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.config.Json - BUILD 21.07.08#185
+<?php #HYPERCELL hcdk.assembly.config.Json - BUILD 22.01.24#187
 namespace hcdk\assembly\config;
 class Json extends \hcdk\assembly\config {
     use \hcf\core\dryver\Base, Json\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;

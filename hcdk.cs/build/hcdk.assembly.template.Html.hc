@@ -1,12 +1,12 @@
-<?php #HYPERCELL hcdk.assembly.template.Html - BUILD 21.07.08#199
+<?php #HYPERCELL hcdk.assembly.template.Html - BUILD 22.01.24#200
 namespace hcdk\assembly\template;
 class Html extends \hcdk\assembly\template\Xml {
     use \hcf\core\dryver\Base, Html\__EO__\Controller, \hcf\core\dryver\Internal;
     const FQN = 'hcdk.assembly.template.Html';
     const NAME = 'Html';
     public function __construct() {
-        if (method_exists($this, 'onConstruct')) {
-            call_user_func_array([$this, 'onConstruct'], func_get_args());
+        if (method_exists($this, 'hcdkassemblytemplateHtml_onConstruct')) {
+            call_user_func_array([$this, 'hcdkassemblytemplateHtml_onConstruct'], func_get_args());
         }
         call_user_func_array('parent::__construct', func_get_args());
     }

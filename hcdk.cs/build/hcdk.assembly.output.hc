@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.output - BUILD 21.07.08#195
+<?php #HYPERCELL hcdk.assembly.output - BUILD 22.01.24#197
 namespace hcdk\assembly;
 abstract class output extends \hcdk\assembly {
     use \hcf\core\dryver\Base, output\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;

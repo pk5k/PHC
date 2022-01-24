@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.web.Container.Autoloader.provider.Style - BUILD 21.06.27#15
+<?php #HYPERCELL hcf.web.Container.Autoloader.provider.Style - BUILD 21.06.27#16
 namespace hcf\web\Container\Autoloader\provider;
 class Style extends \hcf\web\Container\Autoloader\provider {
     use \hcf\core\dryver\Base, Style\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Internal;

@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.cli.exec.Inspect - BUILD 21.07.08#57
+<?php #HYPERCELL hcdk.cli.exec.Inspect - BUILD 22.01.24#59
 namespace hcdk\cli\exec;
 class Inspect extends \hcf\cli\exec {
     use \hcf\core\dryver\Base, Inspect\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;

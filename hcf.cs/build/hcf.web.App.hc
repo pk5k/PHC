@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.web.App - BUILD 21.07.04#130
+<?php #HYPERCELL hcf.web.App - BUILD 21.07.10#131
 namespace hcf\web;
 class App {
     use \hcf\core\dryver\Client, \hcf\core\dryver\Client\Js, \hcf\core\dryver\Config, App\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Template, \hcf\core\dryver\Template\Xml, \hcf\core\dryver\Internal;

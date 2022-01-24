@@ -21,6 +21,7 @@ hcdk\assembly\output\Json=build/hcdk.assembly.output.Json.hc
 hcdk\assembly\output\Raw=build/hcdk.assembly.output.Raw.hc
 hcdk\assembly\output\Text=build/hcdk.assembly.output.Text.hc
 hcdk\assembly\output\Xml=build/hcdk.assembly.output.Xml.hc
+hcdk\assembly\template\Html=build/hcdk.assembly.template.Html.hc
 hcdk\assembly\template\Raw=build/hcdk.assembly.template.Raw.hc
 hcdk\assembly\template\Sql=build/hcdk.assembly.template.Sql.hc
 hcdk\assembly\template\Text=build/hcdk.assembly.template.Text.hc

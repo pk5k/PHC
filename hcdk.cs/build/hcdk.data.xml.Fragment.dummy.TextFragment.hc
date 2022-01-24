@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.data.xml.Fragment.dummy.TextFragment - BUILD 21.07.08#68
+<?php #HYPERCELL hcdk.data.xml.Fragment.dummy.TextFragment - BUILD 22.01.24#70
 namespace hcdk\data\xml\Fragment\dummy;
 class TextFragment extends \hcdk\data\xml\Fragment {
     use \hcf\core\dryver\Base, TextFragment\__EO__\Controller, \hcf\core\dryver\Internal;

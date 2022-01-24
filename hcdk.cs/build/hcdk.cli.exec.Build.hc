@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.cli.exec.Build - BUILD 21.07.08#86
+<?php #HYPERCELL hcdk.cli.exec.Build - BUILD 22.01.24#88
 namespace hcdk\cli\exec;
 class Build extends \hcf\cli\exec {
     use \hcf\core\dryver\Base, Build\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -97,7 +97,7 @@ class Build extends \hcf\cli\exec {
                 $skipped = 0;
                 $build_start = time();
                 foreach ($hypercells as $hypercell) {
-                    InternalLogger::log()->info($hypercell->getName()->long . '(resuild-required: ' . ($hypercell->rebuildRequired() ? 'true' : 'false') . ', abstract: ' . ($hypercell->isAbstract() ? 'true' : 'false') . ', buildable: ' . ($hypercell->isBuildable() ? 'true' : 'false') . ', executable: ' . ($hypercell->isExecutable() ? 'true' : 'false') . '):');
+                    InternalLogger::log()->info($hypercell->getName()->long . '(rebuild-required: ' . ($hypercell->rebuildRequired() ? 'true' : 'false') . ', abstract: ' . ($hypercell->isAbstract() ? 'true' : 'false') . ', buildable: ' . ($hypercell->isBuildable() ? 'true' : 'false') . ', executable: ' . ($hypercell->isExecutable() ? 'true' : 'false') . '):');
                     foreach ($hypercell->getAssemblies() as $assembly) {
                         $an = $assembly->getName();
                         $an.= ($assembly->getType() != '') ? ('.' . $assembly->getType()) : '';

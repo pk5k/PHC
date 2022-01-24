@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.template.Text - BUILD 21.07.08#187
+<?php #HYPERCELL hcdk.assembly.template.Text - BUILD 22.01.24#189
 namespace hcdk\assembly\template;
 class Text extends \hcdk\assembly\template {
     use \hcf\core\dryver\Base, Text\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;

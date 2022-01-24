@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.data.xml.Fragment.loop.ForeachFragment - BUILD 21.07.08#70
+<?php #HYPERCELL hcdk.data.xml.Fragment.loop.ForeachFragment - BUILD 22.01.24#72
 namespace hcdk\data\xml\Fragment\loop;
 class ForeachFragment extends \hcdk\data\xml\Fragment {
     use \hcf\core\dryver\Base, ForeachFragment\__EO__\Controller, \hcf\core\dryver\Internal;

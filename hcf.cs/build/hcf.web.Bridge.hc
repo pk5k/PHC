@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.web.Bridge - BUILD 21.07.11#3308
+<?php #HYPERCELL hcf.web.Bridge - BUILD 21.07.11#3309
 namespace hcf\web;
 class Bridge {
     use \hcf\core\dryver\Client, \hcf\core\dryver\Client\Js, \hcf\core\dryver\Config, Bridge\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Internal;
@@ -12,56 +12,94 @@ class Bridge {
             call_user_func_array([$this, 'hcfwebBridge_onConstruct'], func_get_args());
         }
     }
-    # BEGIN ASSEMBLY FRAME CLIENT.TS
+    # BEGIN ASSEMBLY FRAME CLIENT.JS
     public static function script() {
-        $js = "define(\"hcf.web.Bridge\",[\"require\",\"exports\"],function(require,exports){\"use strict\";Object.defineProperty(exports,\"__esModule\",{value:true});exports.BridgeRequest=void 0;function setup(to){return new BridgeRequest(to);}
-exports.default=setup;class BridgeRequest extends XMLHttpRequest{constructor(to){super();this.internal_route='?!=-bridge';this._target='';this._method='';this.header={target:\"X-Bridge-Target\",method:\"X-Bridge-Method\"};this.to(to);}
-to(hypercell){this.target(hypercell);return this;}
-do(arg_obj){var prepared_data=this.prepareSend(arg_obj);return this.executeRequest(prepared_data.url_args,prepared_data.passed_files,prepared_data.overwrites,prepared_data.callbacks);}
-prepareSend(arg_obj){if(this._method==''){throw'No action specified, use .invoke or .render';}
-let prepared_data={callbacks:this.getCallbacks(arg_obj),overwrites:this.getOverwrites(arg_obj),passed_files:this.getFiles(arg_obj),url_args:this.getArguments(arg_obj)};return prepared_data;}
-method(method){this._method=method;return this;}
-invoke(method,implicit_constructor){if(implicit_constructor===true){method=method+'#implicit';}
-return this.method(method);}
-render(){return this.invoke('toString',true);}
-target(target){this._target=target;return this;}
-getArguments(p_obj){let passed_args=[];if(p_obj.arguments!=undefined&&p_obj.arguments.constructor!=Array&&p_obj.arguments.constructor!=Object){throw'Passed argument list is not of type array nor object';}
-else if(p_obj.arguments!=undefined){passed_args=p_obj.arguments;}
+        $js = "document.Bridge=function(to){var self=this;var _internal_route='?!=-bridge';var _worker_address='hcf.web.Bridge.Worker';var _worker_store=_worker_address+'.Store';var _header={action:\"X-Bridge-Action\",target:\"X-Bridge-Target\",method:\"X-Bridge-Method\"};self._target=to;self._action=undefined;self._method=undefined;if(document[_worker_address]==undefined&&window.Worker){document[_worker_address]=new Worker(_internal_route);document[_worker_address].onmessage=receiveWorkerMessage;}
+else if(!window.Worker){console.warn('Your Browser does not support WebWorkers - all requests will be executed on the main-thread.');}
+if(document[_worker_store]==undefined){document[_worker_store]={};}
+self.do=function(arg_obj){var prepared_data=prepareSend(arg_obj,false);send(prepared_data.url_args,prepared_data.passed_files,prepared_data.overwrites,prepared_data.callbacks);return self;}
+self.letDo=function(arg_obj){if(!window.Worker||!document[_worker_address]){return self.do(arg_obj);}
+var prepared_data=prepareSend(arg_obj,true);var req_token=new Date().getTime();document[_worker_store][req_token]=prepared_data;document[_worker_address].postMessage({_:{token:req_token,route:_internal_route,header:_header,target:self.target(),action:self.action(),method:self.method()},overwrites:prepared_data.overwrites,args:prepared_data.url_args,files:prepared_data.passed_files});return self;}
+function receiveWorkerMessage(e){var token=e.data.token;if(document[_worker_store]==undefined){throw'Missing worker-store at document['+_worker_store+']';}
+else if(document[_worker_store][token]==undefined){throw'Missing worker-store-data at document['+_worker_store+']['+token+']';}
+var stored_data=document[_worker_store][token];var callbacks=stored_data.callbacks;var overwrites=stored_data.overwrites;switch(e.data.result){case'success':if(callbacks.success){callbacks.success(e.data.data);}
+break;case'error':if(callbacks.error){callbacks.error(e.data.data, e.data.code);}
+else{throw'WebWorker-request failed with response-code '+e.data.code+'.';}
+break;case'timeout':if(callbacks.timeout){callbacks.timeout(e.data.data);}
+else{throw'WebWorker-request timed out.';}
+break;default:throw'WebWorker-request returned unknown result \"'+e.data.result+'\"';}
+delete document[_worker_store][token];}
+function prepareSend(arg_obj,for_worker){if(arg_obj===undefined){arg_obj={};}
+if(self.action()===undefined){throw'No action specified';}
+var prepared_data={callbacks:getCallbacks(arg_obj,for_worker),overwrites:getOverwrites(arg_obj,for_worker),passed_files:getFiles(arg_obj),url_args:{method:self.method()}};var passed_args=getArguments(arg_obj);for(var key in passed_args){if(prepared_data.url_args.hasOwnProperty(key)){throw'Cannot use argument '+key+' - this argument is used by the bridge for internally routing';}
+prepared_data.url_args[key]=passed_args[key];}
+return prepared_data;}
+self.invoke=function(method,implicit_constructor){if(method===undefined){throw'No method specified that should be invoked in '+self.target;}
+if(implicit_constructor===true){method=method+'#implicit';}
+return self.action('invoke').method(method);}
+self.render=function(){return self.action('render').method(null);}
+self.action=function(action){if(action===undefined){return self._action;}
+self._action=action;return self;}
+self.target=function(target){if(target===undefined){return self._target;}
+self._target=target;return self;}
+self.method=function(method){if(method===undefined){return self._method;}
+self._method=method;return self;}
+function getArguments(p_obj){var passed_args=[];if(p_obj.arguments!=undefined&&p_obj.arguments.constructor!=Array&&p_obj.arguments.constructor!=Object){throw'Passed argument list is not of type array nor object';}
+else if(p_obj!=undefined){passed_args=p_obj.arguments;}
 return passed_args;}
-getFiles(p_obj){let passed_files=[];if(p_obj.files!=undefined&&p_obj.files.constructor!=Array){throw'Passed file list is not of type array';}
-else if(p_obj.files!=undefined){passed_files=p_obj.files;}
+function getFiles(p_obj){var passed_files=[];if(p_obj.files!=undefined&&p_obj.files.constructor!=Array){throw'Passed file list is not of type array';}
+else if(p_obj!=undefined){passed_files=p_obj.files;}
 return passed_files;}
-getCallbacks(p_obj){let cbs={success:p_obj.success,error:p_obj.error,timeout:p_obj.timeout,upload:p_obj.upload,download:p_obj.download,before:p_obj.before};return cbs;}
-getOverwrites(p_obj){return{xhr:p_obj.xhr,method:p_obj.method,timeoutSeconds:p_obj.timeoutSeconds,eval:p_obj.eval};}
-argsToFormData(args,files){var fd=new FormData();for(var key in args){if(args.hasOwnProperty(key)){let value;Object.keys(args).forEach(dataKey=>{if(dataKey==key){value=args[dataKey];}});if(value!==null&&value.constructor==Object){value=JSON.stringify(value);}
+function getCallbacks(p_obj,for_worker){var callbacks={};if(p_obj!==undefined){var success=p_obj.onSuccess||false;var error=p_obj.onError||false;var timeout=p_obj.onTimeout||false;var upload=p_obj.onUpload||false;var download=p_obj.onDownload||false;var before=p_obj.onBefore||false;if(success){callbacks.success=success;}
+if(error){callbacks.error=error;}
+if(timeout){callbacks.timeout=timeout;}
+if(upload){callbacks.upload=upload;if(for_worker){throw'WebWorker requests can\'t use the upload-callback';}}
+if(download){callbacks.download=download;if(for_worker){throw'WebWorker requests can\'t use the download-callback';}}
+if(before){callbacks.before=before;if(for_worker){throw'WebWorker requests can\'t use the before-callback';}}}
+return callbacks;}
+function getOverwrites(p_obj,for_worker){var overwrites={};if(p_obj!==undefined){var xhr=p_obj.xhr||false;var method=p_obj.method||false;var eval=p_obj.eval||false;var timeout=undefined;if(!isNaN(p_obj.timeout)){timeout=Number(p_obj.timeout);}
+if(p_obj.async!==undefined&&p_obj.async!==null){overwrites.async=p_obj.async;}
+if(xhr){overwrites.xhr=xhr;if(for_worker){throw'WebWorker requests cant override the XHR-object';}}
+if(method){overwrites.method=method;if(for_worker){throw'WebWorker requests cant override the request-method';}}
+if(!isNaN(timeout)){overwrites.timeout=timeout;}
+if(eval){overwrites.eval=eval;}}
+return overwrites;}
+function argsToFormData(args,files){var fd=new FormData();for(var key in args){if(args.hasOwnProperty(key)&&args[key]!==undefined){var value=args[key];if(value!==null&&value.constructor==Object){value=JSON.stringify(value);}
 fd.append(key,value);}}
 for(var i in files){var file=files[i];fd.append(file.name,file);}
 return fd;}
-executeRequest(args,files,overwrites,callbacks){var http_request=false;var async=true;var req_method=overwrites.method||'POST';var timeout=overwrites.timeoutSeconds||0;var eval_reponse=overwrites.eval||true;var info=false;if(this.ontimeout===undefined||this.ontimeout===null){this.ontimeout=function(){if(callbacks.timeout){callbacks.timeout(this);}
-else{throw'Request timed out';}};}
-if(callbacks.upload){this.upload.onprogress=function(e){if(callbacks.upload!=undefined){callbacks.upload(e,this);}};}
-let evalClosure=null;if(eval_reponse){evalClosure=this.eval;}
-if(this.onreadystatechange===null){this.onreadystatechange=()=>{if(this.readyState==4&&this.status<=300&&this.status>=100){var response=this.responseText;if(info){console.log('Request was successful - response data:');console.log((response.length>0)?response:'no data was sent');}
-if(eval_reponse){this.eval(response,false);}
+function send(args,files,overwrites,callbacks){var http_request=false;var async=true;var req_method='POST';var timeout=4000;var eval_reponse=false;var info=false;if(overwrites!==undefined&&overwrites!==null){http_request=overwrites.xhr||http_request;req_method=overwrites.method||req_method;timeout=(!isNaN(overwrites.timeout))?overwrites.timeout:timeout;eval=overwrites.eval||eval;if(overwrites.async!==undefined&&overwrites.async!==null){async=overwrites.async;}}
+if(callbacks===undefined||callbacks===null){callbacks={};}
+if(!http_request){if(window.XMLHttpRequest){http_request=new XMLHttpRequest();}
+else{http_request=new ActiveXObject('Microsoft.XMLHTTP');}}
+if(http_request.ontimeout===undefined||http_request.ontimeout===null){http_request.ontimeout=function(){if(callbacks.timeout){callbacks.timeout(http_request);}
+else{throw'Request timed out';}}}
+if(callbacks.upload){http_request.upload.onprogress=function(e){callbacks.upload(e,http_request);}}
+var evalClosure=null;if(eval_reponse){evalClosure=eval;}
+if(http_request.onreadystatechange===null){http_request.onreadystatechange=function(){if(http_request.readyState==4&&http_request.status<=300&&http_request.status>=100){var response=http_request.responseText;if(info){console.log('Request was successful - response data:');console.log((response.length>0)?response:'no data was sent');}
+if(eval_reponse){evalClosure(response,false);}
 if(callbacks.success){callbacks.success(response);}}
-else if(this.readyState==4&&this.status>=400){if(info){console.log('Request failed - Server returned code '+this.status+' with following response data:');console.log((this.responseText.length>0)?this.responseText:'no data was sent');}
-if(callbacks.error){callbacks.error(this.responseText,this.status);}}
-else if(this.readyState==3){if(callbacks.download){callbacks.download(this.responseText);}
-if(info){console.log('Receiving response-part:');console.log(this.responseText);}}};}
+else if(http_request.readyState==4&&http_request.status>=400){if(info){console.log('Request failed - Server returned code '+http_request.status+' with following response data:');console.log((http_request.responseText.length>0)?http_request.responseText:'no data was sent');}
+if(callbacks.error){callbacks.error(http_request.responseText,http_request.status);}}
+else if(http_request.readyState==3){if(callbacks.download){callbacks.download(http_request.responseText);}
+if(info){console.log('Receiving response-part:');console.log(http_request.responseText);}}}}
 else{if(callbacks.success||callbacks.error){console.warn('Useless callback given in send - XMLHttpRequest.onreadystatechange is overwritten by custom XHR in overwrites-object - callbacks inside the callback-object will be ignored');}}
-let target_xhr=this;if(callbacks.before){let before_ret=callbacks.before(http_request);let override=null;if(before_ret!==undefined){if(before_ret===false){this.abort();return this;}
-else if(before_ret.constructor===XMLHttpRequest){target_xhr=before_ret;}}}
-let data=this.argsToFormData(args,files);target_xhr.open(req_method,this.internal_route,async);target_xhr.setRequestHeader(this.header.target,this._target);target_xhr.setRequestHeader(this.header.method,this._method);target_xhr.timeout=timeout;target_xhr.send(data);return this;}
-eval(scripts,plain){try{if(scripts!=''){var script=\"\";if(plain!==undefined&&plain===true){script=scripts;}
+if(callbacks.before){var before_ret=callbacks.before(http_request);if(before_ret!==undefined){if(before_ret===false){return;}
+else if(before_ret.constructor===XMLHttpRequest){http_request=before_ret;}}}
+var data=argsToFormData(args,files);http_request.open(req_method,_internal_route,async);http_request.setRequestHeader(_header.action,self.action());http_request.setRequestHeader(_header.target,self.target());http_request.setRequestHeader(_header.method,self.method());if(async){http_request.timeout=timeout;}
+http_request.send(data);}
+function eval(scripts,plain){try{if(scripts!=''){var script=\"\";if(plain!==undefined&&plain===true){script=scripts;}
 else{scripts=scripts.replace(/<script[^>]*>([\s\S]*?)<\/script>/gi,function(){if(scripts!==null){script+=arguments[1]+'\\n';}
 return'';});}
-if(script){window.eval(script);return true;}}
+if(script){if(window.execScript){window.execScript(script);}
+else{window.eval(script);}
+return true;}}
 return false;}
-catch(e){console.error('Eval error in following data: '+scripts);}}}
-exports.BridgeRequest=BridgeRequest;});";
+catch(e){console.error('Eval error in following data: '+scripts);}}
+return self;}";
         return $js;
     }
-    # END ASSEMBLY FRAME CLIENT.TS
+    # END ASSEMBLY FRAME CLIENT.JS
     # BEGIN ASSEMBLY FRAME CONFIG.INI
     private static function loadConfig() {
         $content = self::_attachment(__FILE__, __COMPILER_HALT_OFFSET__, 'CONFIG', 'INI');

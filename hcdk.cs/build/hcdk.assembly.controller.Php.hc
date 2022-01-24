@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.controller.Php - BUILD 21.07.08#304
+<?php #HYPERCELL hcdk.assembly.controller.Php - BUILD 22.01.24#306
 namespace hcdk\assembly\controller;
 class Php extends \hcdk\assembly\controller {
     use \hcf\core\dryver\Base, \hcf\core\dryver\Constant, Php\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;

@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.raw.Constant - BUILD 21.07.08#289
+<?php #HYPERCELL hcdk.raw.Constant - BUILD 22.01.24#291
 namespace hcdk\raw;
 class Constant {
     use Constant\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Internal;

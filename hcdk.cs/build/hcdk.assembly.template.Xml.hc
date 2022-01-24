@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.template.Xml - BUILD 21.07.08#198
+<?php #HYPERCELL hcdk.assembly.template.Xml - BUILD 22.01.24#200
 namespace hcdk\assembly\template;
 class Xml extends \hcdk\assembly\template {
     use \hcf\core\dryver\Base, Xml\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
@@ -29,6 +29,7 @@ return self::_postProcess(\$output, [{$__CLASS__::_arg($_func_args, 1, $__CLASS_
     # BEGIN EXECUTABLE FRAME OF CONTROLLER.PHP
     use \hcdk\raw\Method as Method;
     use \hcdk\data\xml\Parser as XMLParser;
+    use \hcdk\data\xml\Fragment\render\PipelineFragment;
     trait Controller {
         public function getType() {
             return 'XML';
@@ -38,6 +39,7 @@ return self::_postProcess(\$output, [{$__CLASS__::_arg($_func_args, 1, $__CLASS_
             // is added in- or outside of the output-variable (the $betweem_double_quotes flag for Placeholder::process)
             // in further implementations, the placeholders should be processed here, to keep the Fragments "placeholder-independet"
             // $ph_output  =
+            PipelineFragment::resetInstanceCounter(); // begin at $instance_0 in each template-method
             $input = $data['content'];
             $opt_attrs = XMLParser::matchOptionalAttributes($input);
             $opt_tags = XMLParser::matchOptionalTags($input);
