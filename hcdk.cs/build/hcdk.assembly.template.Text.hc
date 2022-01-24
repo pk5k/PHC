@@ -1,14 +1,14 @@
-<?php #HYPERCELL hcdk.assembly.template.Text - BUILD 22.01.24#189
+<?php #HYPERCELL hcdk.assembly.template.Text - BUILD 22.01.24#191
 namespace hcdk\assembly\template;
 class Text extends \hcdk\assembly\template {
     use \hcf\core\dryver\Base, Text\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
     const FQN = 'hcdk.assembly.template.Text';
     const NAME = 'Text';
     public function __construct() {
+        call_user_func_array('parent::__construct', func_get_args());
         if (method_exists($this, 'hcdkassemblytemplateText_onConstruct')) {
             call_user_func_array([$this, 'hcdkassemblytemplateText_onConstruct'], func_get_args());
         }
-        call_user_func_array('parent::__construct', func_get_args());
     }
     # BEGIN ASSEMBLY FRAME TEMPLATE.TEXT
     protected function buildTemplateMethod() {

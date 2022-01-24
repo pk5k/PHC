@@ -1,14 +1,14 @@
-<?php #HYPERCELL hcdk.cli.exec.Version - BUILD 22.01.24#69
+<?php #HYPERCELL hcdk.cli.exec.Version - BUILD 22.01.24#71
 namespace hcdk\cli\exec;
 class Version extends \hcf\cli\exec {
     use \hcf\core\dryver\Base, Version\__EO__\Controller, \hcf\core\dryver\Internal;
     const FQN = 'hcdk.cli.exec.Version';
     const NAME = 'Version';
     public function __construct() {
+        call_user_func_array('parent::__construct', func_get_args());
         if (method_exists($this, 'hcdkcliexecVersion_onConstruct')) {
             call_user_func_array([$this, 'hcdkcliexecVersion_onConstruct'], func_get_args());
         }
-        call_user_func_array('parent::__construct', func_get_args());
     }
     }
     namespace hcdk\cli\exec\Version\__EO__;

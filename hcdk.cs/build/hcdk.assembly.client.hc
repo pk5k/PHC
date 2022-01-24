@@ -1,14 +1,14 @@
-<?php #HYPERCELL hcdk.assembly.client - BUILD 22.01.24#198
+<?php #HYPERCELL hcdk.assembly.client - BUILD 22.01.24#200
 namespace hcdk\assembly;
 abstract class client extends \hcdk\assembly {
     use \hcf\core\dryver\Base, client\__EO__\Controller, \hcf\core\dryver\Internal;
     const FQN = 'hcdk.assembly.client';
     const NAME = 'client';
     public function __construct() {
+        call_user_func_array('parent::__construct', func_get_args());
         if (method_exists($this, 'hcdkassemblyclient_onConstruct')) {
             call_user_func_array([$this, 'hcdkassemblyclient_onConstruct'], func_get_args());
         }
-        call_user_func_array('parent::__construct', func_get_args());
     }
     }
     namespace hcdk\assembly\client\__EO__;

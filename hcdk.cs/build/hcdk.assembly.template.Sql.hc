@@ -1,14 +1,14 @@
-<?php #HYPERCELL hcdk.assembly.template.Sql - BUILD 22.01.24#194
+<?php #HYPERCELL hcdk.assembly.template.Sql - BUILD 22.01.24#196
 namespace hcdk\assembly\template;
 class Sql extends \hcdk\assembly\template {
     use \hcf\core\dryver\Base, Sql\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
     const FQN = 'hcdk.assembly.template.Sql';
     const NAME = 'Sql';
     public function __construct() {
+        call_user_func_array('parent::__construct', func_get_args());
         if (method_exists($this, 'hcdkassemblytemplateSql_onConstruct')) {
             call_user_func_array([$this, 'hcdkassemblytemplateSql_onConstruct'], func_get_args());
         }
-        call_user_func_array('parent::__construct', func_get_args());
     }
     # BEGIN ASSEMBLY FRAME TEMPLATE.TEXT
     protected function buildTemplateMethod() {

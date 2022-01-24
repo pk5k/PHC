@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.data.xml.Fragment.embed.FileFragment - BUILD 22.01.24#71
+<?php #HYPERCELL hcdk.data.xml.Fragment.embed.FileFragment - BUILD 22.01.24#73
 namespace hcdk\data\xml\Fragment\embed;
 class FileFragment extends \hcdk\data\xml\Fragment {
     use \hcf\core\dryver\Base, FileFragment\__EO__\Controller, \hcf\core\dryver\Internal;

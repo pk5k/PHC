@@ -1,14 +1,14 @@
-<?php #HYPERCELL hcdk.assembly.Constant - BUILD 22.01.24#199
+<?php #HYPERCELL hcdk.assembly.Constant - BUILD 22.01.24#201
 namespace hcdk\assembly;
 class Constant extends \hcdk\assembly {
     use \hcf\core\dryver\Base, Constant\__EO__\Controller, \hcf\core\dryver\Internal;
     const FQN = 'hcdk.assembly.Constant';
     const NAME = 'Constant';
     public function __construct() {
+        call_user_func_array('parent::__construct', func_get_args());
         if (method_exists($this, 'hcdkassemblyConstant_onConstruct')) {
             call_user_func_array([$this, 'hcdkassemblyConstant_onConstruct'], func_get_args());
         }
-        call_user_func_array('parent::__construct', func_get_args());
     }
     }
     namespace hcdk\assembly\Constant\__EO__;

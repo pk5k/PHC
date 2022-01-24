@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.raw.Method - BUILD 22.01.24#290
+<?php #HYPERCELL hcdk.raw.Method - BUILD 22.01.24#292
 namespace hcdk\raw;
 class Method {
     use Method\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Internal;

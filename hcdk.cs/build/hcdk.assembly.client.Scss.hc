@@ -1,14 +1,14 @@
-<?php #HYPERCELL hcdk.assembly.client.Scss - BUILD 22.01.24#193
+<?php #HYPERCELL hcdk.assembly.client.Scss - BUILD 22.01.24#195
 namespace hcdk\assembly\client;
 class Scss extends \hcdk\assembly\client\Css {
     use \hcf\core\dryver\Base, Scss\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
     const FQN = 'hcdk.assembly.client.Scss';
     const NAME = 'Scss';
     public function __construct() {
+        call_user_func_array('parent::__construct', func_get_args());
         if (method_exists($this, 'hcdkassemblyclientScss_onConstruct')) {
             call_user_func_array([$this, 'hcdkassemblyclientScss_onConstruct'], func_get_args());
         }
-        call_user_func_array('parent::__construct', func_get_args());
     }
     # BEGIN ASSEMBLY FRAME TEMPLATE.TEXT
     protected function tplBuildStyle() {

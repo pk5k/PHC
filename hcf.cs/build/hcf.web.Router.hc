@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.web.Router - BUILD 21.07.11#54
+<?php #HYPERCELL hcf.web.Router - BUILD 22.01.24#55
 namespace hcf\web;
 class Router {
     use \hcf\core\dryver\Config, Router\__EO__\Controller, \hcf\core\dryver\Internal;

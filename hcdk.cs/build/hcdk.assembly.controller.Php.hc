@@ -1,14 +1,14 @@
-<?php #HYPERCELL hcdk.assembly.controller.Php - BUILD 22.01.24#306
+<?php #HYPERCELL hcdk.assembly.controller.Php - BUILD 22.01.24#308
 namespace hcdk\assembly\controller;
 class Php extends \hcdk\assembly\controller {
     use \hcf\core\dryver\Base, \hcf\core\dryver\Constant, Php\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
     const FQN = 'hcdk.assembly.controller.Php';
     const NAME = 'Php';
     public function __construct() {
+        call_user_func_array('parent::__construct', func_get_args());
         if (method_exists($this, 'hcdkassemblycontrollerPhp_onConstruct')) {
             call_user_func_array([$this, 'hcdkassemblycontrollerPhp_onConstruct'], func_get_args());
         }
-        call_user_func_array('parent::__construct', func_get_args());
     }
     # BEGIN ASSEMBLY FRAME CONSTANT
     const CONSTRUCTOR = 'onConstruct';

@@ -1,14 +1,14 @@
-<?php #HYPERCELL hcf.web.Container.Autoloader.provider.Style - BUILD 21.06.27#16
+<?php #HYPERCELL hcf.web.Container.Autoloader.provider.Style - BUILD 22.01.24#17
 namespace hcf\web\Container\Autoloader\provider;
 class Style extends \hcf\web\Container\Autoloader\provider {
     use \hcf\core\dryver\Base, Style\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Internal;
     const FQN = 'hcf.web.Container.Autoloader.provider.Style';
     const NAME = 'Style';
     public function __construct() {
+        call_user_func_array('parent::__construct', func_get_args());
         if (method_exists($this, 'hcfwebContainerAutoloaderproviderStyle_onConstruct')) {
             call_user_func_array([$this, 'hcfwebContainerAutoloaderproviderStyle_onConstruct'], func_get_args());
         }
-        call_user_func_array('parent::__construct', func_get_args());
     }
     # BEGIN ASSEMBLY FRAME OUTPUT.TEXT
     public function __toString() {

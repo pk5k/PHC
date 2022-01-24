@@ -1,14 +1,14 @@
-<?php #HYPERCELL hcdk.assembly.config.Ini - BUILD 22.01.24#188
+<?php #HYPERCELL hcdk.assembly.config.Ini - BUILD 22.01.24#190
 namespace hcdk\assembly\config;
 class Ini extends \hcdk\assembly\config {
     use \hcf\core\dryver\Base, Ini\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
     const FQN = 'hcdk.assembly.config.Ini';
     const NAME = 'Ini';
     public function __construct() {
+        call_user_func_array('parent::__construct', func_get_args());
         if (method_exists($this, 'hcdkassemblyconfigIni_onConstruct')) {
             call_user_func_array([$this, 'hcdkassemblyconfigIni_onConstruct'], func_get_args());
         }
-        call_user_func_array('parent::__construct', func_get_args());
     }
     # BEGIN ASSEMBLY FRAME TEMPLATE.TEXT
     protected function buildLoadConfigMethod() {

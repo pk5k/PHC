@@ -1,14 +1,14 @@
-<?php #HYPERCELL hcdk.assembly.template.Xml - BUILD 22.01.24#200
+<?php #HYPERCELL hcdk.assembly.template.Xml - BUILD 22.01.24#202
 namespace hcdk\assembly\template;
 class Xml extends \hcdk\assembly\template {
     use \hcf\core\dryver\Base, Xml\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
     const FQN = 'hcdk.assembly.template.Xml';
     const NAME = 'Xml';
     public function __construct() {
+        call_user_func_array('parent::__construct', func_get_args());
         if (method_exists($this, 'hcdkassemblytemplateXml_onConstruct')) {
             call_user_func_array([$this, 'hcdkassemblytemplateXml_onConstruct'], func_get_args());
         }
-        call_user_func_array('parent::__construct', func_get_args());
     }
     # BEGIN ASSEMBLY FRAME TEMPLATE.TEXT
     protected function buildTemplateMethod() {

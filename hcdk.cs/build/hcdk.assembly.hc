@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly - BUILD 22.01.24#237
+<?php #HYPERCELL hcdk.assembly - BUILD 22.01.24#239
 namespace hcdk;
 abstract class assembly {
     use assembly\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;

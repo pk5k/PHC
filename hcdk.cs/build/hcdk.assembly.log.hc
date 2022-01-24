@@ -1,14 +1,14 @@
-<?php #HYPERCELL hcdk.assembly.log - BUILD 22.01.24#199
+<?php #HYPERCELL hcdk.assembly.log - BUILD 22.01.24#201
 namespace hcdk\assembly;
 abstract class log extends \hcdk\assembly {
     use \hcf\core\dryver\Base, log\__EO__\Controller, \hcf\core\dryver\Internal;
     const FQN = 'hcdk.assembly.log';
     const NAME = 'log';
     public function __construct() {
+        call_user_func_array('parent::__construct', func_get_args());
         if (method_exists($this, 'hcdkassemblylog_onConstruct')) {
             call_user_func_array([$this, 'hcdkassemblylog_onConstruct'], func_get_args());
         }
-        call_user_func_array('parent::__construct', func_get_args());
     }
     }
     namespace hcdk\assembly\log\__EO__;

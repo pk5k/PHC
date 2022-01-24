@@ -1,14 +1,14 @@
-<?php #HYPERCELL hcdk.assembly.output.Raw - BUILD 22.01.24#186
+<?php #HYPERCELL hcdk.assembly.output.Raw - BUILD 22.01.24#188
 namespace hcdk\assembly\output;
 class Raw extends \hcdk\assembly\output {
     use \hcf\core\dryver\Base, Raw\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Internal;
     const FQN = 'hcdk.assembly.output.Raw';
     const NAME = 'Raw';
     public function __construct() {
+        call_user_func_array('parent::__construct', func_get_args());
         if (method_exists($this, 'hcdkassemblyoutputRaw_onConstruct')) {
             call_user_func_array([$this, 'hcdkassemblyoutputRaw_onConstruct'], func_get_args());
         }
-        call_user_func_array('parent::__construct', func_get_args());
     }
     # BEGIN ASSEMBLY FRAME OUTPUT.TEXT
     public function __toString() {

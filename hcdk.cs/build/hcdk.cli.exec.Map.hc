@@ -1,14 +1,14 @@
-<?php #HYPERCELL hcdk.cli.exec.Map - BUILD 22.01.24#70
+<?php #HYPERCELL hcdk.cli.exec.Map - BUILD 22.01.24#72
 namespace hcdk\cli\exec;
 class Map extends \hcf\cli\exec {
     use \hcf\core\dryver\Base, Map\__EO__\Controller, \hcf\core\dryver\Internal;
     const FQN = 'hcdk.cli.exec.Map';
     const NAME = 'Map';
     public function __construct() {
+        call_user_func_array('parent::__construct', func_get_args());
         if (method_exists($this, 'hcdkcliexecMap_onConstruct')) {
             call_user_func_array([$this, 'hcdkcliexecMap_onConstruct'], func_get_args());
         }
-        call_user_func_array('parent::__construct', func_get_args());
     }
     }
     namespace hcdk\cli\exec\Map\__EO__;

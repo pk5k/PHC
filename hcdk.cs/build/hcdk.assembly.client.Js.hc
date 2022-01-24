@@ -1,17 +1,17 @@
-<?php #HYPERCELL hcdk.assembly.client.Js - BUILD 22.01.24#194
+<?php #HYPERCELL hcdk.assembly.client.Js - BUILD 22.01.24#196
 namespace hcdk\assembly\client;
 class Js extends \hcdk\assembly\client {
     use \hcf\core\dryver\Base, \hcf\core\dryver\Config, Js\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
     const FQN = 'hcdk.assembly.client.Js';
     const NAME = 'Js';
     public function __construct() {
+        call_user_func_array('parent::__construct', func_get_args());
         if (!isset(self::$config)) {
             self::loadConfig();
         }
         if (method_exists($this, 'hcdkassemblyclientJs_onConstruct')) {
             call_user_func_array([$this, 'hcdkassemblyclientJs_onConstruct'], func_get_args());
         }
-        call_user_func_array('parent::__construct', func_get_args());
     }
     # BEGIN ASSEMBLY FRAME CONFIG.INI
     private static function loadConfig() {

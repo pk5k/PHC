@@ -1,17 +1,17 @@
-<?php #HYPERCELL hcdk.assembly.client.Ts - BUILD 22.01.24#132
+<?php #HYPERCELL hcdk.assembly.client.Ts - BUILD 22.01.24#134
 namespace hcdk\assembly\client;
 class Ts extends \hcdk\assembly\client\Js {
     use \hcf\core\dryver\Base, \hcf\core\dryver\Config, Ts\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
     const FQN = 'hcdk.assembly.client.Ts';
     const NAME = 'Ts';
     public function __construct() {
+        call_user_func_array('parent::__construct', func_get_args());
         if (!isset(self::$config)) {
             self::loadConfig();
         }
         if (method_exists($this, 'hcdkassemblyclientTs_onConstruct')) {
             call_user_func_array([$this, 'hcdkassemblyclientTs_onConstruct'], func_get_args());
         }
-        call_user_func_array('parent::__construct', func_get_args());
     }
     # BEGIN ASSEMBLY FRAME CONFIG.INI
     private static function loadConfig() {

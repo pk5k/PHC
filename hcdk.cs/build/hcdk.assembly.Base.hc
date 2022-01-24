@@ -1,14 +1,14 @@
-<?php #HYPERCELL hcdk.assembly.Base - BUILD 22.01.24#212
+<?php #HYPERCELL hcdk.assembly.Base - BUILD 22.01.24#214
 namespace hcdk\assembly;
 class Base extends \hcdk\assembly {
     use \hcf\core\dryver\Base, \hcf\core\dryver\Constant, Base\__EO__\Controller, \hcf\core\dryver\Internal;
     const FQN = 'hcdk.assembly.Base';
     const NAME = 'Base';
     public function __construct() {
+        call_user_func_array('parent::__construct', func_get_args());
         if (method_exists($this, 'hcdkassemblyBase_onConstruct')) {
             call_user_func_array([$this, 'hcdkassemblyBase_onConstruct'], func_get_args());
         }
-        call_user_func_array('parent::__construct', func_get_args());
     }
     # BEGIN ASSEMBLY FRAME CONSTANT
     const TOKEN_INHERIT = 'parent';
@@ -67,7 +67,7 @@ class Base extends \hcdk\assembly {
             if (!$this->implicitConstructor()) {
                 return null;
             }
-            return [999 => 'call_user_func_array(\'parent::__construct\', func_get_args());']; // 999 to be sure, it's the last row in our constructor
+            return [0 => 'call_user_func_array(\'parent::__construct\', func_get_args());']; // 0 to be sure, it's the first row in our constructor
             
         }
         public function getMethods() {

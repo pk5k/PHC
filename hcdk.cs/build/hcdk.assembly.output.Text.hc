@@ -1,14 +1,14 @@
-<?php #HYPERCELL hcdk.assembly.output.Text - BUILD 22.01.24#187
+<?php #HYPERCELL hcdk.assembly.output.Text - BUILD 22.01.24#189
 namespace hcdk\assembly\output;
 class Text extends \hcdk\assembly\output {
     use \hcf\core\dryver\Base, Text\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
     const FQN = 'hcdk.assembly.output.Text';
     const NAME = 'Text';
     public function __construct() {
+        call_user_func_array('parent::__construct', func_get_args());
         if (method_exists($this, 'hcdkassemblyoutputText_onConstruct')) {
             call_user_func_array([$this, 'hcdkassemblyoutputText_onConstruct'], func_get_args());
         }
-        call_user_func_array('parent::__construct', func_get_args());
     }
     # BEGIN ASSEMBLY FRAME TEMPLATE.TEXT
     protected function template__toString() {
