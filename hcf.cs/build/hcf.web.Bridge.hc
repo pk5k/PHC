@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.web.Bridge - BUILD 21.07.11#3309
+<?php #HYPERCELL hcf.web.Bridge - BUILD 22.01.24#3310
 namespace hcf\web;
 class Bridge {
     use \hcf\core\dryver\Client, \hcf\core\dryver\Client\Js, \hcf\core\dryver\Config, Bridge\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Internal;
@@ -31,7 +31,7 @@ break;default:throw'WebWorker-request returned unknown result \"'+e.data.result+
 delete document[_worker_store][token];}
 function prepareSend(arg_obj,for_worker){if(arg_obj===undefined){arg_obj={};}
 if(self.action()===undefined){throw'No action specified';}
-var prepared_data={callbacks:getCallbacks(arg_obj,for_worker),overwrites:getOverwrites(arg_obj,for_worker),passed_files:getFiles(arg_obj),url_args:{method:self.method()}};var passed_args=getArguments(arg_obj);for(var key in passed_args){if(prepared_data.url_args.hasOwnProperty(key)){throw'Cannot use argument '+key+' - this argument is used by the bridge for internally routing';}
+var prepared_data={callbacks:getCallbacks(arg_obj,for_worker),overwrites:getOverwrites(arg_obj,for_worker),passed_files:getFiles(arg_obj),url_args:{}};var passed_args=getArguments(arg_obj);for(var key in passed_args){if(prepared_data.url_args.hasOwnProperty(key)){throw'Cannot use argument '+key+' - this argument is used by the bridge for internally routing';}
 prepared_data.url_args[key]=passed_args[key];}
 return prepared_data;}
 self.invoke=function(method,implicit_constructor){if(method===undefined){throw'No method specified that should be invoked in '+self.target;}

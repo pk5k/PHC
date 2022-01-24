@@ -141,9 +141,7 @@ document.Bridge = function (to)
 			callbacks: getCallbacks(arg_obj, for_worker),
 			overwrites: getOverwrites(arg_obj, for_worker),
 			passed_files: getFiles(arg_obj),
-			url_args: {
-				method: self.method()
-			}
+			url_args: {}
 		};
 
 		var passed_args = getArguments(arg_obj);
