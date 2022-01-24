@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.web.Bridge - BUILD 22.01.24#3313
+<?php #HYPERCELL hcf.web.Bridge - BUILD 22.01.24#3314
 namespace hcf\web;
 class Bridge {
     use \hcf\core\dryver\Client, \hcf\core\dryver\Client\Js, \hcf\core\dryver\Config, Bridge\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Internal;
@@ -37,7 +37,7 @@ return prepared_data;}
 self.invoke=function(method,implicit_constructor){if(method===undefined){throw'No method specified that should be invoked in '+self.target;}
 if(implicit_constructor===true){method=method+'#implicit';}
 return self.action('invoke').method(method);}
-self.render=function(){return self.action('render').method('toString',true);}
+self.render=function(){return self.invoke('toString',true);}
 self.action=function(action){if(action===undefined){return self._action;}
 self._action=action;return self;}
 self.target=function(target){if(target===undefined){return self._target;}

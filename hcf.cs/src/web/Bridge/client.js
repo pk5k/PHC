@@ -176,7 +176,7 @@ document.Bridge = function (to)
 
 	self.render = function()
 	{
-		return self.action('render').method('toString', true);
+		return self.invoke('toString', true);
 	}
 
 	self.action = function(action)
