@@ -60,6 +60,7 @@ hcdk\data\xml\Fragment\embed\FileFragment=build/hcdk.data.xml.Fragment.embed.Fil
 hcdk\data\xml\Fragment\embed\MarkdownFragment=build/hcdk.data.xml.Fragment.embed.MarkdownFragment.hc
 hcdk\data\xml\Fragment\loop\ForeachFragment=build/hcdk.data.xml.Fragment.loop.ForeachFragment.hc
 hcdk\data\xml\Fragment\render\InstructionFragment=build/hcdk.data.xml.Fragment.render.InstructionFragment.hc
+hcdk\data\xml\Fragment\render\PipeFragment=build/hcdk.data.xml.Fragment.render.PipeFragment.hc
 hcdk\data\xml\Fragment\render\PipelineFragment=build/hcdk.data.xml.Fragment.render.PipelineFragment.hc
 hcdk\raw\Cellspace=build/hcdk.raw.Cellspace.hc
 hcdk\raw\Constant=build/hcdk.raw.Constant.hc

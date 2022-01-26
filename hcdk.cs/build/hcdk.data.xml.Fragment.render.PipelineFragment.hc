@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.data.xml.Fragment.render.PipelineFragment - BUILD 22.01.26#35
+<?php #HYPERCELL hcdk.data.xml.Fragment.render.PipelineFragment - BUILD 22.01.26#36
 namespace hcdk\data\xml\Fragment\render;
 class PipelineFragment extends \hcdk\data\xml\Fragment {
     use \hcf\core\dryver\Base, PipelineFragment\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -63,7 +63,17 @@ class PipelineFragment extends \hcdk\data\xml\Fragment {
             } else if (isset($root['template'])) {
                 $template = PlaceholderParser::parse(trim((string)$root['template']), false);
             }
-            $instance_token = '$instance_' . self::nextInstanceCount();
+            $as = trim((string)$root['as']);
+            $instance_token = null;
+            if ($as != '') {
+                if (preg_match('/([^A-Za-z0-9_])+/g', $as)) {
+                    throw new \Exception(selff::FQN . ' - attribute "as" contains invalid characters. Given value: ' . $as . ' for element "' . str_replace(XMLParser::TMP_OPT_TAG_MARKER, '?', $root_name) . '"');
+                }
+                $instance_token = '$' . $as; // can be used as local via {{local:xxx}}
+                
+            } else {
+                $instance_token = '$instance_' . self::nextInstanceCount();
+            }
             $target_raw = trim((string)$root['target']);
             $target = PlaceholderParser::parse($target_raw, false);
             $is_placeholder_target = ($target_raw != $target);
@@ -130,8 +140,23 @@ class PipelineFragment extends \hcdk\data\xml\Fragment {
                     }
                 }
             }
+            return self::fillMissingIndexes($args);
+        }
+        private static function fifllMissingIndexes($args) {
             ksort($args, SORT_NUMERIC);
-            return $args;
+            $last_i = 0;
+            $final_args = [];
+            foreach ($args as $i => $arg) {
+                $diff = $i - $last_i;
+                if ($diff > 1) {
+                    for ($ii = $last_i + 1;$ii < $i;$ii++) {
+                        $final_args[$ii] = 'null';
+                    }
+                }
+                $final_args[$i] = $arg;
+                $last_i = $i;
+            }
+            return $final_args;
         }
     }
     # END EXECUTABLE FRAME OF CONTROLLER.PHP
