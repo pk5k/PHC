@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.raw.Hypercell - BUILD 22.01.24#324
+<?php #HYPERCELL hcdk.raw.Hypercell - BUILD 22.01.24#325
 namespace hcdk\raw;
 class Hypercell {
     use \hcf\core\dryver\Config, Hypercell\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
@@ -378,10 +378,16 @@ __halt_compiler();#__COMPILER_HALT_OFFSET__
             return implode(Utils::newLine(), $rows);
         }
         private function requiredTraits() {
-            $traits = '';
+            $traits = [];
             foreach ($this->assemblies as $assembly) {
-                $traits.= implode(',', $assembly->getTraits()) . ',';
+                $c_traits = $assembly->getTraits();
+                foreach ($c_traits as $trait) {
+                    if (!in_array($trait, $traits)) {
+                        $traits[] = $trait;
+                    }
+                }
             }
+            $traits = implode(',', $traits) . ',';
             // add internal trait
             $traits.= self::config()->internal->trait;
             return $traits;

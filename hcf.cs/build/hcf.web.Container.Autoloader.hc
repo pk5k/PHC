@@ -1,7 +1,7 @@
-<?php #HYPERCELL hcf.web.Container.Autoloader - BUILD 22.01.24#3290
+<?php #HYPERCELL hcf.web.Container.Autoloader - BUILD 22.01.24#3291
 namespace hcf\web\Container;
 class Autoloader {
-    use \hcf\core\dryver\Config, Autoloader\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Template, \hcf\core\dryver\Template\Xml, \hcf\core\dryver\Internal;
+    use \hcf\core\dryver\Config, Autoloader\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Template, \hcf\core\dryver\Template\Html, \hcf\core\dryver\Internal;
     const FQN = 'hcf.web.Container.Autoloader';
     const NAME = 'Autoloader';
     public function __construct() {
@@ -28,7 +28,7 @@ class Autoloader {
         return $output;
     }
     # END ASSEMBLY FRAME OUTPUT.TEXT
-    # BEGIN ASSEMBLY FRAME TEMPLATE.XML
+    # BEGIN ASSEMBLY FRAME TEMPLATE.HTML
     public function stdTpl() {
         $__CLASS__ = __CLASS__;
         $_this = (isset($this)) ? $this : null;
@@ -94,7 +94,7 @@ class Autoloader {
         }
         return self::_postProcess($output, [], []);
     }
-    # END ASSEMBLY FRAME TEMPLATE.XML
+    # END ASSEMBLY FRAME TEMPLATE.HTML
     
     }
     namespace hcf\web\Container\Autoloader\__EO__;

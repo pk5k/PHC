@@ -103,8 +103,8 @@ trait Controller
 			foreach ($fast_instructions as $method => $_0)
 			{
 				$fast_instruction = $root->addChild('render.instruction');
-				$fast_instruction->setAttribute('method', $method);
-				$fast_instruction->setAttribute('_0', $_0);
+				$fast_instruction['method'] = (string)$method;
+				$fast_instruction['_0'] = (string)$_0;
 			}
 
 			foreach ($root->children() as $instruction) 
@@ -146,7 +146,7 @@ trait Controller
 				continue;
 			}
 
-			$fi[$name] = [$value];
+			$fi[$name] = $value;
 		}
 
 		return $fi;

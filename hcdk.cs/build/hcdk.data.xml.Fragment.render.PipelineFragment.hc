@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.data.xml.Fragment.render.PipelineFragment - BUILD 22.01.24#29
+<?php #HYPERCELL hcdk.data.xml.Fragment.render.PipelineFragment - BUILD 22.01.26#35
 namespace hcdk\data\xml\Fragment\render;
 class PipelineFragment extends \hcdk\data\xml\Fragment {
     use \hcf\core\dryver\Base, PipelineFragment\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -80,8 +80,8 @@ class PipelineFragment extends \hcdk\data\xml\Fragment {
                 $fast_instructions = self::collectFastInstructionsFromNode($root);
                 foreach ($fast_instructions as $method => $_0) {
                     $fast_instruction = $root->addChild('render.instruction');
-                    $fast_instruction->setAttribute('method', $method);
-                    $fast_instruction->setAttribute('_0', $_0);
+                    $fast_instruction['method'] = (string)$method;
+                    $fast_instruction['_0'] = (string)$_0;
                 }
                 foreach ($root->children() as $instruction) {
                     $output.= XMLParser::renderFragment($instruction, $file_scope);
@@ -107,7 +107,7 @@ class PipelineFragment extends \hcdk\data\xml\Fragment {
                 if (substr($name, 0, 1) == '_' || $name == 'template' || $name == 'target') {
                     continue;
                 }
-                $fi[$name] = [$value];
+                $fi[$name] = $value;
             }
             return $fi;
         }

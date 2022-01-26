@@ -1,7 +1,7 @@
-<?php #HYPERCELL hcf.web.App - BUILD 22.01.24#132
+<?php #HYPERCELL hcf.web.App - BUILD 22.01.24#133
 namespace hcf\web;
 class App {
-    use \hcf\core\dryver\Client, \hcf\core\dryver\Client\Js, \hcf\core\dryver\Config, App\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Template, \hcf\core\dryver\Template\Xml, \hcf\core\dryver\Internal;
+    use \hcf\core\dryver\Client, \hcf\core\dryver\Client\Js, \hcf\core\dryver\Config, App\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Template, \hcf\core\dryver\Template\Html, \hcf\core\dryver\Internal;
     const FQN = 'hcf.web.App';
     const NAME = 'App';
     public function __construct() {
@@ -35,7 +35,7 @@ exports.default=init;});";
         return $output;
     }
     # END ASSEMBLY FRAME OUTPUT.TEXT
-    # BEGIN ASSEMBLY FRAME TEMPLATE.XML
+    # BEGIN ASSEMBLY FRAME TEMPLATE.HTML
     public function render() {
         $__CLASS__ = __CLASS__;
         $_this = (isset($this)) ? $this : null;
@@ -85,7 +85,7 @@ exports.default=init;});";
         $output.= "</html>";
         return self::_postProcess($output, [], []);
     }
-    # END ASSEMBLY FRAME TEMPLATE.XML
+    # END ASSEMBLY FRAME TEMPLATE.HTML
     
     }
     namespace hcf\web\App\__EO__;

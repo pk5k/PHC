@@ -1,7 +1,7 @@
-<?php #HYPERCELL hcf.web.Container - BUILD 22.01.24#3252
+<?php #HYPERCELL hcf.web.Container - BUILD 22.01.24#3253
 namespace hcf\web;
 class Container {
-    use \hcf\core\dryver\Client, \hcf\core\dryver\Client\Js, \hcf\core\dryver\Config, Container\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Template, \hcf\core\dryver\Template\Xml, \hcf\core\dryver\Internal;
+    use \hcf\core\dryver\Client, \hcf\core\dryver\Client\Js, \hcf\core\dryver\Config, Container\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Template, \hcf\core\dryver\Template\Html, \hcf\core\dryver\Internal;
     const FQN = 'hcf.web.Container';
     const NAME = 'Container';
     public function __construct() {
@@ -185,7 +185,7 @@ if(typeof define==='function'&&define.amd){define(function(){return md5})}else i
         return $output;
     }
     # END ASSEMBLY FRAME OUTPUT.TEXT
-    # BEGIN ASSEMBLY FRAME TEMPLATE.XML
+    # BEGIN ASSEMBLY FRAME TEMPLATE.HTML
     public function stdTpl() {
         $__CLASS__ = __CLASS__;
         $_this = (isset($this)) ? $this : null;
@@ -227,7 +227,7 @@ if(typeof define==='function'&&define.amd){define(function(){return md5})}else i
         $output.= "</html>";
         return self::_postProcess($output, [], []);
     }
-    # END ASSEMBLY FRAME TEMPLATE.XML
+    # END ASSEMBLY FRAME TEMPLATE.HTML
     
     }
     namespace hcf\web\Container\__EO__;

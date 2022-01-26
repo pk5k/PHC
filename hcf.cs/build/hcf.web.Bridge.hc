@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.web.Bridge - BUILD 22.01.24#3314
+<?php #HYPERCELL hcf.web.Bridge - BUILD 22.01.24#3315
 namespace hcf\web;
 class Bridge {
     use \hcf\core\dryver\Client, \hcf\core\dryver\Client\Js, \hcf\core\dryver\Config, Bridge\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Internal;

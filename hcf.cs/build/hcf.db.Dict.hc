@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.db.Dict - BUILD 22.01.24#183
+<?php #HYPERCELL hcf.db.Dict - BUILD 22.01.24#184
 namespace hcf\db;
 class Dict {
     use \hcf\core\dryver\Config, \hcf\core\dryver\Constant, Dict\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;

@@ -432,12 +432,22 @@ trait Controller
 
 	private function requiredTraits()
 	{
-		$traits = '';
+		$traits = [];
 
 		foreach ($this->assemblies as $assembly)
 		{
-			$traits .= implode(',', $assembly->getTraits()).',';
+			$c_traits = $assembly->getTraits();
+
+			foreach ($c_traits as $trait)
+			{
+				if (!in_array($trait, $traits))
+				{
+					$traits[] = $trait;
+				}
+			}
 		}
+
+		$traits = implode(',', $traits).',';
 
 		// add internal trait
 		$traits .= self::config()->internal->trait;
