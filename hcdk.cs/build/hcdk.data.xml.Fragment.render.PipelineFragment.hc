@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.data.xml.Fragment.render.PipelineFragment - BUILD 22.01.26#36
+<?php #HYPERCELL hcdk.data.xml.Fragment.render.PipelineFragment - BUILD 22.01.28#39
 namespace hcdk\data\xml\Fragment\render;
 class PipelineFragment extends \hcdk\data\xml\Fragment {
     use \hcf\core\dryver\Base, PipelineFragment\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -66,7 +66,7 @@ class PipelineFragment extends \hcdk\data\xml\Fragment {
             $as = trim((string)$root['as']);
             $instance_token = null;
             if ($as != '') {
-                if (preg_match('/([^A-Za-z0-9_])+/g', $as)) {
+                if (preg_match('/([^A-Za-z0-9_])+/', $as)) {
                     throw new \Exception(selff::FQN . ' - attribute "as" contains invalid characters. Given value: ' . $as . ' for element "' . str_replace(XMLParser::TMP_OPT_TAG_MARKER, '?', $root_name) . '"');
                 }
                 $instance_token = '$' . $as; // can be used as local via {{local:xxx}}
@@ -114,7 +114,7 @@ class PipelineFragment extends \hcdk\data\xml\Fragment {
             $fi = [];
             foreach ($node->attributes() as $name => $value) {
                 // all Attributes of render.pipline (except target, template and everything beginning with an underscore _ ) will be converted to an <render.instruction method="$name" _0="$value"/> child of this pipeline
-                if (substr($name, 0, 1) == '_' || $name == 'template' || $name == 'target') {
+                if (substr($name, 0, 1) == '_' || $name == 'template' || $name == 'target' || $name == 'as') {
                     continue;
                 }
                 $fi[$name] = $value;
@@ -142,7 +142,7 @@ class PipelineFragment extends \hcdk\data\xml\Fragment {
             }
             return self::fillMissingIndexes($args);
         }
-        private static function fifllMissingIndexes($args) {
+        private static function fillMissingIndexes($args) {
             ksort($args, SORT_NUMERIC);
             $last_i = 0;
             $final_args = [];

@@ -83,7 +83,7 @@ trait Controller
 
 		if ($as != '')
 		{
-			if (preg_match('/([^A-Za-z0-9_])+/g', $as))
+			if (preg_match('/([^A-Za-z0-9_])+/', $as))
 			{
 				throw new \Exception(selff::FQN.' - attribute "as" contains invalid characters. Given value: ' . $as .' for element "'.str_replace(XMLParser::TMP_OPT_TAG_MARKER, '?', $root_name).'"');
 			}
@@ -157,7 +157,7 @@ trait Controller
 		foreach ($node->attributes() as $name => $value)
 		{
 			// all Attributes of render.pipline (except target, template and everything beginning with an underscore _ ) will be converted to an <render.instruction method="$name" _0="$value"/> child of this pipeline
-			if (substr($name, 0, 1) == '_' || $name == 'template' || $name == 'target')
+			if (substr($name, 0, 1) == '_' || $name == 'template' || $name == 'target' || $name=='as')
 			{
 				continue;
 			}
@@ -200,7 +200,7 @@ trait Controller
 		return self::fillMissingIndexes($args);
 	}
 
-	private static function fifllMissingIndexes($args)
+	private static function fillMissingIndexes($args)
 	{
 		ksort($args, SORT_NUMERIC);
 	
