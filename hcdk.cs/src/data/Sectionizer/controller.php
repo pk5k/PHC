@@ -51,12 +51,24 @@ trait Controller
 					break;
 
 				case self::STATE_FEED_SEC:
+					if ($read_buffer == '' && $char == PHP_EOL)
+					{
+						// if first character is a linebreak we're entering a new section coming from the self::CHAR_END_NAME character that is followed by a linebreak.
+						continue;
+					}
+
 					// if current char is a begin-token AND the following one is a visibility-token AND the next end-name-char appears before a line-break -> must be a new section
 					if ($eof || (isset($begin_tokens[$char]) && isset($visibility_tokens[$chars[$index+1]]) && strpos($input, self::CHAR_END_NAME, $index) < strpos($input, PHP_EOL, $index)))
 					{
 						if (strlen($read_buffer))
 						{
-							// only write out, if buffer has content
+							while (substr($read_buffer, -1, 1) == PHP_EOL)
+							{
+								// omit trailing linebreaks
+								$read_buffer = substr($read_buffer, 0, -1);
+							}
+
+							// only write out if buffer has content
 							$result[$section_ptr] = ['content' => $read_buffer, 'mod' => $mod_map];// write out buffer and mods since the current section ends...
 						}
 
