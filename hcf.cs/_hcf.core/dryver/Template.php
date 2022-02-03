@@ -28,10 +28,10 @@ namespace hcf\core\dryver
 
 			foreach ($to_clean as $attr) 
 			{
-				$remove_list[] = $attr.'?=""';
+				$remove_list[] = ' '.$attr.'?=""';
 
-				$match[] = $attr.'?="';
-				$restore[] = $attr.'="';
+				$match[] = ' '.$attr.'?="';
+				$restore[] = ' '.$attr.'="';
 			}
 
 			$in = str_replace($remove_list, '', $in);// this removes the empty attributes completely
