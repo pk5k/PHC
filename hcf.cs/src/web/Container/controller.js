@@ -31,7 +31,7 @@ document.registerComponentController = function(hcfqn, controller_class, as_elem
     {
       element_options = {};
     }
-    
+
     customElements.define(as_element, scope[hcfqn], element_options);
   }
 
@@ -112,7 +112,7 @@ function mouseMoved(e)
     document.mouse_timeout = setTimeout(function() 
     {
       document.mouse_timeout = null;
-    }, 100);
+    }, 250);
   }
 }
 
