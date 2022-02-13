@@ -111,8 +111,9 @@ function mouseMoved(e)
 
     document.mouse_timeout = setTimeout(function() 
     {
+
       document.mouse_timeout = null;
-    }, 250);
+    }, 100);
   }
 }
 

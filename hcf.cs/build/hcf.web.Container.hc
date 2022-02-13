@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.web.Container - BUILD 22.02.13#3257
+<?php #HYPERCELL hcf.web.Container - BUILD 22.02.13#3260
 namespace hcf\web;
 class Container {
     use \hcf\core\dryver\Config, \hcf\core\dryver\Controller, \hcf\core\dryver\Controller\Js, Container\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Template, \hcf\core\dryver\Template\Html, \hcf\core\dryver\Internal;
@@ -36,7 +36,7 @@ if(aobj.parentNode!==undefined){newOffset=document.recursiveOffset(aobj.parentNo
 currOffset.x=currOffset.x+newOffset.x;currOffset.y=currOffset.y+newOffset.y;}
 return currOffset;}
 function mouseMoved(e){if(typeof e=='undefined'||e==null){document.mouse={x:0,y:0};return;}
-if(document.mouse_timeout==null||document.mouse_timeout==undefined){var doc=document.documentElement||document.body;var target=e.srcElement||e.target;var offsetpos=document.recursiveOffset(doc);pos_x=e.clientX+offsetpos.x;pos_y=e.clientY+offsetpos.y;document.mouse={x:pos_x,y:pos_y};document.mouse_timeout=setTimeout(function(){document.mouse_timeout=null;},250);}}
+if(document.mouse_timeout==null||document.mouse_timeout==undefined){var doc=document.documentElement||document.body;var target=e.srcElement||e.target;var offsetpos=document.recursiveOffset(doc);pos_x=e.clientX+offsetpos.x;pos_y=e.clientY+offsetpos.y;document.mouse={x:pos_x,y:pos_y};document.mouse_timeout=setTimeout(function(){document.mouse_timeout=null;},100);}}
 document.onmousemove=mouseMoved;(function(\$){'use strict'
 function safeAdd(x,y){var lsw=(x&0xFFFF)+(y&0xFFFF)
 var msw=(x>>16)+(y>>16)+(lsw>>16)
