@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.output.Text - BUILD 22.01.24#189
+<?php #HYPERCELL hcdk.assembly.output.Text - BUILD 22.01.24#190
 namespace hcdk\assembly\output;
 class Text extends \hcdk\assembly\output {
     use \hcf\core\dryver\Base, Text\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
@@ -15,10 +15,8 @@ class Text extends \hcdk\assembly\output {
         $__CLASS__ = __CLASS__;
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
-        $output = "
-\$output = \"{$__CLASS__::_arg($_func_args, 0, $__CLASS__, $_this) }\";
-return \$output;
-";
+        $output = "\$output = \"{$__CLASS__::_arg($_func_args, 0, $__CLASS__, $_this) }\";
+return \$output;";
         return $output;
     }
     # END ASSEMBLY FRAME TEMPLATE.TEXT

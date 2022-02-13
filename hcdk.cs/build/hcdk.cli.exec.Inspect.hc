@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.cli.exec.Inspect - BUILD 22.01.24#61
+<?php #HYPERCELL hcdk.cli.exec.Inspect - BUILD 22.01.24#62
 namespace hcdk\cli\exec;
 class Inspect extends \hcf\cli\exec {
     use \hcf\core\dryver\Base, Inspect\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
@@ -14,19 +14,14 @@ class Inspect extends \hcf\cli\exec {
         $__CLASS__ = __CLASS__;
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
-        $output = "
-- {$__CLASS__::_arg($_func_args, 0, $__CLASS__, $_this) }: {$__CLASS__::_arg($_func_args, 1, $__CLASS__, $_this) }
-
-";
+        $output = "- {$__CLASS__::_arg($_func_args, 0, $__CLASS__, $_this) }: {$__CLASS__::_arg($_func_args, 1, $__CLASS__, $_this) }";
         return $output;
     }
     protected function propertyRow() {
         $__CLASS__ = __CLASS__;
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
-        $output = "
-- {$__CLASS__::_arg($_func_args, 0, $__CLASS__, $_this) } = {$__CLASS__::_arg($_func_args, 1, $__CLASS__, $_this) }
-";
+        $output = "- {$__CLASS__::_arg($_func_args, 0, $__CLASS__, $_this) } = {$__CLASS__::_arg($_func_args, 1, $__CLASS__, $_this) }";
         return $output;
     }
     # END ASSEMBLY FRAME TEMPLATE.TEXT

@@ -1,7 +1,7 @@
-<?php #HYPERCELL hcf.web.App - BUILD 22.01.24#133
+<?php #HYPERCELL hcf.web.App - BUILD 22.02.13#135
 namespace hcf\web;
 class App {
-    use \hcf\core\dryver\Client, \hcf\core\dryver\Client\Js, \hcf\core\dryver\Config, App\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Template, \hcf\core\dryver\Template\Html, \hcf\core\dryver\Internal;
+    use \hcf\core\dryver\Config, App\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Template, \hcf\core\dryver\Template\Html, \hcf\core\dryver\Internal;
     const FQN = 'hcf.web.App';
     const NAME = 'App';
     public function __construct() {
@@ -12,13 +12,6 @@ class App {
             call_user_func_array([$this, 'hcfwebApp_onConstruct'], func_get_args());
         }
     }
-    # BEGIN ASSEMBLY FRAME CLIENT.TS
-    public static function script() {
-        $js = "define(\"hcf.web.App\",[\"require\",\"exports\"],function(require,exports){\"use strict\";Object.defineProperty(exports,\"__esModule\",{value:true});function init(){throw'You have to override the main hcf.web.App with a hypercell that uses an own client.ts assembly.';}
-exports.default=init;});";
-        return $js;
-    }
-    # END ASSEMBLY FRAME CLIENT.TS
     # BEGIN ASSEMBLY FRAME CONFIG.JSON
     private static function loadConfig() {
         $content = self::_attachment(__FILE__, __COMPILER_HALT_OFFSET__, 'CONFIG', 'JSON');

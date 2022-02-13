@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.data.Sectionizer - BUILD 22.01.28#61
+<?php #HYPERCELL hcdk.data.Sectionizer - BUILD 22.01.28#62
 namespace hcdk\data;
 class Sectionizer {
     use \hcf\core\dryver\Config, \hcf\core\dryver\Constant, Sectionizer\__EO__\Controller, \hcf\core\dryver\Internal;

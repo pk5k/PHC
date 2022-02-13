@@ -1,12 +1,12 @@
-<?php #HYPERCELL hcf.web.Bridge.Worker.FormDataPolyfill - BUILD 22.01.24#10
+<?php #HYPERCELL hcf.web.Bridge.Worker.FormDataPolyfill - BUILD 22.01.26#11
 namespace hcf\web\Bridge\Worker;
 class FormDataPolyfill {
-    use \hcf\core\dryver\Client, \hcf\core\dryver\Client\Js, \hcf\core\dryver\Internal;
+    use \hcf\core\dryver\Controller, \hcf\core\dryver\Controller\Js, \hcf\core\dryver\Internal;
     const FQN = 'hcf.web.Bridge.Worker.FormDataPolyfill';
     const NAME = 'FormDataPolyfill';
     public function __construct() {
     }
-    # BEGIN ASSEMBLY FRAME CLIENT.JS
+    # BEGIN ASSEMBLY FRAME CONTROLLER.JS
     public static function script() {
         $js = "if(typeof Blob!=='undefined'&&(typeof FormData==='undefined'||!FormData.prototype.keys)){const global=typeof window==='object'?window:typeof self==='object'?self:this
 const _FormData=global.FormData
@@ -93,7 +93,7 @@ return _sendBeacon.call(this,url,data)}}
 global['FormData']=FormDataPolyfill}";
         return $js;
     }
-    # END ASSEMBLY FRAME CLIENT.JS
+    # END ASSEMBLY FRAME CONTROLLER.JS
     
     }
     namespace hcf\web\Bridge\Worker\FormDataPolyfill\__EO__;

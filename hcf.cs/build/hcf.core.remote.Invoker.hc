@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.core.remote.Invoker - BUILD 22.01.24#143
+<?php #HYPERCELL hcf.core.remote.Invoker - BUILD 22.01.26#144
 namespace hcf\core\remote;
 class Invoker {
     use Invoker\__EO__\Controller, \hcf\core\dryver\Internal;

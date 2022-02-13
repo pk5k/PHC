@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.data.ph.Processor.DictProcessor - BUILD 22.01.24#98
+<?php #HYPERCELL hcdk.data.ph.Processor.DictProcessor - BUILD 22.01.24#99
 namespace hcdk\data\ph\Processor;
 class DictProcessor extends \hcdk\data\ph\Processor {
     use \hcf\core\dryver\Base, DictProcessor\__EO__\Controller, \hcf\core\dryver\Internal;

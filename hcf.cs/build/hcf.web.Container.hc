@@ -1,7 +1,7 @@
-<?php #HYPERCELL hcf.web.Container - BUILD 22.01.24#3253
+<?php #HYPERCELL hcf.web.Container - BUILD 22.02.13#3256
 namespace hcf\web;
 class Container {
-    use \hcf\core\dryver\Client, \hcf\core\dryver\Client\Js, \hcf\core\dryver\Config, Container\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Template, \hcf\core\dryver\Template\Html, \hcf\core\dryver\Internal;
+    use \hcf\core\dryver\Config, \hcf\core\dryver\Controller, \hcf\core\dryver\Controller\Js, Container\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Template, \hcf\core\dryver\Template\Html, \hcf\core\dryver\Internal;
     const FQN = 'hcf.web.Container';
     const NAME = 'Container';
     public function __construct() {
@@ -12,12 +12,20 @@ class Container {
             call_user_func_array([$this, 'hcfwebContainer_onConstruct'], func_get_args());
         }
     }
-    # BEGIN ASSEMBLY FRAME CLIENT.JS
+    # BEGIN ASSEMBLY FRAME CONFIG.JSON
+    private static function loadConfig() {
+        $content = self::_attachment(__FILE__, __COMPILER_HALT_OFFSET__, 'CONFIG', 'JSON');
+        self::$config = json_decode($content);
+    }
+    # END ASSEMBLY FRAME CONFIG.JSON
+    # BEGIN ASSEMBLY FRAME CONTROLLER.JS
     public static function script() {
-        $js = "document.registerComponent=function(hcfqn,obj){var prop_hcfqn=hcfqn;var split=hcfqn.split('.')
+        $js = "document.registerComponentController=function(hcfqn,controller_class,as_element,element_options){var prop_hcfqn=hcfqn;var split=hcfqn.split('.')
 var scope=window;var hcfqn=split.pop();var prop_name=hcfqn;for(var i in split){var part=split[i];if(!scope[part]){scope[part]={};}
 scope=scope[part];}
-obj.prototype=scope;obj.FQN=prop_hcfqn;obj.NAME=prop_name;scope[hcfqn]=obj;return scope[hcfqn];}
+controller_class.FQN=prop_hcfqn;controller_class.NAME=prop_name;scope[hcfqn]=controller_class;if(as_element!=undefined&&as_element!=null){if(element_options==undefined){element_options={};}
+customElements.define(as_element,scope[hcfqn],element_options);}
+return scope[hcfqn];}
 document.recursiveOffset=function(aobj){var currOffset={x:0,y:0}
 var newOffset={x:0,y:0}
 if(aobj!==null){if(aobj.scrollLeft){currOffset.x=aobj.scrollLeft;}
@@ -28,7 +36,7 @@ if(aobj.parentNode!==undefined){newOffset=document.recursiveOffset(aobj.parentNo
 currOffset.x=currOffset.x+newOffset.x;currOffset.y=currOffset.y+newOffset.y;}
 return currOffset;}
 function mouseMoved(e){if(typeof e=='undefined'||e==null){document.mouse={x:0,y:0};return;}
-var doc=document.documentElement||document.body;var target=e.srcElement||e.target;var offsetpos=document.recursiveOffset(doc);pos_x=e.clientX+offsetpos.x;pos_y=e.clientY+offsetpos.y;document.mouse={x:pos_x,y:pos_y};}
+if(document.mouse_timeout==null||document.mouse_timeout==undefined){var doc=document.documentElement||document.body;var target=e.srcElement||e.target;var offsetpos=document.recursiveOffset(doc);pos_x=e.clientX+offsetpos.x;pos_y=e.clientY+offsetpos.y;document.mouse={x:pos_x,y:pos_y};document.mouse_timeout=setTimeout(function(){document.mouse_timeout=null;},100);}}
 document.onmousemove=mouseMoved;(function(\$){'use strict'
 function safeAdd(x,y){var lsw=(x&0xFFFF)+(y&0xFFFF)
 var msw=(x>>16)+(y>>16)+(lsw>>16)
@@ -167,13 +175,7 @@ return rawHMACMD5(key,string)}
 if(typeof define==='function'&&define.amd){define(function(){return md5})}else if(typeof module==='object'&&module.exports){module.exports=md5}else{\$.md5=md5}}(this))";
         return $js;
     }
-    # END ASSEMBLY FRAME CLIENT.JS
-    # BEGIN ASSEMBLY FRAME CONFIG.JSON
-    private static function loadConfig() {
-        $content = self::_attachment(__FILE__, __COMPILER_HALT_OFFSET__, 'CONFIG', 'JSON');
-        self::$config = json_decode($content);
-    }
-    # END ASSEMBLY FRAME CONFIG.JSON
+    # END ASSEMBLY FRAME CONTROLLER.JS
     # BEGIN ASSEMBLY FRAME OUTPUT.TEXT
     public function __toString() {
         $__CLASS__ = __CLASS__;

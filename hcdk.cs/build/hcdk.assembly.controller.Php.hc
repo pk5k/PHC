@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.controller.Php - BUILD 22.01.24#308
+<?php #HYPERCELL hcdk.assembly.controller.Php - BUILD 22.01.24#309
 namespace hcdk\assembly\controller;
 class Php extends \hcdk\assembly\controller {
     use \hcf\core\dryver\Base, \hcf\core\dryver\Constant, Php\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
@@ -19,27 +19,22 @@ class Php extends \hcdk\assembly\controller {
         $__CLASS__ = __CLASS__;
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
-        $output = "
-if (method_exists(\$this, '{$__CLASS__::_arg($_func_args, 0, $__CLASS__, $_this) }'))
+        $output = "if (method_exists(\$this, '{$__CLASS__::_arg($_func_args, 0, $__CLASS__, $_this) }'))
 {
 	call_user_func_array([\$this, '{$__CLASS__::_arg($_func_args, 0, $__CLASS__, $_this) }'], func_get_args());
-}
-
-";
+}";
         return $output;
     }
     public function defaultInputTemplate() {
         $__CLASS__ = __CLASS__;
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
-        $output = "
-<?php
+        $output = "<?php
 trait Controller
 {
 
 }
-?>
-";
+?>";
         return $output;
     }
     # END ASSEMBLY FRAME TEMPLATE.TEXT

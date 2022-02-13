@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.data.xml.Fragment.render.PipeFragment - BUILD ?
+<?php #HYPERCELL hcdk.data.xml.Fragment.render.PipeFragment - BUILD 22.01.26#1
 namespace hcdk\data\xml\Fragment\render;
 class PipeFragment extends \hcdk\data\xml\Fragment\render\PipelineFragment {
     use \hcf\core\dryver\Base, \hcf\core\dryver\Internal;

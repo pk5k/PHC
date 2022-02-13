@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.template.Xml - BUILD 22.01.24#202
+<?php #HYPERCELL hcdk.assembly.template.Xml - BUILD 22.01.24#203
 namespace hcdk\assembly\template;
 class Xml extends \hcdk\assembly\template {
     use \hcf\core\dryver\Base, Xml\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
@@ -15,8 +15,7 @@ class Xml extends \hcdk\assembly\template {
         $__CLASS__ = __CLASS__;
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
-        $output = "
-\$output = '';
+        $output = "\$output = '';
 {$__CLASS__::_arg($_func_args, 0, $__CLASS__, $_this) }
 
 return self::_postProcess(\$output, [{$__CLASS__::_arg($_func_args, 1, $__CLASS__, $_this) }], [{$__CLASS__::_arg($_func_args, 2, $__CLASS__, $_this) }]);";

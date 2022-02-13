@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.client.Css - BUILD 22.01.24#194
+<?php #HYPERCELL hcdk.assembly.client.Css - BUILD 22.01.24#195
 namespace hcdk\assembly\client;
 class Css extends \hcdk\assembly\client {
     use \hcf\core\dryver\Base, Css\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
@@ -15,14 +15,12 @@ class Css extends \hcdk\assembly\client {
         $__CLASS__ = __CLASS__;
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
-        $output = "
-if(\$as_array)
+        $output = "if(\$as_array)
 {
 	return self::makeStylesheetArray();
 }
 
-return self::_attachment(__FILE__, __COMPILER_HALT_OFFSET__, '{$__CLASS__::_call('getName', $__CLASS__, $_this) }', '{$__CLASS__::_call('getType', $__CLASS__, $_this) }');
-";
+return self::_attachment(__FILE__, __COMPILER_HALT_OFFSET__, '{$__CLASS__::_call('getName', $__CLASS__, $_this) }', '{$__CLASS__::_call('getType', $__CLASS__, $_this) }');";
         return $output;
     }
     # END ASSEMBLY FRAME TEMPLATE.TEXT

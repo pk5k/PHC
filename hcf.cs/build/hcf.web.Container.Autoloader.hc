@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.web.Container.Autoloader - BUILD 22.01.24#3291
+<?php #HYPERCELL hcf.web.Container.Autoloader - BUILD 22.02.13#3293
 namespace hcf\web\Container;
 class Autoloader {
     use \hcf\core\dryver\Config, Autoloader\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Template, \hcf\core\dryver\Template\Html, \hcf\core\dryver\Internal;
@@ -67,7 +67,7 @@ class Autoloader {
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
         $output = '';
-        $output.= "document.registerComponent('{$__CLASS__::_arg($_func_args, 0, $__CLASS__, $_this) }', {$__CLASS__::_arg($_func_args, 1, $__CLASS__, $_this) });";
+        $output.= "document.registerComponentController('{$__CLASS__::_arg($_func_args, 0, $__CLASS__, $_this) }', {$__CLASS__::_arg($_func_args, 1, $__CLASS__, $_this) });";
         return self::_postProcess($output, [], []);
     }
     protected function stylesheet() {
@@ -317,9 +317,7 @@ class Autoloader {
     # END EXECUTABLE FRAME OF CONTROLLER.PHP
     __halt_compiler();
     #__COMPILER_HALT_OFFSET__
-
 BEGIN[CONFIG.JSON]
-
 {
   "client":{
     "style":{
@@ -350,10 +348,6 @@ BEGIN[CONFIG.JSON]
   }
 }
 
-
 END[CONFIG.JSON]
 
-
 ?>
-
-

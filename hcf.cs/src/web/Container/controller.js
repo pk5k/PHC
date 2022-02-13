@@ -1,5 +1,5 @@
 // use this function to register client.js assemblies inside the DOM by it's HC-FQN
-document.registerComponent = function(hcfqn, obj)
+document.registerComponentController = function(hcfqn, controller_class, as_element, element_options)
 {
 	var prop_hcfqn = hcfqn;
   var split = hcfqn.split('.')
@@ -19,11 +19,21 @@ document.registerComponent = function(hcfqn, obj)
     scope = scope[part];
   }
 
-	obj.prototype = scope;
-	obj.FQN = prop_hcfqn;
-	obj.NAME = prop_name;
+	//controller_class.prototype = scope;
+	controller_class.FQN = prop_hcfqn;
+	controller_class.NAME = prop_name;
 	
-  scope[hcfqn] = obj;
+  scope[hcfqn] = controller_class;
+
+  if (as_element != undefined && as_element != null)
+  {
+    if (element_options == undefined)
+    {
+      element_options = {};
+    }
+    
+    customElements.define(as_element, scope[hcfqn], element_options);
+  }
 
   return scope[hcfqn];
 }
@@ -85,19 +95,25 @@ function mouseMoved(e)
     return;
   }
 
-  var doc = document.documentElement || document.body;
-  var target = e.srcElement || e.target;
-  var offsetpos = document.recursiveOffset(doc);
+  if (document.mouse_timeout == null || document.mouse_timeout == undefined)
+  {
+    var doc = document.documentElement || document.body;
+    var target = e.srcElement || e.target;
+    var offsetpos = document.recursiveOffset(doc);
 
-  pos_x = e.clientX+offsetpos.x;
-  pos_y = e.clientY+offsetpos.y;
+    pos_x = e.clientX+offsetpos.x;
+    pos_y = e.clientY+offsetpos.y;
 
-  document.mouse = {
-    x: pos_x,
-    y: pos_y
-  };
+    document.mouse = {
+      x: pos_x,
+      y: pos_y
+    };
 
-
+    document.mouse_timeout = setTimeout(function() 
+    {
+      document.mouse_timeout = null;
+    }, 100);
+  }
 }
 
 document.onmousemove = mouseMoved;

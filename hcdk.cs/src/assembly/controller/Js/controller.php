@@ -14,6 +14,16 @@ trait Controller
 		return false;
 	}
 
+	public function isAttachment()
+	{
+		return false;
+	}
+
+	public function isExecutable()
+	{
+		return false;
+	}
+
 	protected function minifyJS($js_data)
 	{
 		if(self::config()->jshrink->minify)
@@ -43,7 +53,13 @@ trait Controller
 		return $method;
 	}
 
-	public function getStaticMethods()
+	protected function getControllerMethods()
+	{
+		return null;
+	}
+
+
+	public function getStaticControllerMethods()
 	{
 		$methods = [];
 
@@ -52,11 +68,17 @@ trait Controller
 		return $methods;
 	}
 
-	public function defaultInput() { return '{}'; }
+	public function defaultInput() { return 'class {}'; }
+	public function checkInput() {}
 
-	public function getTraits()
+	public function getControllerTrait()
 	{
-		return ['Client' => '\\hcf\\core\\dryver\\Client', 'ClientJs' => '\\hcf\\core\\dryver\\Client\\Js'];
+		return ['Controller' => '\\hcf\\core\\dryver\\Controller', 'ControllerJs' => '\\hcf\\core\\dryver\\Controller\\Js'];
+	}
+
+	protected function getConstructorContents()
+	{
+		return null;
 	}
 }
 ?>

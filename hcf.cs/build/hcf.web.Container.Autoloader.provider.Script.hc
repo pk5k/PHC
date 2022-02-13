@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.web.Container.Autoloader.provider.Script - BUILD 22.01.24#20
+<?php #HYPERCELL hcf.web.Container.Autoloader.provider.Script - BUILD 22.01.26#21
 namespace hcf\web\Container\Autoloader\provider;
 class Script extends \hcf\web\Container\Autoloader\provider {
     use \hcf\core\dryver\Base, Script\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Internal;

@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.log.Xml - BUILD 22.01.24#188
+<?php #HYPERCELL hcdk.assembly.log.Xml - BUILD 22.01.24#189
 namespace hcdk\assembly\log;
 class Xml extends \hcdk\assembly\log {
     use \hcf\core\dryver\Base, Xml\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
@@ -15,9 +15,7 @@ class Xml extends \hcdk\assembly\log {
         $__CLASS__ = __CLASS__;
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
-        $output = "
-return self::_attachment(__FILE__, __COMPILER_HALT_OFFSET__, '{$__CLASS__::_call('getName', $__CLASS__, $_this) }', '{$__CLASS__::_call('getType', $__CLASS__, $_this) }');
-";
+        $output = "return self::_attachment(__FILE__, __COMPILER_HALT_OFFSET__, '{$__CLASS__::_call('getName', $__CLASS__, $_this) }', '{$__CLASS__::_call('getType', $__CLASS__, $_this) }');";
         return $output;
     }
     # END ASSEMBLY FRAME TEMPLATE.TEXT

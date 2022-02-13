@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.data.xml.Fragment.condition.SwitchFragment - BUILD 22.01.24#73
+<?php #HYPERCELL hcdk.data.xml.Fragment.condition.SwitchFragment - BUILD 22.01.24#74
 namespace hcdk\data\xml\Fragment\condition;
 class SwitchFragment extends \hcdk\data\xml\Fragment\condition {
     use \hcf\core\dryver\Base, SwitchFragment\__EO__\Controller, \hcf\core\dryver\Internal;

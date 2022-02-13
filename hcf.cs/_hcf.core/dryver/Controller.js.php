@@ -1,5 +1,5 @@
 <?php
-namespace hcf\core\dryver\Client
+namespace hcf\core\dryver\Controller
 {
 	trait Js
 	{

@@ -272,7 +272,7 @@ trait Controller
 		return $method;
 	}
 
-	public function getStaticMethods()
+	public function getStaticControllerMethods()
 	{
 		$methods = [];
 
@@ -281,11 +281,33 @@ trait Controller
 		return $methods;
 	}
 
-	public function defaultInput() { return 'Class Client {}'; }
+	protected function getControllerMethods()
+	{
+		return null;
+	}
+
+	public function defaultInput() { return 'Class {}'; }
+	public function checkInput() {}
 
 	public function getTraits()
 	{
 		return ['Client' => '\\hcf\\core\\dryver\\Client', 'ClientTs' => '\\hcf\\core\\dryver\\Client\\Js'];
+	}
+
+
+	public function isAttachment()
+	{
+		return false;
+	}
+
+	public function isExecutable()
+	{
+		return false;
+	}
+
+	protected function getConstructorContents()
+	{
+		return null;
 	}
 }
 ?>

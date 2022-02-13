@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.web.Container.Autoloader.provider - BUILD 22.01.24#19
+<?php #HYPERCELL hcf.web.Container.Autoloader.provider - BUILD 22.01.26#20
 namespace hcf\web\Container\Autoloader;
 abstract class provider {
     use provider\__EO__\Controller, \hcf\core\dryver\Internal;

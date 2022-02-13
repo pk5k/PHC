@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.output - BUILD 22.01.24#199
+<?php #HYPERCELL hcdk.assembly.output - BUILD 22.01.24#200
 namespace hcdk\assembly;
 abstract class output extends \hcdk\assembly {
     use \hcf\core\dryver\Base, output\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
@@ -12,8 +12,7 @@ abstract class output extends \hcdk\assembly {
     }
     # BEGIN ASSEMBLY FRAME TEMPLATE.RAW
     public function defaultInput() {
-        $output = "
-{{method:stdTpl}}";
+        $output = "{{method:stdTpl}}";
         return $output;
     }
     # END ASSEMBLY FRAME TEMPLATE.RAW

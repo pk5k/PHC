@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.db.Dict - BUILD 22.01.24#184
+<?php #HYPERCELL hcf.db.Dict - BUILD 22.01.26#185
 namespace hcf\db;
 class Dict {
     use \hcf\core\dryver\Config, \hcf\core\dryver\Constant, Dict\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
@@ -39,86 +39,62 @@ class Dict {
         $__CLASS__ = __CLASS__;
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
-        $sql = "
-SELECT key FROM {$__CLASS__::_property('config.connection.table.name', $__CLASS__, $_this) } WHERE VALUE = '{$__CLASS__::_arg($_func_args, 0, $__CLASS__, $_this) }'
-
-";
+        $sql = "SELECT key FROM {$__CLASS__::_property('config.connection.table.name', $__CLASS__, $_this) } WHERE VALUE = '{$__CLASS__::_arg($_func_args, 0, $__CLASS__, $_this) }'";
         return $sql;
     }
     public function tplLoadDict() {
         $__CLASS__ = __CLASS__;
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
-        $sql = "
-SELECT * FROM {$__CLASS__::_property('config.connection.table.name', $__CLASS__, $_this) };
-
-
-";
+        $sql = "SELECT * FROM {$__CLASS__::_property('config.connection.table.name', $__CLASS__, $_this) };";
         return $sql;
     }
     public function tplCreateDictTable() {
         $__CLASS__ = __CLASS__;
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
-        $sql = "
-CREATE TABLE {$__CLASS__::_property('config.connection.table.name', $__CLASS__, $_this) }
+        $sql = "CREATE TABLE {$__CLASS__::_property('config.connection.table.name', $__CLASS__, $_this) }
 (
 	 {$__CLASS__::_property('config.connection.table.col.key', $__CLASS__, $_this) } VARCHAR(255) NOT NULL PRIMARY KEY,
 	 {$__CLASS__::_property('config.connection.table.col.locale', $__CLASS__, $_this) } VARCHAR(255),
 	 {$__CLASS__::_property('config.connection.table.col.value', $__CLASS__, $_this) } TEXT,
 	 {$__CLASS__::_property('config.connection.table.col.comment', $__CLASS__, $_this) } TEXT
-);
-
-";
+);";
         return $sql;
     }
     public function tplCreateDictEntry() {
         $__CLASS__ = __CLASS__;
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
-        $sql = "
-INSERT INTO {$__CLASS__::_property('config.connection.table.name', $__CLASS__, $_this) } VALUES ('{$__CLASS__::_arg($_func_args, 0, $__CLASS__, $_this) }', '{$__CLASS__::_arg($_func_args, 1, $__CLASS__, $_this) }', '{$__CLASS__::_arg($_func_args, 2, $__CLASS__, $_this) }', '{$__CLASS__::_arg($_func_args, 3, $__CLASS__, $_this) }')
-
-";
+        $sql = "INSERT INTO {$__CLASS__::_property('config.connection.table.name', $__CLASS__, $_this) } VALUES ('{$__CLASS__::_arg($_func_args, 0, $__CLASS__, $_this) }', '{$__CLASS__::_arg($_func_args, 1, $__CLASS__, $_this) }', '{$__CLASS__::_arg($_func_args, 2, $__CLASS__, $_this) }', '{$__CLASS__::_arg($_func_args, 3, $__CLASS__, $_this) }')";
         return $sql;
     }
     public function tplUpdateDictEntry() {
         $__CLASS__ = __CLASS__;
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
-        $sql = "
-UPDATE {$__CLASS__::_property('config.connection.table.name', $__CLASS__, $_this) } SET {$__CLASS__::_property('config.connection.table.col.value', $__CLASS__, $_this) } = '{$__CLASS__::_arg($_func_args, 0, $__CLASS__, $_this) }', {$__CLASS__::_property('config.connection.table.col.comment', $__CLASS__, $_this) } = '{$__CLASS__::_arg($_func_args, 1, $__CLASS__, $_this) }' WHERE {$__CLASS__::_property('config.connection.table.col.key', $__CLASS__, $_this) } = '{$__CLASS__::_property('key', $__CLASS__, $_this) }' AND {$__CLASS__::_property('config.connection.table.col.locale', $__CLASS__, $_this) } = '{$__CLASS__::_property('locale', $__CLASS__, $_this) }'
-
-";
+        $sql = "UPDATE {$__CLASS__::_property('config.connection.table.name', $__CLASS__, $_this) } SET {$__CLASS__::_property('config.connection.table.col.value', $__CLASS__, $_this) } = '{$__CLASS__::_arg($_func_args, 0, $__CLASS__, $_this) }', {$__CLASS__::_property('config.connection.table.col.comment', $__CLASS__, $_this) } = '{$__CLASS__::_arg($_func_args, 1, $__CLASS__, $_this) }' WHERE {$__CLASS__::_property('config.connection.table.col.key', $__CLASS__, $_this) } = '{$__CLASS__::_property('key', $__CLASS__, $_this) }' AND {$__CLASS__::_property('config.connection.table.col.locale', $__CLASS__, $_this) } = '{$__CLASS__::_property('locale', $__CLASS__, $_this) }'";
         return $sql;
     }
     public function tplDeleteDictEntry() {
         $__CLASS__ = __CLASS__;
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
-        $sql = "
-DELETE FROM {$__CLASS__::_property('config.connection.table.name', $__CLASS__, $_this) } WHERE {$__CLASS__::_property('config.connection.table.col.key', $__CLASS__, $_this) } = '{$__CLASS__::_property('key', $__CLASS__, $_this) }' AND {$__CLASS__::_property('config.connection.table.col.locale', $__CLASS__, $_this) } = '{$__CLASS__::_property('locale', $__CLASS__, $_this) }'
-
-";
+        $sql = "DELETE FROM {$__CLASS__::_property('config.connection.table.name', $__CLASS__, $_this) } WHERE {$__CLASS__::_property('config.connection.table.col.key', $__CLASS__, $_this) } = '{$__CLASS__::_property('key', $__CLASS__, $_this) }' AND {$__CLASS__::_property('config.connection.table.col.locale', $__CLASS__, $_this) } = '{$__CLASS__::_property('locale', $__CLASS__, $_this) }'";
         return $sql;
     }
     public function tplTruncate() {
         $__CLASS__ = __CLASS__;
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
-        $sql = "
-TRUNCATE TABLE {$__CLASS__::_property('config.connection.table.name', $__CLASS__, $_this) }
-
-";
+        $sql = "TRUNCATE TABLE {$__CLASS__::_property('config.connection.table.name', $__CLASS__, $_this) }";
         return $sql;
     }
     public function tplTruncateLocale() {
         $__CLASS__ = __CLASS__;
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
-        $sql = "
-DELETE FROM {$__CLASS__::_property('config.connection.table.name', $__CLASS__, $_this) } WHERE {$__CLASS__::_property('config.connection.table.col.locale', $__CLASS__, $_this) } = '{$__CLASS__::_arg($_func_args, 0, $__CLASS__, $_this) }'
-";
+        $sql = "DELETE FROM {$__CLASS__::_property('config.connection.table.name', $__CLASS__, $_this) } WHERE {$__CLASS__::_property('config.connection.table.col.locale', $__CLASS__, $_this) } = '{$__CLASS__::_arg($_func_args, 0, $__CLASS__, $_this) }'";
         return $sql;
     }
     # END ASSEMBLY FRAME TEMPLATE.SQL

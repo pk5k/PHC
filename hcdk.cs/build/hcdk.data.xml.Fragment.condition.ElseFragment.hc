@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.data.xml.Fragment.condition.ElseFragment - BUILD 22.01.24#72
+<?php #HYPERCELL hcdk.data.xml.Fragment.condition.ElseFragment - BUILD 22.01.24#73
 namespace hcdk\data\xml\Fragment\condition;
 class ElseFragment extends \hcdk\data\xml\Fragment\condition {
     use \hcf\core\dryver\Base, ElseFragment\__EO__\Controller, \hcf\core\dryver\Internal;

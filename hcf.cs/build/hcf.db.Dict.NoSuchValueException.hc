@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.db.Dict.NoSuchValueException - BUILD 22.01.24#123
+<?php #HYPERCELL hcf.db.Dict.NoSuchValueException - BUILD 22.01.26#124
 namespace hcf\db\Dict;
 class NoSuchValueException extends \Exception {
     use \hcf\core\dryver\Base, NoSuchValueException\__EO__\Controller, \hcf\core\dryver\Internal;

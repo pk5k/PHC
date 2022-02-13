@@ -1,0 +1,3 @@
+#~template__toString:
+\$output = "{{arg:0}}";
+return \$output;

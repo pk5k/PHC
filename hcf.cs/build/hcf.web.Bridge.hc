@@ -1,7 +1,7 @@
-<?php #HYPERCELL hcf.web.Bridge - BUILD 22.01.24#3315
+<?php #HYPERCELL hcf.web.Bridge - BUILD 22.02.13#3318
 namespace hcf\web;
 class Bridge {
-    use \hcf\core\dryver\Client, \hcf\core\dryver\Client\Js, \hcf\core\dryver\Config, Bridge\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Internal;
+    use \hcf\core\dryver\Config, \hcf\core\dryver\Controller, \hcf\core\dryver\Controller\Js, Bridge\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Internal;
     const FQN = 'hcf.web.Bridge';
     const NAME = 'Bridge';
     public function __construct() {
@@ -12,7 +12,14 @@ class Bridge {
             call_user_func_array([$this, 'hcfwebBridge_onConstruct'], func_get_args());
         }
     }
-    # BEGIN ASSEMBLY FRAME CLIENT.JS
+    # BEGIN ASSEMBLY FRAME CONFIG.INI
+    private static function loadConfig() {
+        $content = self::_attachment(__FILE__, __COMPILER_HALT_OFFSET__, 'CONFIG', 'INI');
+        $parser = new \IniParser();
+        self::$config = $parser->process($content);
+    }
+    # END ASSEMBLY FRAME CONFIG.INI
+    # BEGIN ASSEMBLY FRAME CONTROLLER.JS
     public static function script() {
         $js = "document.Bridge=function(to){var self=this;var _internal_route='?!=-bridge';var _worker_address='hcf.web.Bridge.Worker';var _worker_store=_worker_address+'.Store';var _header={action:\"X-Bridge-Action\",target:\"X-Bridge-Target\",method:\"X-Bridge-Method\"};self._target=to;self._action=undefined;self._method=undefined;if(document[_worker_address]==undefined&&window.Worker){document[_worker_address]=new Worker(_internal_route);document[_worker_address].onmessage=receiveWorkerMessage;}
 else if(!window.Worker){console.warn('Your Browser does not support WebWorkers - all requests will be executed on the main-thread.');}
@@ -99,14 +106,7 @@ catch(e){console.error('Eval error in following data: '+scripts);}}
 return self;}";
         return $js;
     }
-    # END ASSEMBLY FRAME CLIENT.JS
-    # BEGIN ASSEMBLY FRAME CONFIG.INI
-    private static function loadConfig() {
-        $content = self::_attachment(__FILE__, __COMPILER_HALT_OFFSET__, 'CONFIG', 'INI');
-        $parser = new \IniParser();
-        self::$config = $parser->process($content);
-    }
-    # END ASSEMBLY FRAME CONFIG.INI
+    # END ASSEMBLY FRAME CONTROLLER.JS
     # BEGIN ASSEMBLY FRAME OUTPUT.TEXT
     public function __toString() {
         $__CLASS__ = __CLASS__;

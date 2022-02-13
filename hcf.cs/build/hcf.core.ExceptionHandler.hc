@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.core.ExceptionHandler - BUILD 22.01.24#143
+<?php #HYPERCELL hcf.core.ExceptionHandler - BUILD 22.01.26#144
 namespace hcf\core;
 class ExceptionHandler {
     use ExceptionHandler\__EO__\Controller, \hcf\core\dryver\Internal;

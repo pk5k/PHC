@@ -1,7 +1,7 @@
-<?php #HYPERCELL hcf.web.Bridge.Worker - BUILD 22.01.24#30
+<?php #HYPERCELL hcf.web.Bridge.Worker - BUILD 22.02.13#33
 namespace hcf\web\Bridge;
 class Worker {
-    use \hcf\core\dryver\Client, \hcf\core\dryver\Client\Js, Worker\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Internal;
+    use \hcf\core\dryver\Controller, \hcf\core\dryver\Controller\Js, Worker\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Internal;
     const FQN = 'hcf.web.Bridge.Worker';
     const NAME = 'Worker';
     public function __construct() {
@@ -9,7 +9,7 @@ class Worker {
             call_user_func_array([$this, 'hcfwebBridgeWorker_onConstruct'], func_get_args());
         }
     }
-    # BEGIN ASSEMBLY FRAME CLIENT.JS
+    # BEGIN ASSEMBLY FRAME CONTROLLER.JS
     public static function script() {
         $js = "onmessage=function(e){var data=e.data;var http_request=false;var timeout=4000;var info=false;var http_request=new XMLHttpRequest();timeout=(!isNaN(data.overwrites.timeout))?data.overwrites.timeout:timeout;http_request.ontimeout=function(){returnToHost('timeout',0,null);}
 http_request.onreadystatechange=function(){if(http_request.readyState==4&&http_request.status<=300&&http_request.status>=100){var response=http_request.responseText;if(info){console.log('Request was successful - response data:');console.log((response.length>0)?response:'no data was sent');}
@@ -33,7 +33,7 @@ return false;}
 catch(e){console.error('Eval error in following data: '+scripts);}}};";
         return $js;
     }
-    # END ASSEMBLY FRAME CLIENT.JS
+    # END ASSEMBLY FRAME CONTROLLER.JS
     # BEGIN ASSEMBLY FRAME OUTPUT.TEXT
     public function __toString() {
         $__CLASS__ = __CLASS__;

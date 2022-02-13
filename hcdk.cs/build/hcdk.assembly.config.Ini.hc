@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.config.Ini - BUILD 22.01.24#190
+<?php #HYPERCELL hcdk.assembly.config.Ini - BUILD 22.01.24#191
 namespace hcdk\assembly\config;
 class Ini extends \hcdk\assembly\config {
     use \hcf\core\dryver\Base, Ini\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
@@ -15,12 +15,10 @@ class Ini extends \hcdk\assembly\config {
         $__CLASS__ = __CLASS__;
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
-        $output = "
-\$content = self::_attachment(__FILE__, __COMPILER_HALT_OFFSET__, '{$__CLASS__::_call('getName', $__CLASS__, $_this) }', '{$__CLASS__::_call('getType', $__CLASS__, $_this) }');
+        $output = "\$content = self::_attachment(__FILE__, __COMPILER_HALT_OFFSET__, '{$__CLASS__::_call('getName', $__CLASS__, $_this) }', '{$__CLASS__::_call('getType', $__CLASS__, $_this) }');
 
 \$parser = new \IniParser();
-self::\$config = \$parser->process(\$content);
-";
+self::\$config = \$parser->process(\$content);";
         return $output;
     }
     # END ASSEMBLY FRAME TEMPLATE.TEXT

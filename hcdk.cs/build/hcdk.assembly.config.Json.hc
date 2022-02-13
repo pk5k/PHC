@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.config.Json - BUILD 22.01.24#189
+<?php #HYPERCELL hcdk.assembly.config.Json - BUILD 22.01.24#190
 namespace hcdk\assembly\config;
 class Json extends \hcdk\assembly\config {
     use \hcf\core\dryver\Base, Json\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
@@ -15,20 +15,15 @@ class Json extends \hcdk\assembly\config {
         $__CLASS__ = __CLASS__;
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
-        $output = "
-\$content = self::_attachment(__FILE__, __COMPILER_HALT_OFFSET__, '{$__CLASS__::_call('getName', $__CLASS__, $_this) }', '{$__CLASS__::_call('getType', $__CLASS__, $_this) }');
-self::\$config = json_decode(\$content);
-
-";
+        $output = "\$content = self::_attachment(__FILE__, __COMPILER_HALT_OFFSET__, '{$__CLASS__::_call('getName', $__CLASS__, $_this) }', '{$__CLASS__::_call('getType', $__CLASS__, $_this) }');
+self::\$config = json_decode(\$content);";
         return $output;
     }
     public function defaultInput() {
         $__CLASS__ = __CLASS__;
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
-        $output = "
-{}
-";
+        $output = "{}";
         return $output;
     }
     # END ASSEMBLY FRAME TEMPLATE.TEXT

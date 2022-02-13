@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.template.Sql - BUILD 22.01.24#196
+<?php #HYPERCELL hcdk.assembly.template.Sql - BUILD 22.01.24#197
 namespace hcdk\assembly\template;
 class Sql extends \hcdk\assembly\template {
     use \hcf\core\dryver\Base, Sql\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
@@ -15,8 +15,7 @@ class Sql extends \hcdk\assembly\template {
         $__CLASS__ = __CLASS__;
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
-        $output = "
-\$sql = \"{$__CLASS__::_arg($_func_args, 0, $__CLASS__, $_this) }\";
+        $output = "\$sql = \"{$__CLASS__::_arg($_func_args, 0, $__CLASS__, $_this) }\";
 
 return \$sql;";
         return $output;

@@ -1,16 +1,16 @@
-<?php #HYPERCELL hcdk.assembly.client.Ts - BUILD 22.01.24#134
-namespace hcdk\assembly\client;
-class Ts extends \hcdk\assembly\client\Js {
+<?php #HYPERCELL hcdk.assembly.controller.Ts - BUILD 22.02.13#137
+namespace hcdk\assembly\controller;
+class Ts extends \hcdk\assembly\controller\Js {
     use \hcf\core\dryver\Base, \hcf\core\dryver\Config, Ts\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
-    const FQN = 'hcdk.assembly.client.Ts';
+    const FQN = 'hcdk.assembly.controller.Ts';
     const NAME = 'Ts';
     public function __construct() {
         call_user_func_array('parent::__construct', func_get_args());
         if (!isset(self::$config)) {
             self::loadConfig();
         }
-        if (method_exists($this, 'hcdkassemblyclientTs_onConstruct')) {
-            call_user_func_array([$this, 'hcdkassemblyclientTs_onConstruct'], func_get_args());
+        if (method_exists($this, 'hcdkassemblycontrollerTs_onConstruct')) {
+            call_user_func_array([$this, 'hcdkassemblycontrollerTs_onConstruct'], func_get_args());
         }
     }
     # BEGIN ASSEMBLY FRAME CONFIG.INI
@@ -25,30 +25,23 @@ class Ts extends \hcdk\assembly\client\Js {
         $__CLASS__ = __CLASS__;
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
-        $output = "
-\$js = \"{$__CLASS__::_arg($_func_args, 0, $__CLASS__, $_this) }\";
+        $output = "\$js = \"{$__CLASS__::_arg($_func_args, 0, $__CLASS__, $_this) }\";
 
-return \$js;
-
-";
+return \$js;";
         return $output;
     }
     protected function amdModuleName() {
         $__CLASS__ = __CLASS__;
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
-        $output = "
-/// <amd-module name=\"{$__CLASS__::_arg($_func_args, 0, $__CLASS__, $_this) }\"/>
-
-";
+        $output = "/// <amd-module name=\"{$__CLASS__::_arg($_func_args, 0, $__CLASS__, $_this) }\"/>";
         return $output;
     }
     protected function tsConfig() {
         $__CLASS__ = __CLASS__;
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
-        $output = "
-{
+        $output = "{
 	\"files\": [\"{$__CLASS__::_arg($_func_args, 0, $__CLASS__, $_this) }\"],
 	\"compilerOptions\": {
 		\"baseUrl\":\"{$__CLASS__::_arg($_func_args, 3, $__CLASS__, $_this) }\",
@@ -71,7 +64,7 @@ return \$js;
     # END ASSEMBLY FRAME TEMPLATE.TEXT
     
     }
-    namespace hcdk\assembly\client\Ts\__EO__;
+    namespace hcdk\assembly\controller\Ts\__EO__;
     # BEGIN EXECUTABLE FRAME OF CONTROLLER.PHP
     use \hcf\core\Utils;
     use \hcdk\raw\Method as Method;
@@ -247,16 +240,30 @@ return \$js;
             //$client_data = $this->processPlaceholders($client_data);
             return $method;
         }
-        public function getStaticMethods() {
+        public function getStaticControllerMethods() {
             $methods = [];
             $methods['script'] = $this->buildClient();
             return $methods;
         }
+        protected function getControllerMethods() {
+            return null;
+        }
         public function defaultInput() {
-            return 'Class Client {}';
+            return 'Class {}';
+        }
+        public function checkInput() {
         }
         public function getTraits() {
             return ['Client' => '\\hcf\\core\\dryver\\Client', 'ClientTs' => '\\hcf\\core\\dryver\\Client\\Js'];
+        }
+        public function isAttachment() {
+            return false;
+        }
+        public function isExecutable() {
+            return false;
+        }
+        protected function getConstructorContents() {
+            return null;
         }
     }
     # END EXECUTABLE FRAME OF CONTROLLER.PHP

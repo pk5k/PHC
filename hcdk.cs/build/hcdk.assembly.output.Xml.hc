@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.output.Xml - BUILD 22.01.24#192
+<?php #HYPERCELL hcdk.assembly.output.Xml - BUILD 22.02.13#194
 namespace hcdk\assembly\output;
 class Xml extends \hcdk\assembly\output {
     use \hcf\core\dryver\Base, Xml\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
@@ -15,12 +15,10 @@ class Xml extends \hcdk\assembly\output {
         $__CLASS__ = __CLASS__;
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
-        $output = "
-\$output = '';
+        $output = "\$output = '';
 {$__CLASS__::_arg($_func_args, 0, $__CLASS__, $_this) }
 
-return self::_postProcess(\$output, [{$__CLASS__::_arg($_func_args, 1, $__CLASS__, $_this) }], [{$__CLASS__::_arg($_func_args, 2, $__CLASS__, $_this) }]);
-";
+return self::_postProcess(\$output, [{$__CLASS__::_arg($_func_args, 1, $__CLASS__, $_this) }], [{$__CLASS__::_arg($_func_args, 2, $__CLASS__, $_this) }]);";
         return $output;
     }
     # END ASSEMBLY FRAME TEMPLATE.TEXT
@@ -34,7 +32,7 @@ return self::_postProcess(\$output, [{$__CLASS__::_arg($_func_args, 1, $__CLASS_
         public function getType() {
             return 'XML';
         }
-        public function build__toString() {
+        public function build__toString($name) {
             // The Fragment-implementations inside hcdk.xml will process the placeholder by themselfes, because we can't detect, if the placeholder
             // is added in- or outside of the output-variable (the $betweem_double_quotes flag for Placeholder::process)
             // in further implementations, the placeholders should be processed here, to keep the Fragments "placeholder-independet"
@@ -42,7 +40,7 @@ return self::_postProcess(\$output, [{$__CLASS__::_arg($_func_args, 1, $__CLASS_
             $input = $this->rawInput();
             $opt_attrs = XMLParser::matchOptionalAttributes($input);
             $opt_tags = XMLParser::matchOptionalTags($input);
-            $output = XMLParser::parse($input, $this->for_file . ', template-section "' . $name . '"');
+            $output = XMLParser::parse($input, $this->for_file);
             $method = new Method('__toString', ['public']);
             $attrs = '';
             $tags = '';
@@ -61,5 +59,3 @@ return self::_postProcess(\$output, [{$__CLASS__::_arg($_func_args, 1, $__CLASS_
     #__COMPILER_HALT_OFFSET__
 
 ?>
-
-

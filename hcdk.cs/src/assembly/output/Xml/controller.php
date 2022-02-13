@@ -9,7 +9,7 @@ trait Controller
 		return 'XML';
 	}
 
-	public function build__toString()
+	public function build__toString($name)
 	{
 		// The Fragment-implementations inside hcdk.xml will process the placeholder by themselfes, because we can't detect, if the placeholder
 		// is added in- or outside of the output-variable (the $betweem_double_quotes flag for Placeholder::process)
@@ -18,7 +18,7 @@ trait Controller
 		$input = $this->rawInput();
 		$opt_attrs = XMLParser::matchOptionalAttributes($input);
 		$opt_tags = XMLParser::matchOptionalTags($input);
-		$output = XMLParser::parse($input, $this->for_file.', template-section "'.$name.'"');
+		$output = XMLParser::parse($input, $this->for_file);
 		$method = new Method('__toString', ['public']);
 
 		$attrs = '';

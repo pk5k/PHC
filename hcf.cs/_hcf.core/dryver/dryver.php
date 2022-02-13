@@ -9,4 +9,5 @@ require_once __DIR__.'/Log.php';
 require_once __DIR__.'/Client.php';
 require_once __DIR__.'/Controller.php';
 require_once __DIR__.'/Template.php';
+require_once __DIR__.'/View.php';
 ?>

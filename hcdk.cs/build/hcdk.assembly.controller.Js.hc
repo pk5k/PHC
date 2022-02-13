@@ -1,16 +1,16 @@
-<?php #HYPERCELL hcdk.assembly.client.Js - BUILD 22.01.24#196
-namespace hcdk\assembly\client;
-class Js extends \hcdk\assembly\client {
+<?php #HYPERCELL hcdk.assembly.controller.Js - BUILD 22.02.13#200
+namespace hcdk\assembly\controller;
+class Js extends \hcdk\assembly\controller {
     use \hcf\core\dryver\Base, \hcf\core\dryver\Config, Js\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
-    const FQN = 'hcdk.assembly.client.Js';
+    const FQN = 'hcdk.assembly.controller.Js';
     const NAME = 'Js';
     public function __construct() {
         call_user_func_array('parent::__construct', func_get_args());
         if (!isset(self::$config)) {
             self::loadConfig();
         }
-        if (method_exists($this, 'hcdkassemblyclientJs_onConstruct')) {
-            call_user_func_array([$this, 'hcdkassemblyclientJs_onConstruct'], func_get_args());
+        if (method_exists($this, 'hcdkassemblycontrollerJs_onConstruct')) {
+            call_user_func_array([$this, 'hcdkassemblycontrollerJs_onConstruct'], func_get_args());
         }
     }
     # BEGIN ASSEMBLY FRAME CONFIG.INI
@@ -25,8 +25,7 @@ class Js extends \hcdk\assembly\client {
         $__CLASS__ = __CLASS__;
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
-        $output = "
-\$js = \"{$__CLASS__::_arg($_func_args, 0, $__CLASS__, $_this) }\";
+        $output = "\$js = \"{$__CLASS__::_arg($_func_args, 0, $__CLASS__, $_this) }\";
 
 return \$js;";
         return $output;
@@ -34,7 +33,7 @@ return \$js;";
     # END ASSEMBLY FRAME TEMPLATE.TEXT
     
     }
-    namespace hcdk\assembly\client\Js\__EO__;
+    namespace hcdk\assembly\controller\Js\__EO__;
     # BEGIN EXECUTABLE FRAME OF CONTROLLER.PHP
     use \hcdk\raw\Method as Method;
     use \hcf\core\log\Internal as InternalLogger;
@@ -43,6 +42,12 @@ return \$js;";
             return 'JS';
         }
         protected function sourceIsAttachment() {
+            return false;
+        }
+        public function isAttachment() {
+            return false;
+        }
+        public function isExecutable() {
             return false;
         }
         protected function minifyJS($js_data) {
@@ -62,16 +67,24 @@ return \$js;";
             //$client_data = $this->processPlaceholders($client_data);
             return $method;
         }
-        public function getStaticMethods() {
+        protected function getControllerMethods() {
+            return null;
+        }
+        public function getStaticControllerMethods() {
             $methods = [];
             $methods['script'] = $this->buildClient();
             return $methods;
         }
         public function defaultInput() {
-            return '{}';
+            return 'class {}';
         }
-        public function getTraits() {
-            return ['Client' => '\\hcf\\core\\dryver\\Client', 'ClientJs' => '\\hcf\\core\\dryver\\Client\\Js'];
+        public function checkInput() {
+        }
+        public function getControllerTrait() {
+            return ['Controller' => '\\hcf\\core\\dryver\\Controller', 'ControllerJs' => '\\hcf\\core\\dryver\\Controller\\Js'];
+        }
+        protected function getConstructorContents() {
+            return null;
         }
     }
     # END EXECUTABLE FRAME OF CONTROLLER.PHP
