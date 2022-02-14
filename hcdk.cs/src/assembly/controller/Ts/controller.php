@@ -155,8 +155,14 @@ trait Controller
 	{
 		$windows = strpos(PHP_OS, 'WIN') === 0;
   		$test = $windows ? 'where' : 'command -v';
-  		
-  		return (is_executable(trim(shell_exec("$test tsc"))));
+  		$se = shell_exec("$test tsc");
+
+        if (is_null($se))
+        {
+            return false;
+        }
+        
+        return (is_executable(trim($se)));
 	}
 
 	private function amdModuleNameSubstitutionRequired($content)

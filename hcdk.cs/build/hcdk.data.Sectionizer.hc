@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.data.Sectionizer - BUILD 22.01.28#62
+<?php #HYPERCELL hcdk.data.Sectionizer - BUILD 22.02.13#63
 namespace hcdk\data;
 class Sectionizer {
     use \hcf\core\dryver\Config, \hcf\core\dryver\Constant, Sectionizer\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -68,7 +68,7 @@ class Sectionizer {
                     case self::STATE_FEED_SEC:
                         if ($read_buffer == '' && $char == PHP_EOL) {
                             // if first character is a linebreak we're entering a new section coming from the self::CHAR_END_NAME character that is followed by a linebreak.
-                            continue;
+                            continue 2;
                         }
                         // if current char is a begin-token AND the following one is a visibility-token AND the next end-name-char appears before a line-break -> must be a new section
                         if ($eof || (isset($begin_tokens[$char]) && isset($visibility_tokens[$chars[$index + 1]]) && strpos($input, self::CHAR_END_NAME, $index) < strpos($input, PHP_EOL, $index))) {
@@ -101,9 +101,7 @@ class Sectionizer {
     # END EXECUTABLE FRAME OF CONTROLLER.PHP
     __halt_compiler();
     #__COMPILER_HALT_OFFSET__
-
 BEGIN[CONFIG.INI]
-
 ; each key defines the beginning of a template-method while it's value determines if this method will be static or not
 token.begin[#] = ""
 token.begin[@] = "static"
@@ -116,10 +114,6 @@ token.visibility[+] = "public"
 default.name = "stdTpl"; name of the "anonymous" root section if defined
 default.begin = "#+"; prefix to determine the visibility and type of the anonymous root section (is public non-static)
 
-
 END[CONFIG.INI]
 
-
 ?>
-
-

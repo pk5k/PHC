@@ -158,7 +158,7 @@ trait Controller
 		$this->build->no = '?';
 		$this->build->checksum = '?';
 
-		if (is_readable($file))
+		if (is_readable($file) && is_file($file))
 		{
 			$lines = file($file);
 
@@ -339,7 +339,10 @@ trait Controller
 			return false;
 		}
 
-		$this->abstract = (ctype_lower($this->name->short{0}));
+		$first_char = substr($this->name->short, 0, 1);
+		$is_lower = ($first_char == strtolower($first_char));
+
+		$this->abstract = $is_lower;
 	}
 
 	private function resolveName($offset)

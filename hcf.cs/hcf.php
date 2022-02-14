@@ -23,12 +23,6 @@ $elfqn = '\\'.Utils::HCFQN2PHPFQN(ExceptionHandler::FQN);
 set_exception_handler([$elfqn, 'exceptionHandler']);
 register_shutdown_function([$elfqn, 'errorHandler'], getcwd());// getcwd for php/apache path-change on shutdown (to resolve relative paths correctly)
 
-InternalLogger::log()->info('HYPERCELL FRAMEWORK '.HCF_VERSION.' - core initialized for following environment:');
-InternalLogger::log()->info(' - OS = ' . $os);
-InternalLogger::log()->info(' - PHP = ' . PHP_VERSION);
-InternalLogger::log()->info(' - CWD = ' . realpath($cwd));
-InternalLogger::log()->info(' - INI = ' . $hcf_ini_path);
-
 // CELLSPACES
 $include_dirs = $hcf_config->include;
 
@@ -77,13 +71,17 @@ foreach ($lib_dirs as $dir)
 	new LibLoader($dir);
 }
 
-InternalLogger::log()->info(' - SHARE DIR = '.((defined('HCF_SHARED')) ? HCF_SHARED : 'NONE'));
-InternalLogger::log()->info(' - ATTACHMENT DIR = '.((defined('HCF_ATT_OVERRIDE')) ? HCF_ATT_OVERRIDE : 'NONE'));
-
 $http_hooks = (isset($hcf_config->{'http-hooks'}) && is_array($hcf_config->{'http-hooks'})) ? $hcf_config->{'http-hooks'} : [];
 $hh = implode(',', $http_hooks);
 
-InternalLogger::log()->info(' - HTTP-HOOKS = ['.$hh.']');
+InternalLogger::log()->info('HYPERCELL FRAMEWORK '.HCF_VERSION.' - core initialized for:' . $os . 
+	' PHP-version: ' . PHP_VERSION . 
+	' at: ' . realpath($cwd) . 
+	' config: ' . $hcf_ini_path . 
+	' shared-dir: ' . ((defined('HCF_SHARED')) ? HCF_SHARED : 'NONE') . 
+	' attachment-dir: ' .((defined('HCF_ATT_OVERRIDE')) ? HCF_ATT_OVERRIDE : 'NONE') .
+	' active hooks: '. '['.$hh.']'
+);
 
 // read the http-hooks section inside _hcf.core/surface.ini
 if ((isset($_GET['!']) && isset($_SERVER['REQUEST_METHOD'])) ||

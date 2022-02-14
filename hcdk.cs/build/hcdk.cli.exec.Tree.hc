@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.cli.exec.Tree - BUILD 22.01.24#83
+<?php #HYPERCELL hcdk.cli.exec.Tree - BUILD 22.02.13#84
 namespace hcdk\cli\exec;
 class Tree extends \hcf\cli\exec {
     use \hcf\core\dryver\Base, Tree\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -59,7 +59,7 @@ class Tree extends \hcf\cli\exec {
                 $this->printNode($tree, 0, $__arg_details, $__arg_flat);
                 echo Utils::newLine();
             }
-            catch(\Exception $e) {
+            catch(\Exception$e) {
                 InternalLogger::log()->error('Unable to generate cellspace-tree due following exception:');
                 InternalLogger::log()->error($e);
             }
@@ -135,7 +135,7 @@ class Tree extends \hcf\cli\exec {
                 echo $ais . ' - ' . $an . ' (' . $file->getSize() . 'b' . $a_type . ')';
             }
         }
-        private function indentString($indent = 0, $__arg_flat) {
+        private function indentString($indent = 0, $__arg_flat = false) {
             if ($__arg_flat) {
                 return Utils::newLine();
             }
@@ -152,5 +152,3 @@ class Tree extends \hcf\cli\exec {
     #__COMPILER_HALT_OFFSET__
 
 ?>
-
-

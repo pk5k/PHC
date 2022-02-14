@@ -1337,6 +1337,12 @@ class PHP_Beautifier implements PHP_Beautifier_Interface
     public function getPreviousTokenConstant($iPrev = 1) 
     {
         $sToken = $this->getPreviousToken($iPrev);
+
+        if (is_null($sToken)) 
+        {
+            return null;
+        }
+        
         return $sToken[0];
     }
     /**

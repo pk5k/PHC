@@ -54,7 +54,7 @@ trait Controller
 					if ($read_buffer == '' && $char == PHP_EOL)
 					{
 						// if first character is a linebreak we're entering a new section coming from the self::CHAR_END_NAME character that is followed by a linebreak.
-						continue;
+						continue 2;
 					}
 
 					// if current char is a begin-token AND the following one is a visibility-token AND the next end-name-char appears before a line-break -> must be a new section

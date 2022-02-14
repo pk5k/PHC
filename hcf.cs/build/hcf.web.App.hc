@@ -1,7 +1,7 @@
-<?php #HYPERCELL hcf.web.App - BUILD 22.02.13#135
+<?php #HYPERCELL hcf.web.App - BUILD 22.02.13#136
 namespace hcf\web;
 class App {
-    use \hcf\core\dryver\Config, App\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Template, \hcf\core\dryver\Template\Html, \hcf\core\dryver\Internal;
+    use \hcf\core\dryver\Config, App\__EO__\Controller, \hcf\core\dryver\Client, \hcf\core\dryver\Client\Js, \hcf\core\dryver\Output, \hcf\core\dryver\Template, \hcf\core\dryver\Template\Html, \hcf\core\dryver\Internal;
     const FQN = 'hcf.web.App';
     const NAME = 'App';
     public function __construct() {
@@ -18,6 +18,13 @@ class App {
         self::$config = json_decode($content);
     }
     # END ASSEMBLY FRAME CONFIG.JSON
+    # BEGIN ASSEMBLY FRAME CONTROLLER.TS
+    public static function script() {
+        $js = "define(\"hcf.web.App\",[\"require\",\"exports\"],function(require,exports){\"use strict\";Object.defineProperty(exports,\"__esModule\",{value:true});function init(){throw'You have to override the main hcf.web.App with a hypercell that uses an own client.ts assembly.';}
+exports.default=init;});";
+        return $js;
+    }
+    # END ASSEMBLY FRAME CONTROLLER.TS
     # BEGIN ASSEMBLY FRAME OUTPUT.TEXT
     public function __toString() {
         $__CLASS__ = __CLASS__;
@@ -332,9 +339,7 @@ class App {
     # END EXECUTABLE FRAME OF CONTROLLER.PHP
     __halt_compiler();
     #__COMPILER_HALT_OFFSET__
-
 BEGIN[CONFIG.JSON]
-
 {
   "encoding":"utf-8",
   "enable-autoloader": true,
@@ -344,10 +349,6 @@ BEGIN[CONFIG.JSON]
   }
 }
 
-
 END[CONFIG.JSON]
 
-
 ?>
-
-

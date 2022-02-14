@@ -181,7 +181,7 @@ trait Controller
 		}
 	}
 
-	private function indentString($indent = 0, $__arg_flat)
+	private function indentString($indent = 0, $__arg_flat = false)
 	{
 		if ($__arg_flat)
 		{

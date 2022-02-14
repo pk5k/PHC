@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.raw.Hypercell - BUILD 22.01.26#326
+<?php #HYPERCELL hcdk.raw.Hypercell - BUILD 22.02.13#327
 namespace hcdk\raw;
 class Hypercell {
     use \hcf\core\dryver\Config, Hypercell\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
@@ -191,7 +191,7 @@ __halt_compiler();#__COMPILER_HALT_OFFSET__
             $this->build = new \stdClass();
             $this->build->no = '?';
             $this->build->checksum = '?';
-            if (is_readable($file)) {
+            if (is_readable($file) && is_file($file)) {
                 $lines = file($file);
                 if (count($lines) > 0 && strpos($lines[0], '@') !== false) {
                     // new build-info Notation splitted with @ instead of a new line (which causes some problems)
@@ -244,7 +244,7 @@ __halt_compiler();#__COMPILER_HALT_OFFSET__
                 try {
                     $assembly_instance = self::getAssemblyInstance($file, true, $this);
                 }
-                catch(\Exception $e) {
+                catch(\Exception$e) {
                     InternalLogger::log()->info($this->name->long . ' - cannot resolve assembly for file "' . $file . '" due following exception:');
                     InternalLogger::log()->info($e);
                     continue;
@@ -307,7 +307,9 @@ __halt_compiler();#__COMPILER_HALT_OFFSET__
             if (!strlen($this->name->short)) {
                 return false;
             }
-            $this->abstract = (ctype_lower($this->name->short{0}));
+            $first_char = substr($this->name->short, 0, 1);
+            $is_lower = ($first_char == strtolower($first_char));
+            $this->abstract = $is_lower;
         }
         private function resolveName($offset) {
             if (!is_string($offset) || strlen($offset) < 1) {
@@ -471,9 +473,7 @@ __halt_compiler();#__COMPILER_HALT_OFFSET__
     # END EXECUTABLE FRAME OF CONTROLLER.PHP
     __halt_compiler();
     #__COMPILER_HALT_OFFSET__
-
 BEGIN[CONFIG.INI]
-
 ; file-extension which will be used for built Hypercells
 extension = "hc"
 
@@ -491,10 +491,6 @@ attachment.override = true
 internal.file = "internal"
 internal.trait = "\\hcf\\core\\dryver\\Internal"
 
-
 END[CONFIG.INI]
 
-
 ?>
-
-
