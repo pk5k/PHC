@@ -1,7 +1,7 @@
-<?php #HYPERCELL hcf.web.Download - BUILD 22.01.26#144
+<?php #HYPERCELL hcf.web.Download - BUILD 22.02.15#146
 namespace hcf\web;
 class Download {
-    use \hcf\core\dryver\Config, Download\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Internal;
+    use \hcf\core\dryver\Config, Download\__EO__\Controller, \hcf\core\dryver\View, \hcf\core\dryver\Internal;
     const FQN = 'hcf.web.Download';
     const NAME = 'Download';
     public function __construct() {
@@ -19,7 +19,7 @@ class Download {
         self::$config = $parser->process($content);
     }
     # END ASSEMBLY FRAME CONFIG.INI
-    # BEGIN ASSEMBLY FRAME OUTPUT.TEXT
+    # BEGIN ASSEMBLY FRAME VIEW.TEXT
     public function __toString() {
         $__CLASS__ = __CLASS__;
         $_this = (isset($this)) ? $this : null;
@@ -27,7 +27,7 @@ class Download {
         $output = "{$__CLASS__::_call('provideDownload', $__CLASS__, $_this) }";
         return $output;
     }
-    # END ASSEMBLY FRAME OUTPUT.TEXT
+    # END ASSEMBLY FRAME VIEW.TEXT
     
     }
     namespace hcf\web\Download\__EO__;
@@ -143,7 +143,7 @@ class Download {
             try {
                 $ri->invoke($challenger_section->method, $args);
             }
-            catch(\Exception $e) {
+            catch(\Exception$e) {
                 IL::log()->error(self::FQN . ' - unable to provide file "' . $this->file . '" from context "' . $this->context . '" - challenger "' . $challenger_section->name . '::' . $challenger_section->method . '" failed due exception below: ');
                 IL::log()->error($e);
                 IL::log()->error(self::FQN . ' - sending HTTP-response 403 and rethrowing exception');
@@ -191,9 +191,7 @@ class Download {
     # END EXECUTABLE FRAME OF CONTROLLER.PHP
     __halt_compiler();
     #__COMPILER_HALT_OFFSET__
-
 BEGIN[CONFIG.INI]
-
 arg.file = "file"; key of the $_GET array that will be used as name/path to the requested filename.
 arg.context = "context"; key of the $_GET array that will be used as section-name for further processing of the file above
 
@@ -206,10 +204,6 @@ challenger.name = "my.permission.Service"; name of a Hypercell which contains th
 challenger.method = "amIPermittedToDownload"; A (static) method that should be called before providing the file. If this method throws an exception (= challenge failed), the download will abort with HTTP 403 and rethrow the exception
 challenger.args = true; pass arg.file and arg.context as first and second argument to the challenger.method
 
-
 END[CONFIG.INI]
 
-
 ?>
-
-

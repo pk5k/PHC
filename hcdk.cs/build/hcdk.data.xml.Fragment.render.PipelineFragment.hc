@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.data.xml.Fragment.render.PipelineFragment - BUILD 22.01.28#40
+<?php #HYPERCELL hcdk.data.xml.Fragment.render.PipelineFragment - BUILD 22.02.15#44
 namespace hcdk\data\xml\Fragment\render;
 class PipelineFragment extends \hcdk\data\xml\Fragment {
     use \hcf\core\dryver\Base, PipelineFragment\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -164,5 +164,3 @@ class PipelineFragment extends \hcdk\data\xml\Fragment {
     #__COMPILER_HALT_OFFSET__
 
 ?>
-
-

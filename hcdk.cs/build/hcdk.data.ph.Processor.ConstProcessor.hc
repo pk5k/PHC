@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.data.ph.Processor.ConstProcessor - BUILD 22.01.24#75
+<?php #HYPERCELL hcdk.data.ph.Processor.ConstProcessor - BUILD 22.02.15#79
 namespace hcdk\data\ph\Processor;
 class ConstProcessor extends \hcdk\data\ph\Processor {
     use \hcf\core\dryver\Base, ConstProcessor\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -43,5 +43,3 @@ class ConstProcessor extends \hcdk\data\ph\Processor {
     #__COMPILER_HALT_OFFSET__
 
 ?>
-
-

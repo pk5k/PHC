@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.data.ph.Processor.IfProcessor - BUILD 22.01.24#110
+<?php #HYPERCELL hcdk.data.ph.Processor.IfProcessor - BUILD 22.02.15#114
 namespace hcdk\data\ph\Processor;
 class IfProcessor extends \hcdk\data\ph\Processor {
     use \hcf\core\dryver\Base, IfProcessor\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -115,5 +115,3 @@ class IfProcessor extends \hcdk\data\ph\Processor {
     #__COMPILER_HALT_OFFSET__
 
 ?>
-
-

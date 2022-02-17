@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.cli.Colors - BUILD 22.01.26#47
+<?php #HYPERCELL hcf.cli.Colors - BUILD 22.02.15#49
 namespace hcf\cli;
 class Colors {
     use \hcf\core\dryver\Config, Colors\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -51,9 +51,7 @@ class Colors {
     # END EXECUTABLE FRAME OF CONTROLLER.PHP
     __halt_compiler();
     #__COMPILER_HALT_OFFSET__
-
 BEGIN[CONFIG.INI]
-
 [foreground]
 black = "0;30"
 dark-gray = "1;30"
@@ -82,10 +80,6 @@ magenta = "45"
 cyan = "46"
 light-gray = "47"
 
-
 END[CONFIG.INI]
 
-
 ?>
-
-

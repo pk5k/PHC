@@ -1,7 +1,7 @@
-<?php #HYPERCELL hcf.web.App.RequireJS - BUILD 22.02.13#120
+<?php #HYPERCELL hcf.web.App.RequireJS - BUILD 22.02.15#122
 namespace hcf\web\App;
 class RequireJS {
-    use \hcf\core\dryver\Constant, \hcf\core\dryver\Controller, \hcf\core\dryver\Controller\Js, RequireJS\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
+    use \hcf\core\dryver\Constant, \hcf\core\dryver\Controller, \hcf\core\dryver\Controller\Js, RequireJS\__EO__\Controller, \hcf\core\dryver\View, \hcf\core\dryver\Internal;
     const FQN = 'hcf.web.App.RequireJS';
     const NAME = 'RequireJS';
     public function __construct() {
@@ -20,17 +20,14 @@ class RequireJS {
         return $js;
     }
     # END ASSEMBLY FRAME CONTROLLER.JS
-    # BEGIN ASSEMBLY FRAME OUTPUT.TEXT
+    # BEGIN ASSEMBLY FRAME VIEW.TEXT
     public function __toString() {
         $__CLASS__ = __CLASS__;
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
-        $output = "{$__CLASS__::_call('provide', $__CLASS__, $_this) }
-";
+        $output = "{$__CLASS__::_call('provide', $__CLASS__, $_this) }";
         return $output;
     }
-    # END ASSEMBLY FRAME OUTPUT.TEXT
-    # BEGIN ASSEMBLY FRAME TEMPLATE.TEXT
     static protected function requireAsync() {
         $__CLASS__ = __CLASS__;
         $_this = (isset($this)) ? $this : null;
@@ -38,7 +35,7 @@ class RequireJS {
         $output = "require([{$__CLASS__::_arg($_func_args, 0, $__CLASS__, $_this) }]);";
         return $output;
     }
-    # END ASSEMBLY FRAME TEMPLATE.TEXT
+    # END ASSEMBLY FRAME VIEW.TEXT
     
     }
     namespace hcf\web\App\RequireJS\__EO__;
@@ -137,5 +134,3 @@ class RequireJS {
     #__COMPILER_HALT_OFFSET__
 
 ?>
-
-

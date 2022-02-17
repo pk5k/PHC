@@ -1,7 +1,7 @@
-<?php #HYPERCELL hcf.web.Container.Autoloader.provider.Script - BUILD 22.01.26#21
+<?php #HYPERCELL hcf.web.Container.Autoloader.provider.Script - BUILD 22.02.15#23
 namespace hcf\web\Container\Autoloader\provider;
 class Script extends \hcf\web\Container\Autoloader\provider {
-    use \hcf\core\dryver\Base, Script\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Internal;
+    use \hcf\core\dryver\Base, Script\__EO__\Controller, \hcf\core\dryver\View, \hcf\core\dryver\Internal;
     const FQN = 'hcf.web.Container.Autoloader.provider.Script';
     const NAME = 'Script';
     public function __construct() {
@@ -10,16 +10,15 @@ class Script extends \hcf\web\Container\Autoloader\provider {
             call_user_func_array([$this, 'hcfwebContainerAutoloaderproviderScript_onConstruct'], func_get_args());
         }
     }
-    # BEGIN ASSEMBLY FRAME OUTPUT.TEXT
+    # BEGIN ASSEMBLY FRAME VIEW.TEXT
     public function __toString() {
         $__CLASS__ = __CLASS__;
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
-        $output = "{$__CLASS__::_call('provideAssemblies', $__CLASS__, $_this) }
-";
+        $output = "{$__CLASS__::_call('provideAssemblies', $__CLASS__, $_this) }";
         return $output;
     }
-    # END ASSEMBLY FRAME OUTPUT.TEXT
+    # END ASSEMBLY FRAME VIEW.TEXT
     
     }
     namespace hcf\web\Container\Autoloader\provider\Script\__EO__;
@@ -36,5 +35,3 @@ class Script extends \hcf\web\Container\Autoloader\provider {
     #__COMPILER_HALT_OFFSET__
 
 ?>
-
-

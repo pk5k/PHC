@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.raw.Cellspace - BUILD 22.01.24#287
+<?php #HYPERCELL hcdk.raw.Cellspace - BUILD 22.02.15#291
 namespace hcdk\raw;
 class Cellspace {
     use \hcf\core\dryver\Config, Cellspace\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -141,7 +141,7 @@ class Cellspace {
                     // Hypercells will check themselfes on instantination if they are valid
                     $hypercell = new Hypercell($this, $offset);
                 }
-                catch(\Exception $e) {
+                catch(\Exception$e) {
                     InternalLogger::log()->warn(self::FQN . '@' . $this->root . ' - skipped directory "' . $dir . '" due following exception:');
                     InternalLogger::log()->warn($e);
                     continue;
@@ -240,9 +240,7 @@ class Cellspace {
     # END EXECUTABLE FRAME OF CONTROLLER.PHP
     __halt_compiler();
     #__COMPILER_HALT_OFFSET__
-
 BEGIN[CONFIG.INI]
-
 ; name of the file which contains the configuration of the Cellspace.
 ; The content of this file defines, how this cellspace will be build.
 ; This file must be placed at the cellspace-root, which was passed to
@@ -284,10 +282,6 @@ file.map = "cellspace.map"
 	; to avoid build errors. hcf is always included
 	link = []
 
-
 END[CONFIG.INI]
 
-
 ?>
-
-

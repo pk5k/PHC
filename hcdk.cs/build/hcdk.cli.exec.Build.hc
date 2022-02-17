@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.cli.exec.Build - BUILD 22.01.24#91
+<?php #HYPERCELL hcdk.cli.exec.Build - BUILD 22.02.15#95
 namespace hcdk\cli\exec;
 class Build extends \hcf\cli\exec {
     use \hcf\core\dryver\Base, Build\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -86,7 +86,7 @@ class Build extends \hcf\cli\exec {
                     Utils::copyPath($backup_src_dir, $backup_dir); // todo: just copy target + src dir
                     InternalLogger::log()->info('...backup-directory successfully created');
                 }
-                catch(\Exception $e) {
+                catch(\Exception$e) {
                     // set backup_dir null here, to avoid a rollback
                     $backup_dir = null;
                     // throw again
@@ -133,7 +133,7 @@ class Build extends \hcf\cli\exec {
                 $ms_total = time() - $build_start;
                 InternalLogger::log()->info('Build process finished - built ' . $built . ', skipped ' . $skipped . ', took ' . $ms_total . 'ms');
             }
-            catch(\Exception $e) {
+            catch(\Exception$e) {
                 $failed = true;
                 InternalLogger::log()->error('Unable to proceed due following exception:');
                 InternalLogger::log()->error($e);
@@ -155,7 +155,7 @@ class Build extends \hcf\cli\exec {
                     try {
                         Utils::removePath($rm_name);
                     }
-                    catch(\Exception $ee) {
+                    catch(\Exception$ee) {
                         InternalLogger::log()->error('Unable to remove dirty Cellspace "' . $rm_name . '" due following exception:');
                         InternalLogger::log()->error($ee);
                         die();
@@ -171,7 +171,7 @@ class Build extends \hcf\cli\exec {
                 try {
                     Utils::removePath($backup_dir);
                 }
-                catch(\Exception $e) {
+                catch(\Exception$e) {
                     InternalLogger::log()->error('Unable to remove backup Cellspace "' . $backup_dir . '" due following exception:');
                     InternalLogger::log()->error($e);
                     die();
@@ -187,5 +187,3 @@ class Build extends \hcf\cli\exec {
     #__COMPILER_HALT_OFFSET__
 
 ?>
-
-

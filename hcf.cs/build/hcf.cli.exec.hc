@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.cli.exec - BUILD 22.01.26#32
+<?php #HYPERCELL hcf.cli.exec - BUILD 22.02.15#34
 namespace hcf\cli;
 abstract class exec {
     use exec\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -20,5 +20,3 @@ abstract class exec {
     #__COMPILER_HALT_OFFSET__
 
 ?>
-
-

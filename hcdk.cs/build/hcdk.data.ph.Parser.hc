@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.data.ph.Parser - BUILD 22.01.24#77
+<?php #HYPERCELL hcdk.data.ph.Parser - BUILD 22.02.15#81
 namespace hcdk\data\ph;
 class Parser {
     use \hcf\core\dryver\Config, Parser\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -125,7 +125,7 @@ class Parser {
                 $type_class = $ri->getInstance();
                 self::validateProcessor($type_class);
             }
-            catch(\Exception $e) {
+            catch(\Exception$e) {
                 if (self::config()->parser->DOMT) {
                     throw new \PlaceholderException('Placeholder-processor "' . $type . '" cannot be load due following exception: ' . $e->getMessage());
                 }
@@ -269,9 +269,7 @@ class Parser {
     # END EXECUTABLE FRAME OF CONTROLLER.PHP
     __halt_compiler();
     #__COMPILER_HALT_OFFSET__
-
 BEGIN[CONFIG.INI]
-
 [parser]
 regex = "/{{((?:[0-9a-zA-Z_])*):((.)+?)}}/i"; Regex to match placeholders (must start with "value:" followed by everything until first }} 
 DOMT = true; Die-On-Missing-Type - if true, a PlaceholderException will be thrown, if type cannot be resolved to a Placeholder-Generalisation, on false the PH will be skipped
@@ -281,10 +279,6 @@ recursive = false; re-run the parse method, until no placeholders can be found a
 base = "hcdk.data.ph.Processor"; Name of the base processor Hypercell
 package = "hcdk.data.ph.Processor."; hc-package name which HCs inside implement the placeholder-base
 suffix = "Processor"; suffix, which will be append to the placeholders-type-name (e.g. ConstProcessor for {{const:MY_CONST}})
-
 END[CONFIG.INI]
 
-
 ?>
-
-

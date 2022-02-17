@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.data.xml.Fragment.embed.MarkdownFragment - BUILD 22.01.24#74
+<?php #HYPERCELL hcdk.data.xml.Fragment.embed.MarkdownFragment - BUILD 22.02.15#78
 namespace hcdk\data\xml\Fragment\embed;
 class MarkdownFragment extends \hcdk\data\xml\Fragment {
     use \hcf\core\dryver\Base, MarkdownFragment\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -65,5 +65,3 @@ class MarkdownFragment extends \hcdk\data\xml\Fragment {
     #__COMPILER_HALT_OFFSET__
 
 ?>
-
-

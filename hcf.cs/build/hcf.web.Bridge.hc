@@ -1,7 +1,7 @@
-<?php #HYPERCELL hcf.web.Bridge - BUILD 22.02.13#3318
+<?php #HYPERCELL hcf.web.Bridge - BUILD 22.02.15#3320
 namespace hcf\web;
 class Bridge {
-    use \hcf\core\dryver\Config, \hcf\core\dryver\Controller, \hcf\core\dryver\Controller\Js, Bridge\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Internal;
+    use \hcf\core\dryver\Config, \hcf\core\dryver\Controller, \hcf\core\dryver\Controller\Js, Bridge\__EO__\Controller, \hcf\core\dryver\View, \hcf\core\dryver\Internal;
     const FQN = 'hcf.web.Bridge';
     const NAME = 'Bridge';
     public function __construct() {
@@ -107,7 +107,7 @@ return self;}";
         return $js;
     }
     # END ASSEMBLY FRAME CONTROLLER.JS
-    # BEGIN ASSEMBLY FRAME OUTPUT.TEXT
+    # BEGIN ASSEMBLY FRAME VIEW.TEXT
     public function __toString() {
         $__CLASS__ = __CLASS__;
         $_this = (isset($this)) ? $this : null;
@@ -115,7 +115,7 @@ return self;}";
         $output = "{$__CLASS__::_property('output', $__CLASS__, $_this) }";
         return $output;
     }
-    # END ASSEMBLY FRAME OUTPUT.TEXT
+    # END ASSEMBLY FRAME VIEW.TEXT
     
     }
     namespace hcf\web\Bridge\__EO__;
@@ -150,7 +150,7 @@ return self;}";
                 }
                 $this->action($args);
             }
-            catch(\Exception $e) {
+            catch(\Exception$e) {
                 $this->sendHeader(500);
                 throw $e;
             }
@@ -306,9 +306,7 @@ return self;}";
     # END EXECUTABLE FRAME OF CONTROLLER.PHP
     __halt_compiler();
     #__COMPILER_HALT_OFFSET__
-
 BEGIN[CONFIG.INI]
-
 ; name of a http header, which indicates the hypercell which should be used
 header.target = 'X-Bridge-Target'
 
@@ -322,10 +320,6 @@ header.method = 'X-Bridge-Method'
 allow = ['your_package.*']
 
 
-
 END[CONFIG.INI]
 
-
 ?>
-
-

@@ -1,7 +1,7 @@
-<?php #HYPERCELL hcdk.assembly - BUILD 22.01.24#240
+<?php #HYPERCELL hcdk.assembly - BUILD 22.02.15#244
 namespace hcdk;
 abstract class assembly {
-    use assembly\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
+    use assembly\__EO__\Controller, \hcf\core\dryver\View, \hcf\core\dryver\Internal;
     const FQN = 'hcdk.assembly';
     const NAME = 'assembly';
     public function __construct() {
@@ -9,14 +9,14 @@ abstract class assembly {
             call_user_func_array([$this, 'hcdkassembly_onConstruct'], func_get_args());
         }
     }
-    # BEGIN ASSEMBLY FRAME TEMPLATE.RAW
+    # BEGIN ASSEMBLY FRAME VIEW.RAW
     static protected function controlSymbols() {
         $output = "\$__CLASS__ = __CLASS__;
 \$_this = (isset(\$this)) ? \$this : null;
 \$_func_args = \\func_get_args();";
         return $output;
     }
-    # END ASSEMBLY FRAME TEMPLATE.RAW
+    # END ASSEMBLY FRAME VIEW.RAW
     
     }
     namespace hcdk\assembly\__EO__;
@@ -221,5 +221,3 @@ abstract class assembly {
     #__COMPILER_HALT_OFFSET__
 
 ?>
-
-

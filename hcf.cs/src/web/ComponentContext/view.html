@@ -1,0 +1,23 @@
+<dummy.container>
+	<script language="javascript">
+		<loop.foreach var="{{property:components}}" key="fqn" value="component">{{method:clientControllerOf|local:component}}</loop.foreach>
+	</script>
+
+	<condition.if value="{{property:allow_global_style}}" is="true">
+		<style id="{{property:id}}-base-style-global">{{method:styles}}</style>
+	</condition.if>
+
+	<template id="{{property:id}}">
+		<style id="base-style">{{method:styles}}</style>
+
+		<loop.foreach var="{{property:components}}" key="fqn" value="component">
+			<div id="{{local:fqn}}">{{method:templateOf|local:component}}</div>
+		</loop.foreach>
+	</template>
+</dummy.container>
+
+#~styles:
+<dummy.container>
+	<loop.foreach var="{{property:stylesheet_embed}}" value="embed">{{local:embed}}</loop.foreach>
+	<loop.foreach var="{{property:components}}" key="fqn" value="component">{{method:styleOf|local:component}}</loop.foreach>
+</dummy.container>

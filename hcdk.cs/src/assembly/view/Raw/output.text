@@ -1,2 +1,0 @@
-\$output = "{{property:output}}";
-return \$output;

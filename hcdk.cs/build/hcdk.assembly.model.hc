@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.model - BUILD 22.02.13#203
+<?php #HYPERCELL hcdk.assembly.model - BUILD 22.02.15#207
 namespace hcdk\assembly;
 abstract class model extends \hcdk\assembly {
     use \hcf\core\dryver\Base, model\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -51,5 +51,3 @@ abstract class model extends \hcdk\assembly {
     #__COMPILER_HALT_OFFSET__
 
 ?>
-
-

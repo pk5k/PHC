@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.data.xml.Parser - BUILD 22.01.24#90
+<?php #HYPERCELL hcdk.data.xml.Parser - BUILD 22.02.15#94
 namespace hcdk\data\xml;
 class Parser {
     use \hcf\core\dryver\Config, \hcf\core\dryver\Constant, Parser\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -70,13 +70,13 @@ class Parser {
                 self::processLibXMLErrors($file_scope);
                 $output = self::renderFragment($xml, $file_scope);
             }
-            catch(\Exception $e) {
+            catch(\Exception$e) {
                 $errors = $e->getMessage();
             }
             try {
                 self::processLibXMLErrors($file_scope);
             }
-            catch(\XMLParseException $e) {
+            catch(\XMLParseException$e) {
                 $errors.= "\r\n" . $e->getMessage();
             }
             if (isset($errors)) {
@@ -150,7 +150,7 @@ class Parser {
                     InternalLogger::log()->warn(self::FQN . ' - processor tags cannot be flagged as optional. Processor will be executed anyway. In ' . $file_scope . ' for element "' . str_replace(self::TMP_OPT_TAG_MARKER, '?', $xml_root->getName()) . '"');
                 }
             }
-            catch(\Exception $e) {
+            catch(\Exception$e) {
                 // use the default-fragment
                 $type_class = Utils::HCFQN2PHPFQN(self::config()->fragment->base);
             }
@@ -281,9 +281,7 @@ class Parser {
     # END EXECUTABLE FRAME OF CONTROLLER.PHP
     __halt_compiler();
     #__COMPILER_HALT_OFFSET__
-
 BEGIN[CONFIG.INI]
-
 dash-to-cc = true; Convert dashed fragment-names to UpperCamelCase before resolving the fragments class name
 
 [fragment]
@@ -291,10 +289,6 @@ base = "hcdk.data.xml.Fragment"; Name of the base processor Hypercell
 package = "hcdk.data.xml.Fragment."; hc-package name which HCs inside implement the fragment-base
 suffix = "Fragment"; must be append to all base generalisations
 
-
 END[CONFIG.INI]
 
-
 ?>
-
-

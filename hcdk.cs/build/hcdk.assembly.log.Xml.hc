@@ -1,7 +1,7 @@
-<?php #HYPERCELL hcdk.assembly.log.Xml - BUILD 22.01.24#189
+<?php #HYPERCELL hcdk.assembly.log.Xml - BUILD 22.02.15#193
 namespace hcdk\assembly\log;
 class Xml extends \hcdk\assembly\log {
-    use \hcf\core\dryver\Base, Xml\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
+    use \hcf\core\dryver\Base, Xml\__EO__\Controller, \hcf\core\dryver\View, \hcf\core\dryver\Internal;
     const FQN = 'hcdk.assembly.log.Xml';
     const NAME = 'Xml';
     public function __construct() {
@@ -10,7 +10,7 @@ class Xml extends \hcdk\assembly\log {
             call_user_func_array([$this, 'hcdkassemblylogXml_onConstruct'], func_get_args());
         }
     }
-    # BEGIN ASSEMBLY FRAME TEMPLATE.TEXT
+    # BEGIN ASSEMBLY FRAME VIEW.TEXT
     protected function buildGetLogAttachment() {
         $__CLASS__ = __CLASS__;
         $_this = (isset($this)) ? $this : null;
@@ -18,7 +18,7 @@ class Xml extends \hcdk\assembly\log {
         $output = "return self::_attachment(__FILE__, __COMPILER_HALT_OFFSET__, '{$__CLASS__::_call('getName', $__CLASS__, $_this) }', '{$__CLASS__::_call('getType', $__CLASS__, $_this) }');";
         return $output;
     }
-    # END ASSEMBLY FRAME TEMPLATE.TEXT
+    # END ASSEMBLY FRAME VIEW.TEXT
     
     }
     namespace hcdk\assembly\log\Xml\__EO__;
@@ -33,5 +33,3 @@ class Xml extends \hcdk\assembly\log {
     #__COMPILER_HALT_OFFSET__
 
 ?>
-
-

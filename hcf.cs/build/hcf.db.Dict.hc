@@ -1,7 +1,7 @@
-<?php #HYPERCELL hcf.db.Dict - BUILD 22.01.26#185
+<?php #HYPERCELL hcf.db.Dict - BUILD 22.02.15#187
 namespace hcf\db;
 class Dict {
-    use \hcf\core\dryver\Config, \hcf\core\dryver\Constant, Dict\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
+    use \hcf\core\dryver\Config, \hcf\core\dryver\Constant, Dict\__EO__\Controller, \hcf\core\dryver\View, \hcf\core\dryver\Internal;
     const FQN = 'hcf.db.Dict';
     const NAME = 'Dict';
     public function __construct() {
@@ -24,17 +24,7 @@ class Dict {
     const NO_LOCALE_FALLBACK = '???MISSING LOCALE???';
     private static $_constant_list = ['EMPTY_KEY', 'NO_LOCALE_FALLBACK'];
     # END ASSEMBLY FRAME CONSTANT
-    # BEGIN ASSEMBLY FRAME OUTPUT.TEXT
-    public function __toString() {
-        $__CLASS__ = __CLASS__;
-        $_this = (isset($this)) ? $this : null;
-        $_func_args = \func_get_args();
-        $output = "{$__CLASS__::_call('apply', $__CLASS__, $_this) }
-";
-        return $output;
-    }
-    # END ASSEMBLY FRAME OUTPUT.TEXT
-    # BEGIN ASSEMBLY FRAME TEMPLATE.SQL
+    # BEGIN ASSEMBLY FRAME VIEW.SQL
     public function tplLookupKey() {
         $__CLASS__ = __CLASS__;
         $_this = (isset($this)) ? $this : null;
@@ -97,7 +87,16 @@ class Dict {
         $sql = "DELETE FROM {$__CLASS__::_property('config.connection.table.name', $__CLASS__, $_this) } WHERE {$__CLASS__::_property('config.connection.table.col.locale', $__CLASS__, $_this) } = '{$__CLASS__::_arg($_func_args, 0, $__CLASS__, $_this) }'";
         return $sql;
     }
-    # END ASSEMBLY FRAME TEMPLATE.SQL
+    # END ASSEMBLY FRAME VIEW.SQL
+    # BEGIN ASSEMBLY FRAME VIEW.TEXT
+    public function __toString() {
+        $__CLASS__ = __CLASS__;
+        $_this = (isset($this)) ? $this : null;
+        $_func_args = \func_get_args();
+        $output = "{$__CLASS__::_call('apply', $__CLASS__, $_this) }";
+        return $output;
+    }
+    # END ASSEMBLY FRAME VIEW.TEXT
     
     }
     namespace hcf\db\Dict\__EO__;
@@ -377,9 +376,7 @@ class Dict {
     # END EXECUTABLE FRAME OF CONTROLLER.PHP
     __halt_compiler();
     #__COMPILER_HALT_OFFSET__
-
 BEGIN[CONFIG.INI]
-
 [locale]
 default = "de_DE"; default locale which will be used, if no other value was specified at runtime; if no value for the target-locale was found, the default locale will be used as fallback
 cookie.name = "page-settings"; lookup for a cookie with this name, that contains the locale
@@ -394,10 +391,6 @@ table.col.locale = "locale"; the locale, which defines the language
 table.col.value = "value"; the actual text section in the correct language
 table.col.comment = "comment"; additional comments for further developing can be stored here
 
-
 END[CONFIG.INI]
 
-
 ?>
-
-

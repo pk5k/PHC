@@ -1,5 +1,7 @@
 <?php
 use \hcf\core\Utils as Utils;
+use \hcf\web\ComponentContext;
+use \hcf\web\Component;
 
 /**
  * Server
@@ -29,6 +31,9 @@ trait Controller
 	private $meta_http_equiv = [];
 	private $meta_name = [];
 	private $autoloading = false;
+	private $component_reg_data = '';
+	private $component_reg_data_initialized = false;
+	private $component_contexts = [];
 
 	/**
 	 * __construct
@@ -66,6 +71,8 @@ trait Controller
 				$this->favicon($config->{'fav-icon'});
 			}
 		}
+
+		$this->component_reg_data = ComponentContext::script();
 	}
 
 	/**
@@ -317,6 +324,22 @@ trait Controller
 		}
 
 		return '';
+	}
+
+	private function registerMainComponent()
+	{
+		$this->component_reg_data .= ComponentContext::wrappedClientController(Component::FQN, Component::script());
+		$this->component_reg_data_initialized = true;
+	}
+
+	public function registerComponentContext(ComponentContext $cc)
+	{
+		if (!$this->component_reg_data_initialized)
+		{
+			$this->registerMainComponent();
+		}
+
+		$this->component_contexts[] = $cc;
 	}
 }
 ?>

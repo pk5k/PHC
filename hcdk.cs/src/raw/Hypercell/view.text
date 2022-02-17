@@ -1,0 +1,35 @@
+<?php #HYPERCELL {{property:name.long}} - BUILD {{property:build.no}}
+namespace {{method:classNamespace}};
+
+{{method:requiredAliases}}
+
+{{method:classType}} class {{property:name.short}} {{method:classModifiers}}
+{
+	use {{method:requiredTraits}};
+
+	const FQN = '{{property:name.long}}';
+	const NAME = '{{property:name.short}}';
+
+	public function __construct()
+	{
+		{{method:constructorRows}}
+	}
+
+	{{method:assemblyFrames}}
+}
+
+namespace {{method:executableNamespace}};
+{{method:executableFrames}}
+
+__halt_compiler();#__COMPILER_HALT_OFFSET__
+{{method:attachmentFrames}}
+?>
+
+#~assemblyFrame:
+# {{arg:0}} ASSEMBLY FRAME {{arg:1}}
+
+#~executableFrame:
+# {{arg:0}} EXECUTABLE FRAME OF {{arg:1}}
+
+#~attachmentFrame:
+{{arg:0}}[{{arg:1}}]

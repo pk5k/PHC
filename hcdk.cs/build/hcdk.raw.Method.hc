@@ -1,7 +1,7 @@
-<?php #HYPERCELL hcdk.raw.Method - BUILD 22.01.24#293
+<?php #HYPERCELL hcdk.raw.Method - BUILD 22.02.15#297
 namespace hcdk\raw;
 class Method {
-    use Method\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Internal;
+    use Method\__EO__\Controller, \hcf\core\dryver\View, \hcf\core\dryver\Internal;
     const FQN = 'hcdk.raw.Method';
     const NAME = 'Method';
     public function __construct() {
@@ -9,7 +9,7 @@ class Method {
             call_user_func_array([$this, 'hcdkrawMethod_onConstruct'], func_get_args());
         }
     }
-    # BEGIN ASSEMBLY FRAME OUTPUT.TEXT
+    # BEGIN ASSEMBLY FRAME VIEW.TEXT
     public function __toString() {
         $__CLASS__ = __CLASS__;
         $_this = (isset($this)) ? $this : null;
@@ -17,7 +17,7 @@ class Method {
         $output = "{$__CLASS__::_call('makeModifierString', $__CLASS__, $_this) } function {$__CLASS__::_call('getName', $__CLASS__, $_this) }({$__CLASS__::_call('makeArgumentString', $__CLASS__, $_this) }){$__CLASS__::_call('makeBodyString', $__CLASS__, $_this) }";
         return $output;
     }
-    # END ASSEMBLY FRAME OUTPUT.TEXT
+    # END ASSEMBLY FRAME VIEW.TEXT
     
     }
     namespace hcdk\raw\Method\__EO__;
@@ -109,5 +109,3 @@ class Method {
     #__COMPILER_HALT_OFFSET__
 
 ?>
-
-

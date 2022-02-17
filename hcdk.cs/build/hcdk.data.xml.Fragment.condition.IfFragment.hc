@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.data.xml.Fragment.condition.IfFragment - BUILD 22.01.24#74
+<?php #HYPERCELL hcdk.data.xml.Fragment.condition.IfFragment - BUILD 22.02.15#78
 namespace hcdk\data\xml\Fragment\condition;
 class IfFragment extends \hcdk\data\xml\Fragment\condition {
     use \hcf\core\dryver\Base, IfFragment\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -54,5 +54,3 @@ class IfFragment extends \hcdk\data\xml\Fragment\condition {
     #__COMPILER_HALT_OFFSET__
 
 ?>
-
-

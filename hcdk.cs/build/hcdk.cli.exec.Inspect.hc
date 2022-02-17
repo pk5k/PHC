@@ -1,7 +1,7 @@
-<?php #HYPERCELL hcdk.cli.exec.Inspect - BUILD 22.01.24#62
+<?php #HYPERCELL hcdk.cli.exec.Inspect - BUILD 22.02.15#66
 namespace hcdk\cli\exec;
 class Inspect extends \hcf\cli\exec {
-    use \hcf\core\dryver\Base, Inspect\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
+    use \hcf\core\dryver\Base, Inspect\__EO__\Controller, \hcf\core\dryver\View, \hcf\core\dryver\Internal;
     const FQN = 'hcdk.cli.exec.Inspect';
     const NAME = 'Inspect';
     public function __construct() {
@@ -9,7 +9,7 @@ class Inspect extends \hcf\cli\exec {
             call_user_func_array([$this, 'hcdkcliexecInspect_onConstruct'], func_get_args());
         }
     }
-    # BEGIN ASSEMBLY FRAME TEMPLATE.TEXT
+    # BEGIN ASSEMBLY FRAME VIEW.TEXT
     protected function methodRow() {
         $__CLASS__ = __CLASS__;
         $_this = (isset($this)) ? $this : null;
@@ -24,7 +24,7 @@ class Inspect extends \hcf\cli\exec {
         $output = "- {$__CLASS__::_arg($_func_args, 0, $__CLASS__, $_this) } = {$__CLASS__::_arg($_func_args, 1, $__CLASS__, $_this) }";
         return $output;
     }
-    # END ASSEMBLY FRAME TEMPLATE.TEXT
+    # END ASSEMBLY FRAME VIEW.TEXT
     
     }
     namespace hcdk\cli\exec\Inspect\__EO__;
@@ -75,7 +75,7 @@ class Inspect extends \hcf\cli\exec {
                     }
                 }
             }
-            catch(\Exception $e) {
+            catch(\Exception$e) {
                 InternalLogger::log()->error('Unable to inspect Hypercell ' . $__arg_hcfqn . ' at "' . $__arg_dir . '" due following exception:');
                 InternalLogger::log()->error($e);
             }
@@ -144,5 +144,3 @@ class Inspect extends \hcf\cli\exec {
     #__COMPILER_HALT_OFFSET__
 
 ?>
-
-

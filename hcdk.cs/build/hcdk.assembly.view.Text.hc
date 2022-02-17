@@ -1,7 +1,7 @@
-<?php #HYPERCELL hcdk.assembly.view.Text - BUILD 22.02.13#191
+<?php #HYPERCELL hcdk.assembly.view.Text - BUILD 22.02.15#196
 namespace hcdk\assembly\view;
 class Text extends \hcdk\assembly\view {
-    use \hcf\core\dryver\Base, Text\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
+    use \hcf\core\dryver\Base, Text\__EO__\Controller, \hcf\core\dryver\View, \hcf\core\dryver\Internal;
     const FQN = 'hcdk.assembly.view.Text';
     const NAME = 'Text';
     public function __construct() {
@@ -10,8 +10,8 @@ class Text extends \hcdk\assembly\view {
             call_user_func_array([$this, 'hcdkassemblyviewText_onConstruct'], func_get_args());
         }
     }
-    # BEGIN ASSEMBLY FRAME TEMPLATE.TEXT
-    protected function template__toString() {
+    # BEGIN ASSEMBLY FRAME VIEW.TEXT
+    protected function buildTemplateMethod() {
         $__CLASS__ = __CLASS__;
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
@@ -19,7 +19,7 @@ class Text extends \hcdk\assembly\view {
 return \$output;";
         return $output;
     }
-    # END ASSEMBLY FRAME TEMPLATE.TEXT
+    # END ASSEMBLY FRAME VIEW.TEXT
     
     }
     namespace hcdk\assembly\view\Text\__EO__;
@@ -29,10 +29,11 @@ return \$output;";
         public function getType() {
             return 'TEXT';
         }
-        public function build__toString() {
-            $output = str_replace('"', '\\"', $this->processPlaceholders($this->rawInput())); //escape double-quotes
-            $method = new Method('__toString', ['public']);
-            $method->setBody($this->prependControlSymbols($this->template__toString($output)));
+        public function buildTemplate($name, $data) {
+            $output = str_replace('"', '\\"', $data['content']); //escape double-quotes
+            $output = $this->processPlaceholders($output, true);
+            $method = new Method($name, $data['mod']);
+            $method->setBody($this->prependControlSymbols($this->buildTemplateMethod($output)));
             return $method->toString();
         }
     }
@@ -41,5 +42,3 @@ return \$output;";
     #__COMPILER_HALT_OFFSET__
 
 ?>
-
-

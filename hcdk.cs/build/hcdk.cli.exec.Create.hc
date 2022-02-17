@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.cli.exec.Create - BUILD 22.01.24#75
+<?php #HYPERCELL hcdk.cli.exec.Create - BUILD 22.02.15#79
 namespace hcdk\cli\exec;
 class Create extends \hcf\cli\exec {
     use \hcf\core\dryver\Base, Create\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -62,7 +62,7 @@ class Create extends \hcf\cli\exec {
                 Cellspace::create($__arg_dir, $__arg_nsroot, $__arg_source, $__arg_target, $__arg_format, $__arg_ignore, $__arg_link);
                 InternalLogger::log()->info('...Cellspace "' . $__arg_nsroot . '" created successfully');
             }
-            catch(\Exception $e) {
+            catch(\Exception$e) {
                 InternalLogger::log()->error('Unable to create Cellspace at "' . $__arg_dir . '" due following exception:');
                 InternalLogger::log()->error($e);
             }
@@ -73,5 +73,3 @@ class Create extends \hcf\cli\exec {
     #__COMPILER_HALT_OFFSET__
 
 ?>
-
-

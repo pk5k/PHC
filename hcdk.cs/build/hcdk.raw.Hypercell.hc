@@ -1,7 +1,7 @@
-<?php #HYPERCELL hcdk.raw.Hypercell - BUILD 22.02.13#327
+<?php #HYPERCELL hcdk.raw.Hypercell - BUILD 22.02.15#331
 namespace hcdk\raw;
 class Hypercell {
-    use \hcf\core\dryver\Config, Hypercell\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
+    use \hcf\core\dryver\Config, Hypercell\__EO__\Controller, \hcf\core\dryver\View, \hcf\core\dryver\Internal;
     const FQN = 'hcdk.raw.Hypercell';
     const NAME = 'Hypercell';
     public function __construct() {
@@ -19,18 +19,8 @@ class Hypercell {
         self::$config = $parser->process($content);
     }
     # END ASSEMBLY FRAME CONFIG.INI
-    # BEGIN ASSEMBLY FRAME OUTPUT.TEXT
+    # BEGIN ASSEMBLY FRAME VIEW.TEXT
     public function __toString() {
-        $__CLASS__ = __CLASS__;
-        $_this = (isset($this)) ? $this : null;
-        $_func_args = \func_get_args();
-        $output = "{$__CLASS__::_call('body', $__CLASS__, $_this) }
-";
-        return $output;
-    }
-    # END ASSEMBLY FRAME OUTPUT.TEXT
-    # BEGIN ASSEMBLY FRAME TEMPLATE.TEXT
-    protected function body() {
         $__CLASS__ = __CLASS__;
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
@@ -83,7 +73,7 @@ __halt_compiler();#__COMPILER_HALT_OFFSET__
         $output = "{$__CLASS__::_arg($_func_args, 0, $__CLASS__, $_this) }[{$__CLASS__::_arg($_func_args, 1, $__CLASS__, $_this) }]";
         return $output;
     }
-    # END ASSEMBLY FRAME TEMPLATE.TEXT
+    # END ASSEMBLY FRAME VIEW.TEXT
     
     }
     namespace hcdk\raw\Hypercell\__EO__;

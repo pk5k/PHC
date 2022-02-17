@@ -1,7 +1,7 @@
-<?php #HYPERCELL hcdk.assembly.model.Php - BUILD 22.02.13#311
+<?php #HYPERCELL hcdk.assembly.model.Php - BUILD 22.02.15#315
 namespace hcdk\assembly\model;
 class Php extends \hcdk\assembly\model {
-    use \hcf\core\dryver\Base, \hcf\core\dryver\Constant, Php\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
+    use \hcf\core\dryver\Base, \hcf\core\dryver\Constant, Php\__EO__\Controller, \hcf\core\dryver\View, \hcf\core\dryver\Internal;
     const FQN = 'hcdk.assembly.model.Php';
     const NAME = 'Php';
     public function __construct() {
@@ -14,7 +14,7 @@ class Php extends \hcdk\assembly\model {
     const CONSTRUCTOR = 'onConstruct';
     private static $_constant_list = ['CONSTRUCTOR'];
     # END ASSEMBLY FRAME CONSTANT
-    # BEGIN ASSEMBLY FRAME TEMPLATE.TEXT
+    # BEGIN ASSEMBLY FRAME VIEW.TEXT
     protected function constructorDelegation() {
         $__CLASS__ = __CLASS__;
         $_this = (isset($this)) ? $this : null;
@@ -37,7 +37,7 @@ trait Model
 ?>";
         return $output;
     }
-    # END ASSEMBLY FRAME TEMPLATE.TEXT
+    # END ASSEMBLY FRAME VIEW.TEXT
     
     }
     namespace hcdk\assembly\model\Php\__EO__;

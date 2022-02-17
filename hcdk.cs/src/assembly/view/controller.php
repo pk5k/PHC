@@ -1,28 +1,28 @@
 <?php
+use \hcf\core\Utils as Utils;
+use \hcf\core\log\Internal as InternalLogger;
+use \hcdk\data\Sectionizer as Sectionizer;
+
 trait Controller
 {
-	protected abstract function build__toString();
+	public abstract function buildTemplate($name, $data);
 
 	public function getName()
 	{
 		return 'VIEW';
 	}
 
-	protected function escape($str)
-	{
-		// escape double quotes, to don't mess up the __toString method
-		$escaped = str_replace(['"', '$'], ['\\"', '\\$'], $str);
-
-		return $escaped;
-	}
-
 	public function getConstructor() { return null; }
 
 	public function getMethods()
 	{
+		$sections = Sectionizer::toArray($this->rawInput());
 		$methods = [];
 
-		$methods['__toString'] 	= $this->build__toString();
+		foreach ($sections as $name => $data)
+		{
+			$methods[$name] = $this->buildTemplate($name, $data);
+		}
 
 		return $methods;
 	}
@@ -50,5 +50,6 @@ trait Controller
 	}
 
 	public function checkInput() {}
+	public function defaultInput() { return ''; }
 }
 ?>

@@ -1,7 +1,7 @@
-<?php #HYPERCELL hcf.web.Container.Autoloader - BUILD 22.02.13#3293
+<?php #HYPERCELL hcf.web.Container.Autoloader - BUILD 22.02.17#3297
 namespace hcf\web\Container;
 class Autoloader {
-    use \hcf\core\dryver\Config, Autoloader\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Template, \hcf\core\dryver\Template\Html, \hcf\core\dryver\Internal;
+    use \hcf\core\dryver\Config, Autoloader\__EO__\Controller, \hcf\core\dryver\View, \hcf\core\dryver\View\Html, \hcf\core\dryver\Internal;
     const FQN = 'hcf.web.Container.Autoloader';
     const NAME = 'Autoloader';
     public function __construct() {
@@ -18,18 +18,8 @@ class Autoloader {
         self::$config = json_decode($content);
     }
     # END ASSEMBLY FRAME CONFIG.JSON
-    # BEGIN ASSEMBLY FRAME OUTPUT.TEXT
+    # BEGIN ASSEMBLY FRAME VIEW.HTML
     public function __toString() {
-        $__CLASS__ = __CLASS__;
-        $_this = (isset($this)) ? $this : null;
-        $_func_args = \func_get_args();
-        $output = "{$__CLASS__::_call('stdTpl', $__CLASS__, $_this) }
-";
-        return $output;
-    }
-    # END ASSEMBLY FRAME OUTPUT.TEXT
-    # BEGIN ASSEMBLY FRAME TEMPLATE.HTML
-    public function stdTpl() {
         $__CLASS__ = __CLASS__;
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
@@ -94,7 +84,7 @@ class Autoloader {
         }
         return self::_postProcess($output, [], []);
     }
-    # END ASSEMBLY FRAME TEMPLATE.HTML
+    # END ASSEMBLY FRAME VIEW.HTML
     
     }
     namespace hcf\web\Container\Autoloader\__EO__;
@@ -106,7 +96,7 @@ class Autoloader {
     use \hcf\core\loader\AutoLoader as CoreLoader;
     trait Controller {
         private $data = [];
-        private $client_data = '';
+        private $client_data = [];
         private $current_row = null;
         private $client_link_routes = [];
         private $current_client_route = null;
@@ -115,8 +105,12 @@ class Autoloader {
          */
         public function hcfwebContainerAutoloader_onConstruct($autorun = true) {
             if ($autorun) {
-                $this->processSections(self::config()->shared);
-                $this->clientLoader(self::config()->client);
+                if (isset(self::config()->shared)) {
+                    $this->processSections(self::config()->shared);
+                }
+                if (isset(self::config()->client)) {
+                    $this->clientLoader(self::config()->client);
+                }
             }
         }
         private function writeOutRequired($client_name) {

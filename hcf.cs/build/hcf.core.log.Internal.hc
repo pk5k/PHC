@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.core.log.Internal - BUILD 22.01.26#183
+<?php #HYPERCELL hcf.core.log.Internal - BUILD 22.02.15#185
 namespace hcf\core\log;
 class Internal {
     use \hcf\core\dryver\Log, \hcf\core\dryver\Internal;
@@ -16,9 +16,7 @@ class Internal {
     namespace hcf\core\log\Internal\__EO__;
     __halt_compiler();
     #__COMPILER_HALT_OFFSET__
-
 BEGIN[LOG.XML]
-
 <configuration xmlns="http://logging.apache.org/log4php/">
     <appender name="hcf.core.log.Internal" class="LoggerAppenderRollingFile">
         <layout class="LoggerLayoutPattern">
@@ -32,10 +30,6 @@ BEGIN[LOG.XML]
         <appender_ref ref="hcf.core.log.Internal" />
     </root>
 </configuration>
-
 END[LOG.XML]
 
-
 ?>
-
-

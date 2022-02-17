@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.data.Sectionizer - BUILD 22.02.13#63
+<?php #HYPERCELL hcdk.data.Sectionizer - BUILD 22.02.15#67
 namespace hcdk\data;
 class Sectionizer {
     use \hcf\core\dryver\Config, \hcf\core\dryver\Constant, Sectionizer\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -111,7 +111,7 @@ token.visibility[~] = "protected"
 token.visibility[-] = "private"
 token.visibility[+] = "public"
 
-default.name = "stdTpl"; name of the "anonymous" root section if defined
+default.name = "__toString"; name of the "anonymous" root section if defined
 default.begin = "#+"; prefix to determine the visibility and type of the anonymous root section (is public non-static)
 
 END[CONFIG.INI]

@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.data.ph.Processor.ArgProcessor - BUILD 22.01.24#77
+<?php #HYPERCELL hcdk.data.ph.Processor.ArgProcessor - BUILD 22.02.15#81
 namespace hcdk\data\ph\Processor;
 class ArgProcessor extends \hcdk\data\ph\Processor {
     use \hcf\core\dryver\Base, ArgProcessor\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -35,5 +35,3 @@ class ArgProcessor extends \hcdk\data\ph\Processor {
     #__COMPILER_HALT_OFFSET__
 
 ?>
-
-

@@ -1,21 +1,18 @@
 <?php
 use \hcdk\raw\Method as Method;
 
-trait Controller 
+trait Controller
 {
-	private $output = null;
-
 	public function getType()
 	{
 		return 'RAW';
 	}
 
-	public function build__toString()
+	public function buildTemplate($name, $data)
 	{
-		$this->output = str_replace('"', '\\"', $this->rawInput()); //escape double-quotes
-
-		$method = new Method('__toString', ['public']);
-		$method->setBody($this->prependControlSymbols($this->toString()));
+		$output = str_replace('"', '\\"', $data['content']); //escape double-quotes
+		$method = new Method($name, $data['mod']);
+		$method->setBody($this->buildTemplateMethod($output));
 
 		return $method->toString();
 	}

@@ -1,7 +1,7 @@
-<?php #HYPERCELL hcdk.assembly.controller.Ts - BUILD 22.02.13#137
+<?php #HYPERCELL hcdk.assembly.controller.Ts - BUILD 22.02.15#141
 namespace hcdk\assembly\controller;
 class Ts extends \hcdk\assembly\controller\Js {
-    use \hcf\core\dryver\Base, \hcf\core\dryver\Config, Ts\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
+    use \hcf\core\dryver\Base, \hcf\core\dryver\Config, Ts\__EO__\Controller, \hcf\core\dryver\View, \hcf\core\dryver\Internal;
     const FQN = 'hcdk.assembly.controller.Ts';
     const NAME = 'Ts';
     public function __construct() {
@@ -20,7 +20,7 @@ class Ts extends \hcdk\assembly\controller\Js {
         self::$config = $parser->process($content);
     }
     # END ASSEMBLY FRAME CONFIG.INI
-    # BEGIN ASSEMBLY FRAME TEMPLATE.TEXT
+    # BEGIN ASSEMBLY FRAME VIEW.TEXT
     protected function buildClientMethod() {
         $__CLASS__ = __CLASS__;
         $_this = (isset($this)) ? $this : null;
@@ -61,7 +61,7 @@ return \$js;";
 }";
         return $output;
     }
-    # END ASSEMBLY FRAME TEMPLATE.TEXT
+    # END ASSEMBLY FRAME VIEW.TEXT
     
     }
     namespace hcdk\assembly\controller\Ts\__EO__;
@@ -167,12 +167,9 @@ return \$js;";
             $windows = strpos(PHP_OS, 'WIN') === 0;
             $test = $windows ? 'where' : 'command -v';
             $se = shell_exec("$test tsc");
-
-            if (is_null($se))
-            {
+            if (is_null($se)) {
                 return false;
             }
-            
             return (is_executable(trim($se)));
         }
         private function amdModuleNameSubstitutionRequired($content) {
@@ -276,17 +273,11 @@ return \$js;";
     # END EXECUTABLE FRAME OF CONTROLLER.PHP
     __halt_compiler();
     #__COMPILER_HALT_OFFSET__
-
 BEGIN[CONFIG.INI]
-
 [jshrink]
 minify = true; if false, keep-doc-blocks will be true
 keep-doc-blocks = false;
 
-
 END[CONFIG.INI]
 
-
 ?>
-
-

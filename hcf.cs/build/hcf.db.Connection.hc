@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.db.Connection - BUILD 22.01.26#41
+<?php #HYPERCELL hcf.db.Connection - BUILD 22.02.15#43
 namespace hcf\db;
 class Connection {
     use \hcf\core\dryver\Config, Connection\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -110,7 +110,7 @@ class Connection {
                     $connection->exec($value);
                 }
             }
-            catch(\PDOException $e) {
+            catch(\PDOException$e) {
                 throw new \Exception($e->getMessage());
             }
             return $connection;
@@ -119,9 +119,7 @@ class Connection {
     # END EXECUTABLE FRAME OF CONTROLLER.PHP
     __halt_compiler();
     #__COMPILER_HALT_OFFSET__
-
 BEGIN[CONFIG.INI]
-
 ; usage hcf.db.Connection::to('dummy-db'); returns a valid connection (PDO instance) to the refered db-section
 [dummy-db]
 server = "localhost"
@@ -134,10 +132,6 @@ charset = "utf-8"
 username = "dbUser1"
 password = "password1"
 
-
 END[CONFIG.INI]
 
-
 ?>
-
-

@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.data.php.ClassParser - BUILD 22.01.24#179
+<?php #HYPERCELL hcdk.data.php.ClassParser - BUILD 22.02.15#183
 namespace hcdk\data\php;
 class ClassParser {
     use \hcf\core\dryver\Config, ClassParser\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -230,7 +230,7 @@ class ClassParser {
             $mod = array();
             $doc = NULL;
             $state = NULL;
-            foreach ($tokens as $idx => & $token) {
+            foreach ($tokens as $idx => &$token) {
                 if (is_array($token)) {
                     switch ($token[0]) {
                         case T_AS:
@@ -406,16 +406,10 @@ class ClassParser {
     # END EXECUTABLE FRAME OF CONTROLLER.PHP
     __halt_compiler();
     #__COMPILER_HALT_OFFSET__
-
 BEGIN[CONFIG.INI]
-
 [state]
 CLASS_HEAD = 100001
 FUNCTION_HEAD = 100002
-
 END[CONFIG.INI]
 
-
 ?>
-
-

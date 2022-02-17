@@ -1,0 +1,4 @@
+{{method:provide}}
+
+@~requireAsync:
+require([{{arg:0}}]);

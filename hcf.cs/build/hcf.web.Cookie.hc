@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.web.Cookie - BUILD 22.01.26#35
+<?php #HYPERCELL hcf.web.Cookie - BUILD 22.02.15#37
 namespace hcf\web;
 class Cookie {
     use \hcf\core\dryver\Config, Cookie\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -113,9 +113,7 @@ class Cookie {
     # END EXECUTABLE FRAME OF CONTROLLER.PHP
     __halt_compiler();
     #__COMPILER_HALT_OFFSET__
-
 BEGIN[CONFIG.INI]
-
 ; example values for "expiry" config
 ; Session = 0
 ; Day = 86400
@@ -131,10 +129,6 @@ secure = false
 httponly = true
 globalremove = true
 mask = "1Another2String3To4Mask5The6String7On8The9Client0Side10"
-
 END[CONFIG.INI]
 
-
 ?>
-
-

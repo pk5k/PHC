@@ -1,5 +1,0 @@
-#~template__toString:
-\$output = '';
-{{arg:0}}
-
-return self::_postProcess(\$output, [{{arg:1}}], [{{arg:2}}]);

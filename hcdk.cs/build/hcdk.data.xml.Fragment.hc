@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.data.xml.Fragment - BUILD 22.01.24#64
+<?php #HYPERCELL hcdk.data.xml.Fragment - BUILD 22.02.15#68
 namespace hcdk\data\xml;
 class Fragment {
     use \hcf\core\dryver\Config, Fragment\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -102,15 +102,9 @@ class Fragment {
     # END EXECUTABLE FRAME OF CONTROLLER.PHP
     __halt_compiler();
     #__COMPILER_HALT_OFFSET__
-
 BEGIN[CONFIG.INI]
-
 output.start = '$output .= "'; $output is the string, which will be returned by the template method of your hypercell
 output.end = '";'; This closes the $output var
-
 END[CONFIG.INI]
 
-
 ?>
-
-

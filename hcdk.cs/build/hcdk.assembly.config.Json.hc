@@ -1,7 +1,7 @@
-<?php #HYPERCELL hcdk.assembly.config.Json - BUILD 22.01.24#190
+<?php #HYPERCELL hcdk.assembly.config.Json - BUILD 22.02.15#194
 namespace hcdk\assembly\config;
 class Json extends \hcdk\assembly\config {
-    use \hcf\core\dryver\Base, Json\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
+    use \hcf\core\dryver\Base, Json\__EO__\Controller, \hcf\core\dryver\View, \hcf\core\dryver\Internal;
     const FQN = 'hcdk.assembly.config.Json';
     const NAME = 'Json';
     public function __construct() {
@@ -10,7 +10,7 @@ class Json extends \hcdk\assembly\config {
             call_user_func_array([$this, 'hcdkassemblyconfigJson_onConstruct'], func_get_args());
         }
     }
-    # BEGIN ASSEMBLY FRAME TEMPLATE.TEXT
+    # BEGIN ASSEMBLY FRAME VIEW.TEXT
     protected function buildLoadConfigMethod() {
         $__CLASS__ = __CLASS__;
         $_this = (isset($this)) ? $this : null;
@@ -26,7 +26,7 @@ self::\$config = json_decode(\$content);";
         $output = "{}";
         return $output;
     }
-    # END ASSEMBLY FRAME TEMPLATE.TEXT
+    # END ASSEMBLY FRAME VIEW.TEXT
     
     }
     namespace hcdk\assembly\config\Json\__EO__;
@@ -54,5 +54,3 @@ self::\$config = json_decode(\$content);";
     #__COMPILER_HALT_OFFSET__
 
 ?>
-
-

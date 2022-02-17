@@ -8,7 +8,7 @@ use \hcf\core\loader\AutoLoader as CoreLoader;
 trait Controller
 {
 	private $data = [];
-	private $client_data = '';
+	private $client_data = [];
 	private $current_row = null;
 	private $client_link_routes = [];
 	private $current_client_route = null;
@@ -20,8 +20,15 @@ trait Controller
 	{
 		if ($autorun)
 		{
-			$this->processSections(self::config()->shared);
-			$this->clientLoader(self::config()->client);
+			if (isset(self::config()->shared))
+			{
+				$this->processSections(self::config()->shared);
+			}
+
+			if (isset(self::config()->client))
+			{
+				$this->clientLoader(self::config()->client);
+			}
 		}
 	}
 

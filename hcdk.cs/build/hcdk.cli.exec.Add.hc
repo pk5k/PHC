@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.cli.exec.Add - BUILD 22.01.24#76
+<?php #HYPERCELL hcdk.cli.exec.Add - BUILD 22.02.15#80
 namespace hcdk\cli\exec;
 class Add extends \hcf\cli\exec {
     use \hcf\core\dryver\Base, Add\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -40,7 +40,7 @@ class Add extends \hcf\cli\exec {
                 $hc = $cellspace->add($__arg_hcfqn, $__arg_assemblies);
                 InternalLogger::log()->info('...Hypercell ' . $__arg_hcfqn . ' created successfully');
             }
-            catch(\Exception $e) {
+            catch(\Exception$e) {
                 InternalLogger::log()->error('Unable to add Hypercell "' . $__arg_hcfqn . '" to Cellspace "' . $__arg_dir . '" due following exception:');
                 InternalLogger::log()->error($e);
             }
@@ -51,5 +51,3 @@ class Add extends \hcf\cli\exec {
     #__COMPILER_HALT_OFFSET__
 
 ?>
-
-

@@ -1,7 +1,7 @@
-<?php #HYPERCELL hcf.web.App - BUILD 22.02.13#136
+<?php #HYPERCELL hcf.web.App - BUILD 22.02.15#138
 namespace hcf\web;
 class App {
-    use \hcf\core\dryver\Config, App\__EO__\Controller, \hcf\core\dryver\Client, \hcf\core\dryver\Client\Js, \hcf\core\dryver\Output, \hcf\core\dryver\Template, \hcf\core\dryver\Template\Html, \hcf\core\dryver\Internal;
+    use \hcf\core\dryver\Config, App\__EO__\Controller, \hcf\core\dryver\Client, \hcf\core\dryver\Client\Js, \hcf\core\dryver\View, \hcf\core\dryver\View\Html, \hcf\core\dryver\Internal;
     const FQN = 'hcf.web.App';
     const NAME = 'App';
     public function __construct() {
@@ -25,18 +25,8 @@ exports.default=init;});";
         return $js;
     }
     # END ASSEMBLY FRAME CONTROLLER.TS
-    # BEGIN ASSEMBLY FRAME OUTPUT.TEXT
+    # BEGIN ASSEMBLY FRAME VIEW.HTML
     public function __toString() {
-        $__CLASS__ = __CLASS__;
-        $_this = (isset($this)) ? $this : null;
-        $_func_args = \func_get_args();
-        $output = "<!DOCTYPE html>
-{$__CLASS__::_call('render', $__CLASS__, $_this) }";
-        return $output;
-    }
-    # END ASSEMBLY FRAME OUTPUT.TEXT
-    # BEGIN ASSEMBLY FRAME TEMPLATE.HTML
-    public function render() {
         $__CLASS__ = __CLASS__;
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
@@ -85,7 +75,7 @@ exports.default=init;});";
         $output.= "</html>";
         return self::_postProcess($output, [], []);
     }
-    # END ASSEMBLY FRAME TEMPLATE.HTML
+    # END ASSEMBLY FRAME VIEW.HTML
     
     }
     namespace hcf\web\App\__EO__;

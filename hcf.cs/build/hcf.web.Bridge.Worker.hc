@@ -1,7 +1,7 @@
-<?php #HYPERCELL hcf.web.Bridge.Worker - BUILD 22.02.13#33
+<?php #HYPERCELL hcf.web.Bridge.Worker - BUILD 22.02.15#35
 namespace hcf\web\Bridge;
 class Worker {
-    use \hcf\core\dryver\Controller, \hcf\core\dryver\Controller\Js, Worker\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Internal;
+    use \hcf\core\dryver\Controller, \hcf\core\dryver\Controller\Js, Worker\__EO__\Controller, \hcf\core\dryver\View, \hcf\core\dryver\Internal;
     const FQN = 'hcf.web.Bridge.Worker';
     const NAME = 'Worker';
     public function __construct() {
@@ -34,7 +34,7 @@ catch(e){console.error('Eval error in following data: '+scripts);}}};";
         return $js;
     }
     # END ASSEMBLY FRAME CONTROLLER.JS
-    # BEGIN ASSEMBLY FRAME OUTPUT.TEXT
+    # BEGIN ASSEMBLY FRAME VIEW.TEXT
     public function __toString() {
         $__CLASS__ = __CLASS__;
         $_this = (isset($this)) ? $this : null;
@@ -42,7 +42,7 @@ catch(e){console.error('Eval error in following data: '+scripts);}}};";
         $output = "{$__CLASS__::_call('render', $__CLASS__, $_this) }";
         return $output;
     }
-    # END ASSEMBLY FRAME OUTPUT.TEXT
+    # END ASSEMBLY FRAME VIEW.TEXT
     
     }
     namespace hcf\web\Bridge\Worker\__EO__;
@@ -61,5 +61,3 @@ catch(e){console.error('Eval error in following data: '+scripts);}}};";
     #__COMPILER_HALT_OFFSET__
 
 ?>
-
-

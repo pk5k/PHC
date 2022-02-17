@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.web.Router - BUILD 22.01.26#57
+<?php #HYPERCELL hcf.web.Router - BUILD 22.02.15#59
 namespace hcf\web;
 class Router {
     use \hcf\core\dryver\Config, Router\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -66,7 +66,7 @@ class Router {
         private static function constructorArgs() {
             return [$_GET];
         }
-        private static function catchException(\Exception $e, $output_hc, $route_section) {
+        private static function catchException(\Exception$e, $output_hc, $route_section) {
             $config = self::config();
             $new_route_section = false;
             $type = get_class($e);
@@ -114,7 +114,7 @@ class Router {
                 $output = $ri->invoke('toString');
                 return $output;
             }
-            catch(\Exception $e) {
+            catch(\Exception$e) {
                 return self::catchException($e, $output_hc, $route_section);
             }
         }
@@ -136,9 +136,7 @@ class Router {
     # END EXECUTABLE FRAME OF CONTROLLER.PHP
     __halt_compiler();
     #__COMPILER_HALT_OFFSET__
-
 BEGIN[CONFIG.INI]
-
 arg = "route"; key of the $_GET array that will be used as the value of the route-section.
 default = "-bridge"; if the arg is not set, this route will be used
 
@@ -186,10 +184,6 @@ get.output = "hcf.web.Container.Autoloader.provider.Script"; this will be used a
 ; THIS IS REQUIRED FOR REQUIRE.JS IF YOU WANT TO USE CLIENT.TS ASSEMBLIES WITH hcf.web.App
 get.output = "hcf.web.App.RequireJS"
 
-
 END[CONFIG.INI]
 
-
 ?>
-
-

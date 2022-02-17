@@ -1,7 +1,7 @@
-<?php #HYPERCELL hcdk.raw.Constant - BUILD 22.01.24#294
+<?php #HYPERCELL hcdk.raw.Constant - BUILD 22.02.15#298
 namespace hcdk\raw;
 class Constant {
-    use Constant\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Internal;
+    use Constant\__EO__\Controller, \hcf\core\dryver\View, \hcf\core\dryver\Internal;
     const FQN = 'hcdk.raw.Constant';
     const NAME = 'Constant';
     public function __construct() {
@@ -9,7 +9,7 @@ class Constant {
             call_user_func_array([$this, 'hcdkrawConstant_onConstruct'], func_get_args());
         }
     }
-    # BEGIN ASSEMBLY FRAME OUTPUT.TEXT
+    # BEGIN ASSEMBLY FRAME VIEW.TEXT
     public function __toString() {
         $__CLASS__ = __CLASS__;
         $_this = (isset($this)) ? $this : null;
@@ -17,7 +17,7 @@ class Constant {
         $output = "const {$__CLASS__::_property('name', $__CLASS__, $_this) } = {$__CLASS__::_property('value', $__CLASS__, $_this) };";
         return $output;
     }
-    # END ASSEMBLY FRAME OUTPUT.TEXT
+    # END ASSEMBLY FRAME VIEW.TEXT
     
     }
     namespace hcdk\raw\Constant\__EO__;
@@ -63,5 +63,3 @@ class Constant {
     #__COMPILER_HALT_OFFSET__
 
 ?>
-
-

@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.cli.exec.Map - BUILD 22.01.24#73
+<?php #HYPERCELL hcdk.cli.exec.Map - BUILD 22.02.15#77
 namespace hcdk\cli\exec;
 class Map extends \hcf\cli\exec {
     use \hcf\core\dryver\Base, Map\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -40,7 +40,7 @@ class Map extends \hcf\cli\exec {
                 $map_data = $cellspace->readMap($__arg_wb);
                 echo $map_data . Utils::newLine();
             }
-            catch(\Exception $e) {
+            catch(\Exception$e) {
                 InternalLogger::log()->error('Unable to generate cellspace-tree due following exception:');
                 InternalLogger::log()->error($e);
             }
@@ -51,5 +51,3 @@ class Map extends \hcf\cli\exec {
     #__COMPILER_HALT_OFFSET__
 
 ?>
-
-

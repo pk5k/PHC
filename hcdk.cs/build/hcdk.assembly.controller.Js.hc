@@ -1,7 +1,7 @@
-<?php #HYPERCELL hcdk.assembly.controller.Js - BUILD 22.02.13#200
+<?php #HYPERCELL hcdk.assembly.controller.Js - BUILD 22.02.15#204
 namespace hcdk\assembly\controller;
 class Js extends \hcdk\assembly\controller {
-    use \hcf\core\dryver\Base, \hcf\core\dryver\Config, Js\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
+    use \hcf\core\dryver\Base, \hcf\core\dryver\Config, Js\__EO__\Controller, \hcf\core\dryver\View, \hcf\core\dryver\Internal;
     const FQN = 'hcdk.assembly.controller.Js';
     const NAME = 'Js';
     public function __construct() {
@@ -20,7 +20,7 @@ class Js extends \hcdk\assembly\controller {
         self::$config = $parser->process($content);
     }
     # END ASSEMBLY FRAME CONFIG.INI
-    # BEGIN ASSEMBLY FRAME TEMPLATE.TEXT
+    # BEGIN ASSEMBLY FRAME VIEW.TEXT
     protected function buildClientMethod() {
         $__CLASS__ = __CLASS__;
         $_this = (isset($this)) ? $this : null;
@@ -30,7 +30,7 @@ class Js extends \hcdk\assembly\controller {
 return \$js;";
         return $output;
     }
-    # END ASSEMBLY FRAME TEMPLATE.TEXT
+    # END ASSEMBLY FRAME VIEW.TEXT
     
     }
     namespace hcdk\assembly\controller\Js\__EO__;
@@ -90,16 +90,10 @@ return \$js;";
     # END EXECUTABLE FRAME OF CONTROLLER.PHP
     __halt_compiler();
     #__COMPILER_HALT_OFFSET__
-
 BEGIN[CONFIG.INI]
-
 [jshrink]
 minify = true; if false, keep-doc-blocks will be true
 keep-doc-blocks = false;
-
 END[CONFIG.INI]
 
-
 ?>
-
-

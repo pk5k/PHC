@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.core.remote.Invoker - BUILD 22.01.26#144
+<?php #HYPERCELL hcf.core.remote.Invoker - BUILD 22.02.15#146
 namespace hcf\core\remote;
 class Invoker {
     use Invoker\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -102,7 +102,7 @@ class Invoker {
                     try {
                         $default = $arg->getDefaultValue();
                     }
-                    catch(\ReflectionException $e) {
+                    catch(\ReflectionException$e) {
                         $default = null;
                     }
                     $this->accessible_methods[$name][$index] = ['name' => $arg_name, 'optional' => $optional, 'default' => $default];
@@ -152,5 +152,3 @@ class Invoker {
     #__COMPILER_HALT_OFFSET__
 
 ?>
-
-

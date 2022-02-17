@@ -8,11 +8,12 @@ trait Controller
 		return 'TEXT';
 	}
 
-	public function build__toString()
+	public function buildTemplate($name, $data)
 	{
-		$output = str_replace('"', '\\"', $this->processPlaceholders($this->rawInput())); //escape double-quotes
-		$method = new Method('__toString', ['public']);
-		$method->setBody($this->prependControlSymbols($this->template__toString($output)));
+		$output = str_replace('"', '\\"', $data['content']); //escape double-quotes
+		$output = $this->processPlaceholders($output, true);
+		$method = new Method($name, $data['mod']);
+		$method->setBody($this->prependControlSymbols($this->buildTemplateMethod($output)));
 
 		return $method->toString();
 	}

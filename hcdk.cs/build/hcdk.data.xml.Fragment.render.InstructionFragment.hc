@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.data.xml.Fragment.render.InstructionFragment - BUILD 22.01.24#16
+<?php #HYPERCELL hcdk.data.xml.Fragment.render.InstructionFragment - BUILD 22.02.15#20
 namespace hcdk\data\xml\Fragment\render;
 class InstructionFragment extends \hcdk\data\xml\Fragment {
     use \hcf\core\dryver\Base, InstructionFragment\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -53,5 +53,3 @@ class InstructionFragment extends \hcdk\data\xml\Fragment {
     #__COMPILER_HALT_OFFSET__
 
 ?>
-
-

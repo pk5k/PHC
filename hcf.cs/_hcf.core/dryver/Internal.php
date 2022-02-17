@@ -40,7 +40,7 @@ namespace hcf\core\dryver
         $pass_args = $mirror_map;
       }
 
-  		$method = new \ReflectionMethod(__CLASS__, $name);
+  		$method = new \ReflectionMethod($__CLASS__, $name);
 
       // TODO: remove
   		if (!$method->isPublic())
@@ -76,7 +76,7 @@ namespace hcf\core\dryver
         $obj_access = true;
       }
 
-  		$prop = new \ReflectionProperty(__CLASS__, $name);
+  		$prop = new \ReflectionProperty($__CLASS__, $name);
 
   		if (!$prop->isPublic())
   		{

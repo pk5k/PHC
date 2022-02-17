@@ -1,7 +1,7 @@
-<?php #HYPERCELL hcdk.assembly.view.Raw - BUILD 22.02.13#190
+<?php #HYPERCELL hcdk.assembly.view.Raw - BUILD 22.02.15#196
 namespace hcdk\assembly\view;
 class Raw extends \hcdk\assembly\view {
-    use \hcf\core\dryver\Base, Raw\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Internal;
+    use \hcf\core\dryver\Base, Raw\__EO__\Controller, \hcf\core\dryver\View, \hcf\core\dryver\Internal;
     const FQN = 'hcdk.assembly.view.Raw';
     const NAME = 'Raw';
     public function __construct() {
@@ -10,30 +10,29 @@ class Raw extends \hcdk\assembly\view {
             call_user_func_array([$this, 'hcdkassemblyviewRaw_onConstruct'], func_get_args());
         }
     }
-    # BEGIN ASSEMBLY FRAME OUTPUT.TEXT
-    public function __toString() {
+    # BEGIN ASSEMBLY FRAME VIEW.TEXT
+    protected function buildTemplateMethod() {
         $__CLASS__ = __CLASS__;
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
-        $output = "\$output = \"{$__CLASS__::_property('output', $__CLASS__, $_this) }\";
+        $output = "\$output = \"{$__CLASS__::_arg($_func_args, 0, $__CLASS__, $_this) }\";
 return \$output;";
         return $output;
     }
-    # END ASSEMBLY FRAME OUTPUT.TEXT
+    # END ASSEMBLY FRAME VIEW.TEXT
     
     }
     namespace hcdk\assembly\view\Raw\__EO__;
     # BEGIN EXECUTABLE FRAME OF CONTROLLER.PHP
     use \hcdk\raw\Method as Method;
     trait Controller {
-        private $output = null;
         public function getType() {
             return 'RAW';
         }
-        public function build__toString() {
-            $this->output = str_replace('"', '\\"', $this->rawInput()); //escape double-quotes
-            $method = new Method('__toString', ['public']);
-            $method->setBody($this->prependControlSymbols($this->toString()));
+        public function buildTemplate($name, $data) {
+            $output = str_replace('"', '\\"', $data['content']); //escape double-quotes
+            $method = new Method($name, $data['mod']);
+            $method->setBody($this->buildTemplateMethod($output));
             return $method->toString();
         }
     }
@@ -42,5 +41,3 @@ return \$output;";
     #__COMPILER_HALT_OFFSET__
 
 ?>
-
-

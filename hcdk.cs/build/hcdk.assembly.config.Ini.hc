@@ -1,7 +1,7 @@
-<?php #HYPERCELL hcdk.assembly.config.Ini - BUILD 22.01.24#191
+<?php #HYPERCELL hcdk.assembly.config.Ini - BUILD 22.02.15#195
 namespace hcdk\assembly\config;
 class Ini extends \hcdk\assembly\config {
-    use \hcf\core\dryver\Base, Ini\__EO__\Controller, \hcf\core\dryver\Template, \hcf\core\dryver\Internal;
+    use \hcf\core\dryver\Base, Ini\__EO__\Controller, \hcf\core\dryver\View, \hcf\core\dryver\Internal;
     const FQN = 'hcdk.assembly.config.Ini';
     const NAME = 'Ini';
     public function __construct() {
@@ -10,7 +10,7 @@ class Ini extends \hcdk\assembly\config {
             call_user_func_array([$this, 'hcdkassemblyconfigIni_onConstruct'], func_get_args());
         }
     }
-    # BEGIN ASSEMBLY FRAME TEMPLATE.TEXT
+    # BEGIN ASSEMBLY FRAME VIEW.TEXT
     protected function buildLoadConfigMethod() {
         $__CLASS__ = __CLASS__;
         $_this = (isset($this)) ? $this : null;
@@ -21,7 +21,7 @@ class Ini extends \hcdk\assembly\config {
 self::\$config = \$parser->process(\$content);";
         return $output;
     }
-    # END ASSEMBLY FRAME TEMPLATE.TEXT
+    # END ASSEMBLY FRAME VIEW.TEXT
     
     }
     namespace hcdk\assembly\config\Ini\__EO__;
@@ -50,5 +50,3 @@ self::\$config = \$parser->process(\$content);";
     #__COMPILER_HALT_OFFSET__
 
 ?>
-
-

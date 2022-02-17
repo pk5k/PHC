@@ -1,7 +1,7 @@
-<?php #HYPERCELL hcf.web.Upload - BUILD 22.01.26#118
+<?php #HYPERCELL hcf.web.Upload - BUILD 22.02.15#120
 namespace hcf\web;
 class Upload {
-    use \hcf\core\dryver\Config, Upload\__EO__\Controller, \hcf\core\dryver\Output, \hcf\core\dryver\Internal;
+    use \hcf\core\dryver\Config, Upload\__EO__\Controller, \hcf\core\dryver\View, \hcf\core\dryver\Internal;
     const FQN = 'hcf.web.Upload';
     const NAME = 'Upload';
     public function __construct() {
@@ -19,7 +19,7 @@ class Upload {
         self::$config = $parser->process($content);
     }
     # END ASSEMBLY FRAME CONFIG.INI
-    # BEGIN ASSEMBLY FRAME OUTPUT.TEXT
+    # BEGIN ASSEMBLY FRAME VIEW.TEXT
     public function __toString() {
         $__CLASS__ = __CLASS__;
         $_this = (isset($this)) ? $this : null;
@@ -30,7 +30,7 @@ class Upload {
 }";
         return $output;
     }
-    # END ASSEMBLY FRAME OUTPUT.TEXT
+    # END ASSEMBLY FRAME VIEW.TEXT
     
     }
     namespace hcf\web\Upload\__EO__;
@@ -217,9 +217,7 @@ class Upload {
     # END EXECUTABLE FRAME OF CONTROLLER.PHP
     __halt_compiler();
     #__COMPILER_HALT_OFFSET__
-
 BEGIN[CONFIG.INI]
-
 [tunnel]
 destination = "files/"
 
@@ -238,10 +236,6 @@ check_session_key = "upload"
 allow = ["jpg", "bmp", "gif", "png"]
 max_size = 200000000
 
-
 END[CONFIG.INI]
 
-
 ?>
-
-

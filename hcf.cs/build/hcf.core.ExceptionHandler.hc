@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.core.ExceptionHandler - BUILD 22.01.26#144
+<?php #HYPERCELL hcf.core.ExceptionHandler - BUILD 22.02.15#146
 namespace hcf\core;
 class ExceptionHandler {
     use ExceptionHandler\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -297,5 +297,3 @@ class ExceptionHandler {
     #__COMPILER_HALT_OFFSET__
 
 ?>
-
-

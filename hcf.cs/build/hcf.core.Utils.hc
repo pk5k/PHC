@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.core.Utils - BUILD 22.01.26#178
+<?php #HYPERCELL hcf.core.Utils - BUILD 22.02.15#180
 namespace hcf\core;
 class Utils {
     use \hcf\core\dryver\Config, Utils\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -457,9 +457,7 @@ class Utils {
     # END EXECUTABLE FRAME OF CONTROLLER.PHP
     __halt_compiler();
     #__COMPILER_HALT_OFFSET__
-
 BEGIN[CONFIG.INI]
-
 system-files = [".", "..", ".DS_Store", "_notes", "Thumbs.db"]; for Utils::isEmptyDirectory
 
 [HTTP]
@@ -1189,10 +1187,6 @@ zip	= "application/zip"
 zir	= "application/vnd.zul"
 zmm	= "application/vnd.handheld-entertainment+xml"
 
-
 END[CONFIG.INI]
 
-
 ?>
-
-
