@@ -1,12 +1,12 @@
-<?php #HYPERCELL hcf.core.remote.Invoker - BUILD 22.02.15#146
+<?php #HYPERCELL hcf.core.remote.Invoker - BUILD 22.02.15#147
 namespace hcf\core\remote;
 class Invoker {
     use Invoker\__EO__\Controller, \hcf\core\dryver\Internal;
     const FQN = 'hcf.core.remote.Invoker';
     const NAME = 'Invoker';
     public function __construct() {
-        if (method_exists($this, 'hcfcoreremoteInvoker_onConstruct')) {
-            call_user_func_array([$this, 'hcfcoreremoteInvoker_onConstruct'], func_get_args());
+        if (method_exists($this, 'hcfcoreremoteInvoker_onConstruct_Controller')) {
+            call_user_func_array([$this, 'hcfcoreremoteInvoker_onConstruct_Controller'], func_get_args());
         }
     }
     }
@@ -38,7 +38,7 @@ class Invoker {
          *
          * @throws RuntimeException
          */
-        public function hcfcoreremoteInvoker_onConstruct($hcfqn, $constructor_arguments = null) {
+        public function hcfcoreremoteInvoker_onConstruct_Controller($hcfqn, $constructor_arguments = null) {
             if (!Utils::isValidRMFQN($hcfqn)) {
                 throw new \RuntimeException('Given value "' . $hcfqn . '" is not a valid Hypercell FQN - unable to proceed');
             }

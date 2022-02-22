@@ -1,15 +1,15 @@
-<?php #HYPERCELL hcf.web.Container - BUILD 22.02.17#13
+<?php #HYPERCELL hcf.web.Container - BUILD 22.02.22#16
 namespace hcf\web;
 class Container {
-    use \hcf\core\dryver\Config, \hcf\core\dryver\Controller, \hcf\core\dryver\Controller\Js, Container\__EO__\Controller, \hcf\core\dryver\View, \hcf\core\dryver\View\Html, \hcf\core\dryver\View\Css, \hcf\core\dryver\Internal;
+    use \hcf\core\dryver\Config, \hcf\core\dryver\Controller, \hcf\core\dryver\Controller\Js, Container\__EO__\Model, \hcf\core\dryver\View, \hcf\core\dryver\View\Html, \hcf\core\dryver\View\Css, \hcf\core\dryver\Internal;
     const FQN = 'hcf.web.Container';
     const NAME = 'Container';
     public function __construct() {
         if (!isset(self::$config)) {
             self::loadConfig();
         }
-        if (method_exists($this, 'hcfwebContainer_onConstruct')) {
-            call_user_func_array([$this, 'hcfwebContainer_onConstruct'], func_get_args());
+        if (method_exists($this, 'hcfwebContainer_onConstruct_Model')) {
+            call_user_func_array([$this, 'hcfwebContainer_onConstruct_Model'], func_get_args());
         }
     }
     # BEGIN ASSEMBLY FRAME CONFIG.JSON
@@ -20,7 +20,21 @@ class Container {
     # END ASSEMBLY FRAME CONFIG.JSON
     # BEGIN ASSEMBLY FRAME CONTROLLER.JS
     public static function script() {
-        $js = "document.recursiveOffset=function(aobj){var currOffset={x:0,y:0}
+        $js = "window.addEventListener('DOMContentLoaded',function(){document.APP_VERSION=document.querySelector('html').getAttribute('data-version');});document.registerComponentController=function(hcfqn,controller_class,component_context_id,as_element,element_options){var prop_hcfqn=hcfqn;let target=document.objectByHcfqn(hcfqn);if(target==null){var split=hcfqn.split('.')
+var scope=window;var hcfqn=split.pop();var prop_name=hcfqn;for(var i in split){var part=split[i];if(!scope[part]){scope[part]={};}
+scope=scope[part];}
+controller_class.FQN=prop_hcfqn;controller_class.NAME=prop_name;target=scope[hcfqn]=controller_class;}
+if(as_element!=undefined&&as_element!=null){if(element_options==undefined){element_options={};}
+if(customElements.get(as_element)==undefined){if(target.prototype instanceof hcf.web.Component||(target.prototype instanceof HTMLElement&&element_options.extends!=undefined)){customElements.define(as_element,target,element_options);}
+else{throw prop_hcfqn+' client-controller of '+prop_hcfqn+' must extend hcf.web.Component if elementName is given.';}}
+if(document.componentMap==undefined){document.componentMap={};}
+document.componentMap[as_element.toUpperCase()]={fqn:prop_hcfqn,context:component_context_id};}
+return target;};document.objectByHcfqn=function(hcfqn){var split=hcfqn.split('.')
+var scope=window;var hcfqn=split.pop();for(var i in split){var part=split[i];if(!scope[part]){return null;}
+scope=scope[part];}
+if(scope[hcfqn]!=undefined){return scope[hcfqn];}
+else{return null;}}
+document.recursiveOffset=function(aobj){var currOffset={x:0,y:0}
 var newOffset={x:0,y:0}
 if(aobj!==null){if(aobj.scrollLeft){currOffset.x=aobj.scrollLeft;}
 if(aobj.scrollTop){currOffset.y=aobj.scrollTop;}
@@ -177,7 +191,7 @@ if(typeof define==='function'&&define.amd){define(function(){return md5})}else i
         $_func_args = \func_get_args();
         $output = '';
         $output.= "{$__CLASS__::_call('docType', $__CLASS__, $_this) }";
-        $output.= "<html lang=\"{$__CLASS__::_property('content_language', $__CLASS__, $_this) }\">";
+        $output.= "<html lang=\"{$__CLASS__::_property('content_language', $__CLASS__, $_this) }\" data-version=\"{$__CLASS__::_call('appVersion', $__CLASS__, $_this) }\">";
         $output.= "<head>";
         $output.= "<meta http-equiv=\"X-UA-Compatible\" content=\"IE=Edge\"/>";
         $output.= "<meta charset=\"{$__CLASS__::_property('encoding', $__CLASS__, $_this) }\"/>";
@@ -199,8 +213,8 @@ if(typeof define==='function'&&define.amd){define(function(){return md5})}else i
         foreach ($__CLASS__::_property('ext_css', $__CLASS__, $_this) as $href => $media) {
             $output.= "<link rel=\"stylesheet\" type=\"text/css\" href=\"$href\" media=\"$media\"/>";
         }
-        $output.= "<script language=\"javascript\">{$__CLASS__::_call('script', $__CLASS__, $_this) } {$__CLASS__::_property('component_reg_data', $__CLASS__, $_this) }</script>";
-        $output.= "<style>{$__CLASS__::_call('style', $__CLASS__, $_this) }</style>";
+        $output.= "<script language=\"javascript\">{$__CLASS__::_call('ownScript', $__CLASS__, $_this) } {$__CLASS__::_property('component_reg_data', $__CLASS__, $_this) }</script>";
+        $output.= "<style>{$__CLASS__::_call('ownStyle', $__CLASS__, $_this) }</style>";
         foreach ($__CLASS__::_property('component_contexts', $__CLASS__, $_this) as $component_context) {
             $output.= "$component_context";
         }
@@ -213,7 +227,7 @@ if(typeof define==='function'&&define.amd){define(function(){return md5})}else i
         $output.= "<style>body { font-family:'{$__CLASS__::_property('font_family', $__CLASS__, $_this) }'!important; font-size:{$__CLASS__::_property('font_size', $__CLASS__, $_this) }!important;}</style>";
         $output.= "{$__CLASS__::_call('autoloader', $__CLASS__, $_this) }";
         $output.= "</head>";
-        $output.= "<body>{$__CLASS__::_property('content', $__CLASS__, $_this) }</body>";
+        $output.= "<body>{$__CLASS__::_call('renderContent', $__CLASS__, $_this) }</body>";
         $output.= "</html>";
         return self::_postProcess($output, [], []);
     }
@@ -238,10 +252,13 @@ if(typeof define==='function'&&define.amd){define(function(){return md5})}else i
     
     }
     namespace hcf\web\Container\__EO__;
-    # BEGIN EXECUTABLE FRAME OF CONTROLLER.PHP
+    # BEGIN EXECUTABLE FRAME OF MODEL.PHP
     use \hcf\core\Utils as Utils;
     use \hcf\web\ComponentContext;
     use \hcf\web\Component;
+    use \hcf\web\Bridge;
+    use \hcf\web\PageLoader;
+    use \hcf\web\Page;
     /**
      * Server
      * This is the HTML-container from the raw-merge framework
@@ -251,40 +268,37 @@ if(typeof define==='function'&&define.amd){define(function(){return md5})}else i
      * @author Philipp Kopf
      * @version 1.0.0
      */
-    trait Controller {
-        private $title = self::FQN;
-        private $content_language = 'en';
-        private $content = 'No content set.';
-        private $ext_js = [];
-        private $emb_js = [];
-        private $ext_css = [];
-        private $emb_css = [];
-        private $encoding = 'utf-8';
-        private $font_family = 'arial';
-        private $font_size = 12; //px
-        private $fav_mimetype = '';
-        private $fav_path = '';
-        private $meta_http_equiv = [];
-        private $meta_name = [];
-        private $autoloading = false;
-        private $component_reg_data = '';
-        private $component_reg_data_initialized = false;
-        private $component_contexts = [];
+    trait Model {
+        protected $title = self::FQN;
+        protected $content_language = 'en';
+        protected $content = 'No content set.';
+        protected $ext_js = [];
+        protected $emb_js = [];
+        protected $ext_css = [];
+        protected $emb_css = [];
+        protected $encoding = 'utf-8';
+        protected $font_family = 'arial';
+        protected $font_size = 12; //px
+        protected $fav_mimetype = '';
+        protected $fav_path = '';
+        protected $meta_http_equiv = [];
+        protected $meta_name = [];
+        protected $autoloading = false;
+        protected $component_reg_data = '';
+        protected $component_reg_data_initialized = false;
+        protected $component_contexts = [];
         /**
          * __construct
          *
-         * @param autoload - boolean - optional - enable the autoloader for this instance (true) or not (false)
          */
-        public function hcfwebContainer_onConstruct($autoload = null) {
+        public function hcfwebContainer_onConstruct_Model() {
             $config = self::config();
             if (isset($config)) {
                 if (isset($config->font) && is_object($config->font)) {
                     $this->font($config->font->family);
                     $this->fontSize($config->font->size);
                 }
-                if (isset($autoload)) {
-                    $this->autoloading = $autoload;
-                } else if (isset($config->{'enable-autoloader'}) && is_bool($config->{'enable-autoloader'})) {
+                if (isset($config->{'enable-autoloader'}) && is_bool($config->{'enable-autoloader'})) {
                     $this->autoloading = $config->{'enable-autoloader'};
                 }
                 if (isset($config->encoding) && is_string($config->encoding)) {
@@ -294,7 +308,12 @@ if(typeof define==='function'&&define.amd){define(function(){return md5})}else i
                     $this->favicon($config->{'fav-icon'});
                 }
             }
-            $this->component_reg_data = ComponentContext::script();
+            $cc = new ComponentContext('core');
+            $cc->register(Component::class);
+            $cc->register(Bridge::class);
+            $cc->register(PageLoader::class);
+            $cc->register(Page::class);
+            $this->registerComponentContext($cc);
         }
         /**
          * title
@@ -494,18 +513,23 @@ if(typeof define==='function'&&define.amd){define(function(){return md5})}else i
             }
             return '';
         }
-        private function registerMainComponent() {
-            $this->component_reg_data.= ComponentContext::wrappedClientController(Component::FQN, Component::script());
-            $this->component_reg_data_initialized = true;
-        }
         public function registerComponentContext(ComponentContext $cc) {
-            if (!$this->component_reg_data_initialized) {
-                $this->registerMainComponent();
-            }
             $this->component_contexts[] = $cc;
         }
+        protected function renderContent() {
+            return $this->content;
+        }
+        protected function ownScript() {
+            return self::script();
+        }
+        protected function ownStyle() {
+            return self::style();
+        }
+        private function appVersion() {
+            return (defined('APP_VERSION') ? APP_VERSION : '');
+        }
     }
-    # END EXECUTABLE FRAME OF CONTROLLER.PHP
+    # END EXECUTABLE FRAME OF MODEL.PHP
     __halt_compiler();
     #__COMPILER_HALT_OFFSET__
 BEGIN[CONFIG.JSON]

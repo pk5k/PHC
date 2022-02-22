@@ -1,12 +1,12 @@
-<?php #HYPERCELL hcdk.raw.Constant - BUILD 22.02.15#298
+<?php #HYPERCELL hcdk.raw.Constant - BUILD 22.02.18#300
 namespace hcdk\raw;
 class Constant {
     use Constant\__EO__\Controller, \hcf\core\dryver\View, \hcf\core\dryver\Internal;
     const FQN = 'hcdk.raw.Constant';
     const NAME = 'Constant';
     public function __construct() {
-        if (method_exists($this, 'hcdkrawConstant_onConstruct')) {
-            call_user_func_array([$this, 'hcdkrawConstant_onConstruct'], func_get_args());
+        if (method_exists($this, 'hcdkrawConstant_onConstruct_Controller')) {
+            call_user_func_array([$this, 'hcdkrawConstant_onConstruct_Controller'], func_get_args());
         }
     }
     # BEGIN ASSEMBLY FRAME VIEW.TEXT
@@ -25,7 +25,7 @@ class Constant {
     trait Controller {
         private $name = 'UNNAMED_CONSTANT';
         private $value = 0;
-        public function hcdkrawConstant_onConstruct($name) {
+        public function hcdkrawConstant_onConstruct_Controller($name) {
             $this->setName($name);
         }
         public function setName($name) {

@@ -1,15 +1,15 @@
-<?php #HYPERCELL hcf.web.Bridge - BUILD 22.02.15#3320
+<?php #HYPERCELL hcf.web.Bridge - BUILD 22.02.21#3325
 namespace hcf\web;
-class Bridge {
-    use \hcf\core\dryver\Config, \hcf\core\dryver\Controller, \hcf\core\dryver\Controller\Js, Bridge\__EO__\Controller, \hcf\core\dryver\View, \hcf\core\dryver\Internal;
+class Bridge extends \hcf\web\Component {
+    use \hcf\core\dryver\Base, \hcf\core\dryver\Config, \hcf\core\dryver\Controller, \hcf\core\dryver\Controller\Js, Bridge\__EO__\Controller, \hcf\core\dryver\View, \hcf\core\dryver\Internal;
     const FQN = 'hcf.web.Bridge';
     const NAME = 'Bridge';
     public function __construct() {
         if (!isset(self::$config)) {
             self::loadConfig();
         }
-        if (method_exists($this, 'hcfwebBridge_onConstruct')) {
-            call_user_func_array([$this, 'hcfwebBridge_onConstruct'], func_get_args());
+        if (method_exists($this, 'hcfwebBridge_onConstruct_Controller')) {
+            call_user_func_array([$this, 'hcfwebBridge_onConstruct_Controller'], func_get_args());
         }
     }
     # BEGIN ASSEMBLY FRAME CONFIG.INI
@@ -21,7 +21,7 @@ class Bridge {
     # END ASSEMBLY FRAME CONFIG.INI
     # BEGIN ASSEMBLY FRAME CONTROLLER.JS
     public static function script() {
-        $js = "document.Bridge=function(to){var self=this;var _internal_route='?!=-bridge';var _worker_address='hcf.web.Bridge.Worker';var _worker_store=_worker_address+'.Store';var _header={action:\"X-Bridge-Action\",target:\"X-Bridge-Target\",method:\"X-Bridge-Method\"};self._target=to;self._action=undefined;self._method=undefined;if(document[_worker_address]==undefined&&window.Worker){document[_worker_address]=new Worker(_internal_route);document[_worker_address].onmessage=receiveWorkerMessage;}
+        $js = "function(to){var self=this;var _internal_route='?!=-bridge';var _worker_address='hcf.web.Bridge.Worker';var _worker_store=_worker_address+'.Store';var _header={action:\"X-Bridge-Action\",target:\"X-Bridge-Target\",method:\"X-Bridge-Method\"};self._target=to;self._action=undefined;self._method=undefined;if(document[_worker_address]==undefined&&window.Worker){document[_worker_address]=new Worker(_internal_route);document[_worker_address].onmessage=receiveWorkerMessage;}
 else if(!window.Worker){console.warn('Your Browser does not support WebWorkers - all requests will be executed on the main-thread.');}
 if(document[_worker_store]==undefined){document[_worker_store]={};}
 self.do=function(arg_obj){var prepared_data=prepareSend(arg_obj,false);send(prepared_data.url_args,prepared_data.passed_files,prepared_data.overwrites,prepared_data.callbacks);return self;}
@@ -57,11 +57,12 @@ return passed_args;}
 function getFiles(p_obj){var passed_files=[];if(p_obj.files!=undefined&&p_obj.files.constructor!=Array){throw'Passed file list is not of type array';}
 else if(p_obj!=undefined){passed_files=p_obj.files;}
 return passed_files;}
-function getCallbacks(p_obj,for_worker){var callbacks={};if(p_obj!==undefined){var success=p_obj.onSuccess||false;var error=p_obj.onError||false;var timeout=p_obj.onTimeout||false;var upload=p_obj.onUpload||false;var download=p_obj.onDownload||false;var before=p_obj.onBefore||false;if(success){callbacks.success=success;}
+function getCallbacks(p_obj,for_worker){var callbacks={};if(p_obj!==undefined){var success=p_obj.onSuccess||false;var error=p_obj.onError||false;var timeout=p_obj.onTimeout||false;var upload=p_obj.onUpload||false;var download=p_obj.onDownload||false;var progress=p_obj.onProgress||false;var before=p_obj.onBefore||false;if(success){callbacks.success=success;}
 if(error){callbacks.error=error;}
 if(timeout){callbacks.timeout=timeout;}
 if(upload){callbacks.upload=upload;if(for_worker){throw'WebWorker requests can\'t use the upload-callback';}}
 if(download){callbacks.download=download;if(for_worker){throw'WebWorker requests can\'t use the download-callback';}}
+if(progress){callbacks.progress=progress;if(for_worker){throw'WebWorker requests can\'t use the progress-callback';}}
 if(before){callbacks.before=before;if(for_worker){throw'WebWorker requests can\'t use the before-callback';}}}
 return callbacks;}
 function getOverwrites(p_obj,for_worker){var overwrites={};if(p_obj!==undefined){var xhr=p_obj.xhr||false;var method=p_obj.method||false;var eval=p_obj.eval||false;var timeout=undefined;if(!isNaN(p_obj.timeout)){timeout=Number(p_obj.timeout);}
@@ -82,6 +83,7 @@ else{http_request=new ActiveXObject('Microsoft.XMLHTTP');}}
 if(http_request.ontimeout===undefined||http_request.ontimeout===null){http_request.ontimeout=function(){if(callbacks.timeout){callbacks.timeout(http_request);}
 else{throw'Request timed out';}}}
 if(callbacks.upload){http_request.upload.onprogress=function(e){callbacks.upload(e,http_request);}}
+if(callbacks.progress){http_request.addEventListener('progress',function(e){callbacks.progress(e,http_request);});}
 var evalClosure=null;if(eval_reponse){evalClosure=eval;}
 if(http_request.onreadystatechange===null){http_request.onreadystatechange=function(){if(http_request.readyState==4&&http_request.status<=300&&http_request.status>=100){var response=http_request.responseText;if(info){console.log('Request was successful - response data:');console.log((response.length>0)?response:'no data was sent');}
 if(eval_reponse){evalClosure(response,false);}
@@ -141,7 +143,7 @@ return self;}";
          *
          * @param args - array - arguments which decide the target-Hypercell and what happens with it
          */
-        public function hcfwebBridge_onConstruct() {
+        public function hcfwebBridge_onConstruct_Controller() {
             try {
                 $this->setup();
                 $args = self::getArgs();
@@ -313,11 +315,11 @@ header.target = 'X-Bridge-Target'
 ; name of a http header, which indicates the method which should be executed
 header.method = 'X-Bridge-Method'
 
-; fqns which can be accessed by this action - if the target is not inside this list,
+; fqns which can be accessed by bridge invokes - if the target is not inside this list,
 ; the action will fail (with HTTP-response code 403 - forbidden)
 ; this is for security-reasons, to avoid executing any class somebody wants
 ; wildcards are possible to match fqn patterns
-allow = ['your_package.*']
+allow = ['hcf.web.PageLoader', 'your_package.*']
 
 
 END[CONFIG.INI]

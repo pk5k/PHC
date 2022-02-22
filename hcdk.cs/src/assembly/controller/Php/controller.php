@@ -37,7 +37,7 @@ trait Controller
 
 	private function namedConstructor()
 	{
-		return str_replace('.', '', $this->forHypercell()->getName()->long).'_'.self::CONSTRUCTOR;
+		return str_replace('.', '', $this->forHypercell()->getName()->long).'_'.self::CONSTRUCTOR.'_Controller';
 	}
 
 	public function checkInput()

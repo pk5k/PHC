@@ -1,12 +1,12 @@
-<?php #HYPERCELL hcf.cli.exec - BUILD 22.02.15#34
+<?php #HYPERCELL hcf.cli.exec - BUILD 22.02.15#35
 namespace hcf\cli;
 abstract class exec {
     use exec\__EO__\Controller, \hcf\core\dryver\Internal;
     const FQN = 'hcf.cli.exec';
     const NAME = 'exec';
     public function __construct() {
-        if (method_exists($this, 'hcfcliexec_onConstruct')) {
-            call_user_func_array([$this, 'hcfcliexec_onConstruct'], func_get_args());
+        if (method_exists($this, 'hcfcliexec_onConstruct_Controller')) {
+            call_user_func_array([$this, 'hcfcliexec_onConstruct_Controller'], func_get_args());
         }
     }
     }

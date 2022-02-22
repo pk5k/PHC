@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.Base - BUILD 22.02.15#219
+<?php #HYPERCELL hcdk.assembly.Base - BUILD 22.02.18#221
 namespace hcdk\assembly;
 class Base extends \hcdk\assembly {
     use \hcf\core\dryver\Base, \hcf\core\dryver\Constant, Base\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -6,8 +6,8 @@ class Base extends \hcdk\assembly {
     const NAME = 'Base';
     public function __construct() {
         call_user_func_array('parent::__construct', func_get_args());
-        if (method_exists($this, 'hcdkassemblyBase_onConstruct')) {
-            call_user_func_array([$this, 'hcdkassemblyBase_onConstruct'], func_get_args());
+        if (method_exists($this, 'hcdkassemblyBase_onConstruct_Controller')) {
+            call_user_func_array([$this, 'hcdkassemblyBase_onConstruct_Controller'], func_get_args());
         }
     }
     # BEGIN ASSEMBLY FRAME CONSTANT

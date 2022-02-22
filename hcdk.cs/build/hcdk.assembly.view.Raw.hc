@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.view.Raw - BUILD 22.02.15#196
+<?php #HYPERCELL hcdk.assembly.view.Raw - BUILD 22.02.18#198
 namespace hcdk\assembly\view;
 class Raw extends \hcdk\assembly\view {
     use \hcf\core\dryver\Base, Raw\__EO__\Controller, \hcf\core\dryver\View, \hcf\core\dryver\Internal;
@@ -6,8 +6,8 @@ class Raw extends \hcdk\assembly\view {
     const NAME = 'Raw';
     public function __construct() {
         call_user_func_array('parent::__construct', func_get_args());
-        if (method_exists($this, 'hcdkassemblyviewRaw_onConstruct')) {
-            call_user_func_array([$this, 'hcdkassemblyviewRaw_onConstruct'], func_get_args());
+        if (method_exists($this, 'hcdkassemblyviewRaw_onConstruct_Controller')) {
+            call_user_func_array([$this, 'hcdkassemblyviewRaw_onConstruct_Controller'], func_get_args());
         }
     }
     # BEGIN ASSEMBLY FRAME VIEW.TEXT

@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.controller.Js - BUILD 22.02.15#204
+<?php #HYPERCELL hcdk.assembly.controller.Js - BUILD 22.02.18#206
 namespace hcdk\assembly\controller;
 class Js extends \hcdk\assembly\controller {
     use \hcf\core\dryver\Base, \hcf\core\dryver\Config, Js\__EO__\Controller, \hcf\core\dryver\View, \hcf\core\dryver\Internal;
@@ -9,8 +9,8 @@ class Js extends \hcdk\assembly\controller {
         if (!isset(self::$config)) {
             self::loadConfig();
         }
-        if (method_exists($this, 'hcdkassemblycontrollerJs_onConstruct')) {
-            call_user_func_array([$this, 'hcdkassemblycontrollerJs_onConstruct'], func_get_args());
+        if (method_exists($this, 'hcdkassemblycontrollerJs_onConstruct_Controller')) {
+            call_user_func_array([$this, 'hcdkassemblycontrollerJs_onConstruct_Controller'], func_get_args());
         }
     }
     # BEGIN ASSEMBLY FRAME CONFIG.INI

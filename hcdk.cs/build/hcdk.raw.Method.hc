@@ -1,12 +1,12 @@
-<?php #HYPERCELL hcdk.raw.Method - BUILD 22.02.15#297
+<?php #HYPERCELL hcdk.raw.Method - BUILD 22.02.18#299
 namespace hcdk\raw;
 class Method {
     use Method\__EO__\Controller, \hcf\core\dryver\View, \hcf\core\dryver\Internal;
     const FQN = 'hcdk.raw.Method';
     const NAME = 'Method';
     public function __construct() {
-        if (method_exists($this, 'hcdkrawMethod_onConstruct')) {
-            call_user_func_array([$this, 'hcdkrawMethod_onConstruct'], func_get_args());
+        if (method_exists($this, 'hcdkrawMethod_onConstruct_Controller')) {
+            call_user_func_array([$this, 'hcdkrawMethod_onConstruct_Controller'], func_get_args());
         }
     }
     # BEGIN ASSEMBLY FRAME VIEW.TEXT
@@ -28,7 +28,7 @@ class Method {
         private $modifiers = [];
         private $arguments = [];
         private $body = null;
-        public function hcdkrawMethod_onConstruct($name, $modifiers = [], $arguments = []) {
+        public function hcdkrawMethod_onConstruct_Controller($name, $modifiers = [], $arguments = []) {
             $this->setName($name);
             $this->setModifiers($modifiers);
             $this->setArguments($arguments);

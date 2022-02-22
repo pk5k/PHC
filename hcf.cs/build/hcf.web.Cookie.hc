@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.web.Cookie - BUILD 22.02.15#37
+<?php #HYPERCELL hcf.web.Cookie - BUILD 22.02.15#38
 namespace hcf\web;
 class Cookie {
     use \hcf\core\dryver\Config, Cookie\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -8,8 +8,8 @@ class Cookie {
         if (!isset(self::$config)) {
             self::loadConfig();
         }
-        if (method_exists($this, 'hcfwebCookie_onConstruct')) {
-            call_user_func_array([$this, 'hcfwebCookie_onConstruct'], func_get_args());
+        if (method_exists($this, 'hcfwebCookie_onConstruct_Controller')) {
+            call_user_func_array([$this, 'hcfwebCookie_onConstruct_Controller'], func_get_args());
         }
     }
     # BEGIN ASSEMBLY FRAME CONFIG.INI

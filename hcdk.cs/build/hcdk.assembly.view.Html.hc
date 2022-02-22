@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.view.Html - BUILD 22.02.15#207
+<?php #HYPERCELL hcdk.assembly.view.Html - BUILD 22.02.18#209
 namespace hcdk\assembly\view;
 class Html extends \hcdk\assembly\view\Xml {
     use \hcf\core\dryver\Base, Html\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -6,8 +6,8 @@ class Html extends \hcdk\assembly\view\Xml {
     const NAME = 'Html';
     public function __construct() {
         call_user_func_array('parent::__construct', func_get_args());
-        if (method_exists($this, 'hcdkassemblyviewHtml_onConstruct')) {
-            call_user_func_array([$this, 'hcdkassemblyviewHtml_onConstruct'], func_get_args());
+        if (method_exists($this, 'hcdkassemblyviewHtml_onConstruct_Controller')) {
+            call_user_func_array([$this, 'hcdkassemblyviewHtml_onConstruct_Controller'], func_get_args());
         }
     }
     }

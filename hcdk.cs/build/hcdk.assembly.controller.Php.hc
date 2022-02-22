@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.controller.Php - BUILD 22.02.15#313
+<?php #HYPERCELL hcdk.assembly.controller.Php - BUILD 22.02.18#315
 namespace hcdk\assembly\controller;
 class Php extends \hcdk\assembly\controller {
     use \hcf\core\dryver\Base, \hcf\core\dryver\Constant, Php\__EO__\Controller, \hcf\core\dryver\View, \hcf\core\dryver\Internal;
@@ -6,8 +6,8 @@ class Php extends \hcdk\assembly\controller {
     const NAME = 'Php';
     public function __construct() {
         call_user_func_array('parent::__construct', func_get_args());
-        if (method_exists($this, 'hcdkassemblycontrollerPhp_onConstruct')) {
-            call_user_func_array([$this, 'hcdkassemblycontrollerPhp_onConstruct'], func_get_args());
+        if (method_exists($this, 'hcdkassemblycontrollerPhp_onConstruct_Controller')) {
+            call_user_func_array([$this, 'hcdkassemblycontrollerPhp_onConstruct_Controller'], func_get_args());
         }
     }
     # BEGIN ASSEMBLY FRAME CONSTANT
@@ -64,7 +64,7 @@ trait Controller
             return trim($this->defaultInputTemplate());
         }
         private function namedConstructor() {
-            return str_replace('.', '', $this->forHypercell()->getName()->long) . '_' . self::CONSTRUCTOR;
+            return str_replace('.', '', $this->forHypercell()->getName()->long) . '_' . self::CONSTRUCTOR . '_Controller';
         }
         public function checkInput() {
             // override constructor to absolute name (base-implicit and constructor-delegation need this to work)
@@ -77,7 +77,7 @@ trait Controller
             if (preg_match('/(?:[TtRrAaIiTtSs]*)\s*[C|c]ontroller/', $raw_input) === false) {
                 throw new \Exception(self::FQN . ' - unable to find trait "Controller" inside ' . $this->fileInfo()->getPathInfo());
             }
-            // rawInput must NOT contain a __construct method -> use hcdkassemblycontrollerPhp_onConstruct instead
+            // rawInput must NOT contain a __construct method -> use hcdkassemblycontrollerPhp_onConstruct_Controller instead
             if (preg_match('/(?:\s+__construct\s*\(.*\))/i', $raw_input) !== 0) {
                 throw new \Exception(self::FQN . ' - don\'t use __construct inside controller.php assemblies - use ' . self::CONSTRUCTOR . ' instead - in ' . $this->fileInfo()->getPathInfo());
             }

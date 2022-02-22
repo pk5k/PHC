@@ -30,6 +30,16 @@ trait Model
 		self::$registry[$id] = $this;
 	}
 
+	public static function get($id)
+	{
+		if (isset(self::$registry) && isset(self::$registry[$id]))
+		{
+			return self::$registry[$id];
+		}
+
+		return null;
+	}
+
 	public function allowGlobalStyle($allow)
 	{
 		$this->allow_global_style = ($allow) ? 'true' : 'false';
@@ -37,7 +47,7 @@ trait Model
 
 	public function register(/* WebComponent::class */ $component_class)
 	{
-		if (!is_subclass_of($component_class, WebComponent::class))
+		if (!is_subclass_of($component_class, WebComponent::class) && $component_class != WebComponent::class)
 		{
 			throw new Exception(self::FQN .' - given class '.$component_class.' does not implement '.WebComponent::class);
 		}
@@ -54,14 +64,7 @@ trait Model
 
 	private function clientControllerOf($component)
 	{
-		if (is_null($component::elementName()) || $component::elementName() == WebComponent::elementName())
-		{
-			return self::wrappedClientController($component::FQN, $component::script());
-		}
-		else
-		{
-			return self::wrappedClientControllerWithElement($component::FQN, $component::script(), $this->id, $component::elementName(), $component::elementOptions());
-		}
+		return $component::wrappedClientController($this->id);
 	}
 
 	private function styleOf($component)
@@ -77,6 +80,25 @@ trait Model
 	public function embedStylesheet($which)
 	{
 		$this->stylesheet_embed[] = $which;
+	}
+
+	private function url($target, $component)
+	{
+		if (is_array($component))
+		{
+			$c_str = '';
+
+			foreach ($component as $fqn => $component) 
+			{
+				$c_str .= $fqn.',';
+			}
+
+			$component = substr($c_str, 0, -1);
+		}
+
+		$v = (defined('APP_VERSION') ? '&v='.APP_VERSION : '');// define APP_VERSION and increment on updates to override caches
+
+		return '?!=-'.$target.'&context='.$this->id.'&component='.$component.$v;
 	}
 }
 ?>

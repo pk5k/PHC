@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.data.Sectionizer - BUILD 22.02.15#67
+<?php #HYPERCELL hcdk.data.Sectionizer - BUILD 22.02.18#69
 namespace hcdk\data;
 class Sectionizer {
     use \hcf\core\dryver\Config, \hcf\core\dryver\Constant, Sectionizer\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -8,8 +8,8 @@ class Sectionizer {
         if (!isset(self::$config)) {
             self::loadConfig();
         }
-        if (method_exists($this, 'hcdkdataSectionizer_onConstruct')) {
-            call_user_func_array([$this, 'hcdkdataSectionizer_onConstruct'], func_get_args());
+        if (method_exists($this, 'hcdkdataSectionizer_onConstruct_Controller')) {
+            call_user_func_array([$this, 'hcdkdataSectionizer_onConstruct_Controller'], func_get_args());
         }
     }
     # BEGIN ASSEMBLY FRAME CONFIG.INI

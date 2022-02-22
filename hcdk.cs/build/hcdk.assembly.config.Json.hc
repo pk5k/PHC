@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.config.Json - BUILD 22.02.15#194
+<?php #HYPERCELL hcdk.assembly.config.Json - BUILD 22.02.18#196
 namespace hcdk\assembly\config;
 class Json extends \hcdk\assembly\config {
     use \hcf\core\dryver\Base, Json\__EO__\Controller, \hcf\core\dryver\View, \hcf\core\dryver\Internal;
@@ -6,8 +6,8 @@ class Json extends \hcdk\assembly\config {
     const NAME = 'Json';
     public function __construct() {
         call_user_func_array('parent::__construct', func_get_args());
-        if (method_exists($this, 'hcdkassemblyconfigJson_onConstruct')) {
-            call_user_func_array([$this, 'hcdkassemblyconfigJson_onConstruct'], func_get_args());
+        if (method_exists($this, 'hcdkassemblyconfigJson_onConstruct_Controller')) {
+            call_user_func_array([$this, 'hcdkassemblyconfigJson_onConstruct_Controller'], func_get_args());
         }
     }
     # BEGIN ASSEMBLY FRAME VIEW.TEXT

@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.db.Dict - BUILD 22.02.15#187
+<?php #HYPERCELL hcf.db.Dict - BUILD 22.02.15#188
 namespace hcf\db;
 class Dict {
     use \hcf\core\dryver\Config, \hcf\core\dryver\Constant, Dict\__EO__\Controller, \hcf\core\dryver\View, \hcf\core\dryver\Internal;
@@ -8,8 +8,8 @@ class Dict {
         if (!isset(self::$config)) {
             self::loadConfig();
         }
-        if (method_exists($this, 'hcfdbDict_onConstruct')) {
-            call_user_func_array([$this, 'hcfdbDict_onConstruct'], func_get_args());
+        if (method_exists($this, 'hcfdbDict_onConstruct_Controller')) {
+            call_user_func_array([$this, 'hcfdbDict_onConstruct_Controller'], func_get_args());
         }
     }
     # BEGIN ASSEMBLY FRAME CONFIG.INI
@@ -111,7 +111,7 @@ class Dict {
         private static $locale = null;
         private $key = null;
         private $value = null;
-        public function hcfdbDict_onConstruct($key, $load_with_comments = false) {
+        public function hcfdbDict_onConstruct_Controller($key, $load_with_comments = false) {
             if ((bool)self::config()->connection->emulate === true) {
                 IL::log()->warn(self::FQN . ' - emulation mode is enabled');
                 $this->key = $key;

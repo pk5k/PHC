@@ -1,12 +1,12 @@
-<?php #HYPERCELL hcdk.data.xml.Fragment.embed.DataFragment - BUILD 22.02.15#80
+<?php #HYPERCELL hcdk.data.xml.Fragment.embed.DataFragment - BUILD 22.02.18#82
 namespace hcdk\data\xml\Fragment\embed;
 class DataFragment extends \hcdk\data\xml\Fragment {
     use \hcf\core\dryver\Base, DataFragment\__EO__\Controller, \hcf\core\dryver\Internal;
     const FQN = 'hcdk.data.xml.Fragment.embed.DataFragment';
     const NAME = 'DataFragment';
     public function __construct() {
-        if (method_exists($this, 'hcdkdataxmlFragmentembedDataFragment_onConstruct')) {
-            call_user_func_array([$this, 'hcdkdataxmlFragmentembedDataFragment_onConstruct'], func_get_args());
+        if (method_exists($this, 'hcdkdataxmlFragmentembedDataFragment_onConstruct_Controller')) {
+            call_user_func_array([$this, 'hcdkdataxmlFragmentembedDataFragment_onConstruct_Controller'], func_get_args());
         }
     }
     }

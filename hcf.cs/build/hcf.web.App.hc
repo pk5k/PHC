@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.web.App - BUILD 22.02.15#138
+<?php #HYPERCELL hcf.web.App - BUILD 22.02.15#139
 namespace hcf\web;
 class App {
     use \hcf\core\dryver\Config, App\__EO__\Controller, \hcf\core\dryver\Client, \hcf\core\dryver\Client\Js, \hcf\core\dryver\View, \hcf\core\dryver\View\Html, \hcf\core\dryver\Internal;
@@ -8,8 +8,8 @@ class App {
         if (!isset(self::$config)) {
             self::loadConfig();
         }
-        if (method_exists($this, 'hcfwebApp_onConstruct')) {
-            call_user_func_array([$this, 'hcfwebApp_onConstruct'], func_get_args());
+        if (method_exists($this, 'hcfwebApp_onConstruct_Controller')) {
+            call_user_func_array([$this, 'hcfwebApp_onConstruct_Controller'], func_get_args());
         }
     }
     # BEGIN ASSEMBLY FRAME CONFIG.JSON
@@ -115,7 +115,7 @@ exports.default=init;});";
          *
          * @param autoload - boolean - optional - enable the autoloader for this instance (true) or not (false)
          */
-        public function hcfwebApp_onConstruct() {
+        public function hcfwebApp_onConstruct_Controller() {
             $this->init();
         }
         protected function init() {

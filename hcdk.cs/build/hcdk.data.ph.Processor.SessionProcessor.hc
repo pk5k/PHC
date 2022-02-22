@@ -1,12 +1,12 @@
-<?php #HYPERCELL hcdk.data.ph.Processor.SessionProcessor - BUILD 22.02.15#78
+<?php #HYPERCELL hcdk.data.ph.Processor.SessionProcessor - BUILD 22.02.18#80
 namespace hcdk\data\ph\Processor;
 class SessionProcessor extends \hcdk\data\ph\Processor {
     use \hcf\core\dryver\Base, SessionProcessor\__EO__\Controller, \hcf\core\dryver\Internal;
     const FQN = 'hcdk.data.ph.Processor.SessionProcessor';
     const NAME = 'SessionProcessor';
     public function __construct() {
-        if (method_exists($this, 'hcdkdataphProcessorSessionProcessor_onConstruct')) {
-            call_user_func_array([$this, 'hcdkdataphProcessorSessionProcessor_onConstruct'], func_get_args());
+        if (method_exists($this, 'hcdkdataphProcessorSessionProcessor_onConstruct_Controller')) {
+            call_user_func_array([$this, 'hcdkdataphProcessorSessionProcessor_onConstruct_Controller'], func_get_args());
         }
     }
     }

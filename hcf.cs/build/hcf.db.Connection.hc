@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.db.Connection - BUILD 22.02.15#43
+<?php #HYPERCELL hcf.db.Connection - BUILD 22.02.15#44
 namespace hcf\db;
 class Connection {
     use \hcf\core\dryver\Config, Connection\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -8,8 +8,8 @@ class Connection {
         if (!isset(self::$config)) {
             self::loadConfig();
         }
-        if (method_exists($this, 'hcfdbConnection_onConstruct')) {
-            call_user_func_array([$this, 'hcfdbConnection_onConstruct'], func_get_args());
+        if (method_exists($this, 'hcfdbConnection_onConstruct_Controller')) {
+            call_user_func_array([$this, 'hcfdbConnection_onConstruct_Controller'], func_get_args());
         }
     }
     # BEGIN ASSEMBLY FRAME CONFIG.INI

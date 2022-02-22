@@ -1,14 +1,14 @@
 <dummy.container>
-	<script language="javascript">
-		<loop.foreach var="{{property:components}}" key="fqn" value="component">{{method:clientControllerOf|local:component}}</loop.foreach>
-	</script>
-
 	<condition.if value="{{property:allow_global_style}}" is="true">
-		<style id="{{property:id}}-base-style-global">{{method:styles}}</style>
+		<style id="{{property:id}}-global-base-style">{{method:styles}}</style>
+		<link id="{{property:id}}-global-component-styles" rel="stylesheet" href="{{method:url|'style', property:components}}"/>
 	</condition.if>
 
-	<template id="{{property:id}}">
+	<script src="{{method:url|'script', property:components}}"/>
+
+	<template id="{{property:id}}" data-global="{{property:allow_global_style}}">
 		<style id="base-style">{{method:styles}}</style>
+		<link id="component-styles" rel="stylesheet" href="{{method:url|'style', property:components}}"/>
 
 		<loop.foreach var="{{property:components}}" key="fqn" value="component">
 			<div id="{{local:fqn}}">{{method:templateOf|local:component}}</div>

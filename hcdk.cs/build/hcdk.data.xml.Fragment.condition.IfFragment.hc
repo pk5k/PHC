@@ -1,12 +1,12 @@
-<?php #HYPERCELL hcdk.data.xml.Fragment.condition.IfFragment - BUILD 22.02.15#78
+<?php #HYPERCELL hcdk.data.xml.Fragment.condition.IfFragment - BUILD 22.02.21#82
 namespace hcdk\data\xml\Fragment\condition;
 class IfFragment extends \hcdk\data\xml\Fragment\condition {
     use \hcf\core\dryver\Base, IfFragment\__EO__\Controller, \hcf\core\dryver\Internal;
     const FQN = 'hcdk.data.xml.Fragment.condition.IfFragment';
     const NAME = 'IfFragment';
     public function __construct() {
-        if (method_exists($this, 'hcdkdataxmlFragmentconditionIfFragment_onConstruct')) {
-            call_user_func_array([$this, 'hcdkdataxmlFragmentconditionIfFragment_onConstruct'], func_get_args());
+        if (method_exists($this, 'hcdkdataxmlFragmentconditionIfFragment_onConstruct_Controller')) {
+            call_user_func_array([$this, 'hcdkdataxmlFragmentconditionIfFragment_onConstruct_Controller'], func_get_args());
         }
     }
     }
@@ -27,7 +27,7 @@ class IfFragment extends \hcdk\data\xml\Fragment\condition {
         public static function build($root, $file_scope) {
             $root_name = $root->getName();
             $value = (isset($root['value'])) ? (string)$root['value'] : null;
-            $condition = self::getConditionAttribute($root);
+            $condition = self::getConditionAttribute($root, $file_scope);
             if (strpos($condition[0], '#') !== false) {
                 if (!is_null($value)) {
                     throw new \XMLParseException(self::FQN . ' - attribute "value" cannot be set on ' . $condition[0] . ' condition. The attribute contains already the value that should be checked. In ' . $file_scope . ' for element "' . str_replace(XMLParser::TMP_OPT_TAG_MARKER, '?', $root->getName()) . '"');
@@ -38,11 +38,16 @@ class IfFragment extends \hcdk\data\xml\Fragment\condition {
                     throw new \XMLParseException(self::FQN . ' - Value cannot be empty. In ' . $file_scope . ' for element "' . str_replace(XMLParser::TMP_OPT_TAG_MARKER, '?', $root->getName()) . '"');
                 }
                 $value = PlaceholderParser::parse($value, false);
-                $output = 'if(' . $value . ' ' . $condition[0];
-                if (!is_numeric($condition[1])) {
-                    $output.= ' "' . $condition[1] . '"';
+                if ($condition[0] == '(bool)' && ($condition[1] == 'true' || $condition[1] == 'false')) // cast -> treat attribute value as this type
+                {
+                    $output = 'if(' . $value . ' === ' . $condition[1];
                 } else {
-                    $output.= ' ' . $condition[1];
+                    $output = 'if(' . $value . ' ' . $condition[0];
+                    if (!is_numeric($condition[1])) {
+                        $output.= ' "' . $condition[1] . '"';
+                    } else {
+                        $output.= ' ' . $condition[1];
+                    }
                 }
             }
             $output.= ') { ' . self::buildBody($root, $file_scope) . ' }';

@@ -18,7 +18,7 @@ trait Controller
 		$root_name = $root->getName();
 
 		$value = (isset($root['value'])) ? (string)$root['value'] : null;
-		$condition = self::getConditionAttribute($root);
+		$condition = self::getConditionAttribute($root, $file_scope);
 
 		if (strpos($condition[0], '#') !== false)
 		{
@@ -38,15 +38,22 @@ trait Controller
 
 			$value = PlaceholderParser::parse($value, false);
 
-			$output = 'if('.$value.' '.$condition[0];
-			
-			if(!is_numeric($condition[1]))
+			if ($condition[0] == '(bool)' && ($condition[1] == 'true' || $condition[1] == 'false')) // cast -> treat attribute value as this type
 			{
-				$output .= ' "'.$condition[1].'"';
+				$output = 'if('.$value.' === '.$condition[1];
 			}
-			else
+			else 
 			{
-				$output .= ' '.$condition[1];
+				$output = 'if('.$value.' '.$condition[0];
+
+				if (!is_numeric($condition[1]))
+				{
+					$output .= ' "'.$condition[1].'"';
+				}
+				else
+				{
+					$output .= ' '.$condition[1];
+				}
 			}
 		}
 

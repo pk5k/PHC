@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.controller - BUILD 22.02.15#206
+<?php #HYPERCELL hcdk.assembly.controller - BUILD 22.02.18#208
 namespace hcdk\assembly;
 abstract class controller extends \hcdk\assembly {
     use \hcf\core\dryver\Base, controller\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -6,8 +6,8 @@ abstract class controller extends \hcdk\assembly {
     const NAME = 'controller';
     public function __construct() {
         call_user_func_array('parent::__construct', func_get_args());
-        if (method_exists($this, 'hcdkassemblycontroller_onConstruct')) {
-            call_user_func_array([$this, 'hcdkassemblycontroller_onConstruct'], func_get_args());
+        if (method_exists($this, 'hcdkassemblycontroller_onConstruct_Controller')) {
+            call_user_func_array([$this, 'hcdkassemblycontroller_onConstruct_Controller'], func_get_args());
         }
     }
     }

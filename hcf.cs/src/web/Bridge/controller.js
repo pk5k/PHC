@@ -1,4 +1,4 @@
-document.Bridge = function (to)
+function (to)
 {
 	var self = this;
 	var _internal_route = '?!=-bridge';
@@ -297,6 +297,7 @@ document.Bridge = function (to)
 			var timeout = p_obj.onTimeout || false;
 			var upload	= p_obj.onUpload || false;
 			var download = p_obj.onDownload || false;
+			var progress = p_obj.onProgress || false;
 			var before	= p_obj.onBefore || false;
 
 			if (success)
@@ -331,6 +332,16 @@ document.Bridge = function (to)
 				if (for_worker)
 				{
 					throw 'WebWorker requests can\'t use the download-callback';
+				}
+			}
+			
+			if (progress)
+			{
+				callbacks.progress = progress;
+
+				if (for_worker)
+				{
+					throw 'WebWorker requests can\'t use the progress-callback';
 				}
 			}
 
@@ -506,6 +517,14 @@ document.Bridge = function (to)
 			{
 				callbacks.upload(e, http_request);
 			}
+		}
+
+		if (callbacks.progress) //if an progress-callback was given, add it to the xhr
+		{
+			http_request.addEventListener('progress', function(e)
+			{
+				callbacks.progress(e, http_request);
+			});
 		}
 
 		var evalClosure = null;

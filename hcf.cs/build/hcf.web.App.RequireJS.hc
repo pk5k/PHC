@@ -1,12 +1,12 @@
-<?php #HYPERCELL hcf.web.App.RequireJS - BUILD 22.02.15#122
+<?php #HYPERCELL hcf.web.App.RequireJS - BUILD 22.02.15#123
 namespace hcf\web\App;
 class RequireJS {
     use \hcf\core\dryver\Constant, \hcf\core\dryver\Controller, \hcf\core\dryver\Controller\Js, RequireJS\__EO__\Controller, \hcf\core\dryver\View, \hcf\core\dryver\Internal;
     const FQN = 'hcf.web.App.RequireJS';
     const NAME = 'RequireJS';
     public function __construct() {
-        if (method_exists($this, 'hcfwebAppRequireJS_onConstruct')) {
-            call_user_func_array([$this, 'hcfwebAppRequireJS_onConstruct'], func_get_args());
+        if (method_exists($this, 'hcfwebAppRequireJS_onConstruct_Controller')) {
+            call_user_func_array([$this, 'hcfwebAppRequireJS_onConstruct_Controller'], func_get_args());
         }
     }
     # BEGIN ASSEMBLY FRAME CONSTANT

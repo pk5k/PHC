@@ -1,12 +1,12 @@
-<?php #HYPERCELL hcdk.data.xml.Fragment.condition.SwitchFragment - BUILD 22.02.15#78
+<?php #HYPERCELL hcdk.data.xml.Fragment.condition.SwitchFragment - BUILD 22.02.18#80
 namespace hcdk\data\xml\Fragment\condition;
 class SwitchFragment extends \hcdk\data\xml\Fragment\condition {
     use \hcf\core\dryver\Base, SwitchFragment\__EO__\Controller, \hcf\core\dryver\Internal;
     const FQN = 'hcdk.data.xml.Fragment.condition.SwitchFragment';
     const NAME = 'SwitchFragment';
     public function __construct() {
-        if (method_exists($this, 'hcdkdataxmlFragmentconditionSwitchFragment_onConstruct')) {
-            call_user_func_array([$this, 'hcdkdataxmlFragmentconditionSwitchFragment_onConstruct'], func_get_args());
+        if (method_exists($this, 'hcdkdataxmlFragmentconditionSwitchFragment_onConstruct_Controller')) {
+            call_user_func_array([$this, 'hcdkdataxmlFragmentconditionSwitchFragment_onConstruct_Controller'], func_get_args());
         }
     }
     }

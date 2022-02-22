@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.model - BUILD 22.02.15#207
+<?php #HYPERCELL hcdk.assembly.model - BUILD 22.02.18#209
 namespace hcdk\assembly;
 abstract class model extends \hcdk\assembly {
     use \hcf\core\dryver\Base, model\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -6,8 +6,8 @@ abstract class model extends \hcdk\assembly {
     const NAME = 'model';
     public function __construct() {
         call_user_func_array('parent::__construct', func_get_args());
-        if (method_exists($this, 'hcdkassemblymodel_onConstruct')) {
-            call_user_func_array([$this, 'hcdkassemblymodel_onConstruct'], func_get_args());
+        if (method_exists($this, 'hcdkassemblymodel_onConstruct_Controller')) {
+            call_user_func_array([$this, 'hcdkassemblymodel_onConstruct_Controller'], func_get_args());
         }
     }
     }

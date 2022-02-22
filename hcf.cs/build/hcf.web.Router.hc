@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.web.Router - BUILD 22.02.15#59
+<?php #HYPERCELL hcf.web.Router - BUILD 22.02.22#67
 namespace hcf\web;
 class Router {
     use \hcf\core\dryver\Config, Router\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -8,8 +8,8 @@ class Router {
         if (!isset(self::$config)) {
             self::loadConfig();
         }
-        if (method_exists($this, 'hcfwebRouter_onConstruct')) {
-            call_user_func_array([$this, 'hcfwebRouter_onConstruct'], func_get_args());
+        if (method_exists($this, 'hcfwebRouter_onConstruct_Controller')) {
+            call_user_func_array([$this, 'hcfwebRouter_onConstruct_Controller'], func_get_args());
         }
     }
     # BEGIN ASSEMBLY FRAME CONFIG.INI
@@ -26,6 +26,7 @@ class Router {
     use \hcf\core\Utils as Utils;
     use \hcf\core\log\Internal as IL;
     use \hcf\core\remote\Invoker as RI;
+    use \hcf\web\Page;
     trait Controller {
         public static function route() {
             $arg = self::config()->arg;
@@ -45,7 +46,24 @@ class Router {
             }
             return self::routeBySection($route_section);
         }
-        private static function routeBySection($route_section) {
+        public static function routeSectionTarget($route_section, $get_chosen_route = false) {
+            $config = self::config();
+            if (!isset($config->$route_section)) {
+                return null;
+            }
+            $req_method = strtolower($_SERVER['REQUEST_METHOD']);
+            $output_hc = null;
+            if (isset($config->$route_section->output)) {
+                $output_hc = $config->$route_section->output;
+            } else if (isset($config->$route_section->$req_method)) {
+                $output_hc = $config->$route_section->$req_method->output;
+            } else {
+                IL::log()->error(self::FQN . ' - route-section "' . $route_section . '" doesn\'t have an output nor ' . $req_method . '.output configuration - error 404 will be send');
+                return self::renderError(404);
+            }
+            return self::resolveTarget($output_hc, $route_section, $get_chosen_route);
+        }
+        public static function routeBySection($route_section, $return_instance = false) {
             $config = self::config();
             if (!isset($config->$route_section)) {
                 IL::log()->error(self::FQN . ' - route-section "' . $route_section . '" doesn\'t exist - error 404 will be send');
@@ -61,12 +79,12 @@ class Router {
                 IL::log()->error(self::FQN . ' - route-section "' . $route_section . '" doesn\'t have an output nor ' . $req_method . '.output configuration - error 404 will be send');
                 return self::renderError(404);
             }
-            return self::getOutput($output_hc, $route_section);
+            return self::getOutput($output_hc, $route_section, $return_instance);
         }
         private static function constructorArgs() {
             return [$_GET];
         }
-        private static function catchException(\Exception$e, $output_hc, $route_section) {
+        private static function catchException(\Exception$e, $output_hc, $route_section, $target_only = false, $target_only_with_route = false) {
             $config = self::config();
             $new_route_section = false;
             $type = get_class($e);
@@ -103,19 +121,46 @@ class Router {
                 }
             } else {
                 IL::log()->info(self::FQN . ' - hypercell ' . $output_hc . ' failed during execution of route-section ' . $route_section . ' - redirecting to route-section ' . $new_route_section);
-                return self::routeBySection($new_route_section);
+                if ($target_only) {
+                    return self::routeSectionTarget($new_route_section, $target_only_with_route);
+                } else {
+                    return self::routeBySection($new_route_section);
+                }
             }
         }
-        private static function getOutput($output_hc, $route_section) {
+        private static function getOutput($output_hc, $route_section, $return_instance = false) {
             $config = self::config();
             try {
+                $class = Utils::HCFQN2PHPFQN($output_hc);
+                if (is_subclass_of($class, Page::class)) {
+                    $class::checkPermissions();
+                }
                 RI::implicitConstructor(true);
                 $ri = new RI($output_hc, self::constructorArgs());
-                $output = $ri->invoke('toString');
-                return $output;
+                if ($return_instance) {
+                    return $ri->getInstance();
+                }
+                return $ri->invoke('toString');
             }
             catch(\Exception$e) {
                 return self::catchException($e, $output_hc, $route_section);
+            }
+        }
+        private static function resolveTarget($output_hc, $route_section, $get_chosen_route = false) {
+            $config = self::config();
+            try {
+                $class = Utils::HCFQN2PHPFQN($output_hc);
+                if (!is_subclass_of($class, Page::class)) {
+                    throw new \Exception(self::FQN . ' - target ' . $output_hc . ' is no hcf.web.Page instance, target cannot be resolved.');
+                }
+                $class::checkPermissions();
+                if ($get_chosen_route) {
+                    return [$class, $route_section];
+                }
+                return $class;
+            }
+            catch(\Exception$e) {
+                return self::catchException($e, $output_hc, $route_section, true, $get_chosen_route);
             }
         }
         private static function renderError($error_code) {
@@ -172,12 +217,17 @@ get.output = "hcf.web.Bridge.Worker"
 [-style]
 ; DON'T REMOVE THIS SECTION AND ADD IT TO YOUR ATTACHMENT IN CASE OF OVERRIDING IT
 ; THIS IS REQUIRED AS STYLE-LINK FOR hcf.web.Container
-get.output = "hcf.web.Container.Autoloader.provider.Style"; this will be used as fake-file: <style link="?!-style" type="text/css"/>
+get.output = "hcf.web.Container.provider.Style"; this will be used as fake-file: <style link="?!-style" type="text/css"/>
 
 [-script]
 ; DON'T REMOVE THIS SECTION AND ADD IT TO YOUR ATTACHMENT IN CASE OF OVERRIDING IT
 ; THIS IS REQUIRED AS SCRIPT-SOURCE FOR hcf.web.Container
-get.output = "hcf.web.Container.Autoloader.provider.Script"; this will be used as fake-file: <script src="?!-script" language="javascript"/>
+get.output = "hcf.web.Container.provider.Script"; this will be used as fake-file: <script src="?!-script" language="javascript"/>
+
+[-template]
+; DON'T REMOVE THIS SECTION AND ADD IT TO YOUR ATTACHMENT IN CASE OF OVERRIDING IT
+; THIS IS REQUIRED AS TEMPLATE-SOURCE FOR hcf.web.Container
+get.output = "hcf.web.Container.provider.Template"; this will be used as fake-file: <script src="?!-template&component=my.web.Component" language="javascript"/> to inject the template HTML to the DOM
 
 [-require]
 ; DON'T REMOVE THIS SECTION AND ADD IT TO YOUR ATTACHMENT IN CASE OF OVERRIDING IT

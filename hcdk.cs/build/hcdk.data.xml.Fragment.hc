@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.data.xml.Fragment - BUILD 22.02.15#68
+<?php #HYPERCELL hcdk.data.xml.Fragment - BUILD 22.02.18#70
 namespace hcdk\data\xml;
 class Fragment {
     use \hcf\core\dryver\Config, Fragment\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -8,8 +8,8 @@ class Fragment {
         if (!isset(self::$config)) {
             self::loadConfig();
         }
-        if (method_exists($this, 'hcdkdataxmlFragment_onConstruct')) {
-            call_user_func_array([$this, 'hcdkdataxmlFragment_onConstruct'], func_get_args());
+        if (method_exists($this, 'hcdkdataxmlFragment_onConstruct_Controller')) {
+            call_user_func_array([$this, 'hcdkdataxmlFragment_onConstruct_Controller'], func_get_args());
         }
     }
     # BEGIN ASSEMBLY FRAME CONFIG.INI

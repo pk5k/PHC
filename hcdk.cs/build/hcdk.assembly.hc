@@ -1,12 +1,12 @@
-<?php #HYPERCELL hcdk.assembly - BUILD 22.02.15#244
+<?php #HYPERCELL hcdk.assembly - BUILD 22.02.18#246
 namespace hcdk;
 abstract class assembly {
     use assembly\__EO__\Controller, \hcf\core\dryver\View, \hcf\core\dryver\Internal;
     const FQN = 'hcdk.assembly';
     const NAME = 'assembly';
     public function __construct() {
-        if (method_exists($this, 'hcdkassembly_onConstruct')) {
-            call_user_func_array([$this, 'hcdkassembly_onConstruct'], func_get_args());
+        if (method_exists($this, 'hcdkassembly_onConstruct_Controller')) {
+            call_user_func_array([$this, 'hcdkassembly_onConstruct_Controller'], func_get_args());
         }
     }
     # BEGIN ASSEMBLY FRAME VIEW.RAW
@@ -35,7 +35,7 @@ abstract class assembly {
          * @param $raw_input - string - the raw data out of the source file
          * @param $for_file - string - the filepath to the source, the $raw_input belongs to
          */
-        public function hcdkassembly_onConstruct($raw_input, $for_file, Hypercell $for_hc) {
+        public function hcdkassembly_onConstruct_Controller($raw_input, $for_file, Hypercell $for_hc) {
             $this->for_file = $for_file;
             $this->forHypercell($for_hc);
             if (strlen(trim($raw_input))) {

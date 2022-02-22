@@ -1,12 +1,12 @@
-<?php #HYPERCELL hcdk.data.xml.Fragment.dummy.TextFragment - BUILD 22.02.15#77
+<?php #HYPERCELL hcdk.data.xml.Fragment.dummy.TextFragment - BUILD 22.02.18#79
 namespace hcdk\data\xml\Fragment\dummy;
 class TextFragment extends \hcdk\data\xml\Fragment {
     use \hcf\core\dryver\Base, TextFragment\__EO__\Controller, \hcf\core\dryver\Internal;
     const FQN = 'hcdk.data.xml.Fragment.dummy.TextFragment';
     const NAME = 'TextFragment';
     public function __construct() {
-        if (method_exists($this, 'hcdkdataxmlFragmentdummyTextFragment_onConstruct')) {
-            call_user_func_array([$this, 'hcdkdataxmlFragmentdummyTextFragment_onConstruct'], func_get_args());
+        if (method_exists($this, 'hcdkdataxmlFragmentdummyTextFragment_onConstruct_Controller')) {
+            call_user_func_array([$this, 'hcdkdataxmlFragmentdummyTextFragment_onConstruct_Controller'], func_get_args());
         }
     }
     }

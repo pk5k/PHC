@@ -74,7 +74,7 @@ namespace hcf\core\dryver
 
 		public function __toString()
 		{
-			return '';
+			return is_callable(['parent', '__toString']) ? parent::__toString() : '';// if no own __toString template method was defined use parents template if set, otherwise empty string.
 		}
 	}
 }

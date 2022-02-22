@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.core.Utils - BUILD 22.02.15#180
+<?php #HYPERCELL hcf.core.Utils - BUILD 22.02.15#181
 namespace hcf\core;
 class Utils {
     use \hcf\core\dryver\Config, Utils\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -8,8 +8,8 @@ class Utils {
         if (!isset(self::$config)) {
             self::loadConfig();
         }
-        if (method_exists($this, 'hcfcoreUtils_onConstruct')) {
-            call_user_func_array([$this, 'hcfcoreUtils_onConstruct'], func_get_args());
+        if (method_exists($this, 'hcfcoreUtils_onConstruct_Controller')) {
+            call_user_func_array([$this, 'hcfcoreUtils_onConstruct_Controller'], func_get_args());
         }
     }
     # BEGIN ASSEMBLY FRAME CONFIG.INI

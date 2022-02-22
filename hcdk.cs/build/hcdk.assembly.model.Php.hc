@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.model.Php - BUILD 22.02.15#315
+<?php #HYPERCELL hcdk.assembly.model.Php - BUILD 22.02.18#317
 namespace hcdk\assembly\model;
 class Php extends \hcdk\assembly\model {
     use \hcf\core\dryver\Base, \hcf\core\dryver\Constant, Php\__EO__\Controller, \hcf\core\dryver\View, \hcf\core\dryver\Internal;
@@ -6,8 +6,8 @@ class Php extends \hcdk\assembly\model {
     const NAME = 'Php';
     public function __construct() {
         call_user_func_array('parent::__construct', func_get_args());
-        if (method_exists($this, 'hcdkassemblymodelPhp_onConstruct')) {
-            call_user_func_array([$this, 'hcdkassemblymodelPhp_onConstruct'], func_get_args());
+        if (method_exists($this, 'hcdkassemblymodelPhp_onConstruct_Controller')) {
+            call_user_func_array([$this, 'hcdkassemblymodelPhp_onConstruct_Controller'], func_get_args());
         }
     }
     # BEGIN ASSEMBLY FRAME CONSTANT
@@ -64,7 +64,7 @@ trait Model
             return trim($this->defaultInputTemplate());
         }
         private function namedConstructor() {
-            return str_replace('.', '', $this->forHypercell()->getName()->long) . '_' . self::CONSTRUCTOR;
+            return str_replace('.', '', $this->forHypercell()->getName()->long) . '_' . self::CONSTRUCTOR . '_Model';
         }
         public function checkInput() {
             // override constructor to absolute name (base-implicit and constructor-delegation need this to work)
@@ -77,7 +77,7 @@ trait Model
             if (preg_match('/(?:[TtRrAaIiTtSs]*)\s*[M|m]odel/', $raw_input) === false) {
                 throw new \Exception(self::FQN . ' - unable to find trait "Model" inside ' . $this->fileInfo()->getPathInfo());
             }
-            // rawInput must NOT contain a __construct method -> use hcdkassemblymodelPhp_onConstruct instead
+            // rawInput must NOT contain a __construct method -> use hcdkassemblymodelPhp_onConstruct_Controller instead
             if (preg_match('/(?:\s+__construct\s*\(.*\))/i', $raw_input) !== 0) {
                 throw new \Exception(self::FQN . ' - don\'t use __construct inside model.php assemblies - use ' . self::CONSTRUCTOR . ' instead - in ' . $this->fileInfo()->getPathInfo());
             }
@@ -99,7 +99,8 @@ trait Model
             
         }
         protected function getConstructorContents() {
-            return [3 => $this->constructorDelegation($this->namedConstructor()) ];
+            return [3 => $this->constructorDelegation($this->namedConstructor()) ]; // use same index as controller.php's constructor to throw an exception if two assemblies want to add an php-constructor
+            
         }
     }
     # END EXECUTABLE FRAME OF CONTROLLER.PHP

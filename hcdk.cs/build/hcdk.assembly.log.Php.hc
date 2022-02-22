@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.log.Php - BUILD 22.02.15#193
+<?php #HYPERCELL hcdk.assembly.log.Php - BUILD 22.02.18#195
 namespace hcdk\assembly\log;
 class Php extends \hcdk\assembly\log {
     use \hcf\core\dryver\Base, Php\__EO__\Controller, \hcf\core\dryver\View, \hcf\core\dryver\Internal;
@@ -6,8 +6,8 @@ class Php extends \hcdk\assembly\log {
     const NAME = 'Php';
     public function __construct() {
         call_user_func_array('parent::__construct', func_get_args());
-        if (method_exists($this, 'hcdkassemblylogPhp_onConstruct')) {
-            call_user_func_array([$this, 'hcdkassemblylogPhp_onConstruct'], func_get_args());
+        if (method_exists($this, 'hcdkassemblylogPhp_onConstruct_Controller')) {
+            call_user_func_array([$this, 'hcdkassemblylogPhp_onConstruct_Controller'], func_get_args());
         }
     }
     # BEGIN ASSEMBLY FRAME VIEW.TEXT

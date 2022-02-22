@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.config - BUILD 22.02.15#204
+<?php #HYPERCELL hcdk.assembly.config - BUILD 22.02.18#206
 namespace hcdk\assembly;
 abstract class config extends \hcdk\assembly {
     use \hcf\core\dryver\Base, config\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -6,8 +6,8 @@ abstract class config extends \hcdk\assembly {
     const NAME = 'config';
     public function __construct() {
         call_user_func_array('parent::__construct', func_get_args());
-        if (method_exists($this, 'hcdkassemblyconfig_onConstruct')) {
-            call_user_func_array([$this, 'hcdkassemblyconfig_onConstruct'], func_get_args());
+        if (method_exists($this, 'hcdkassemblyconfig_onConstruct_Controller')) {
+            call_user_func_array([$this, 'hcdkassemblyconfig_onConstruct_Controller'], func_get_args());
         }
     }
     }

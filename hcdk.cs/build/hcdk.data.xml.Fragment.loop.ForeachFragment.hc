@@ -1,12 +1,12 @@
-<?php #HYPERCELL hcdk.data.xml.Fragment.loop.ForeachFragment - BUILD 22.02.15#79
+<?php #HYPERCELL hcdk.data.xml.Fragment.loop.ForeachFragment - BUILD 22.02.18#81
 namespace hcdk\data\xml\Fragment\loop;
 class ForeachFragment extends \hcdk\data\xml\Fragment {
     use \hcf\core\dryver\Base, ForeachFragment\__EO__\Controller, \hcf\core\dryver\Internal;
     const FQN = 'hcdk.data.xml.Fragment.loop.ForeachFragment';
     const NAME = 'ForeachFragment';
     public function __construct() {
-        if (method_exists($this, 'hcdkdataxmlFragmentloopForeachFragment_onConstruct')) {
-            call_user_func_array([$this, 'hcdkdataxmlFragmentloopForeachFragment_onConstruct'], func_get_args());
+        if (method_exists($this, 'hcdkdataxmlFragmentloopForeachFragment_onConstruct_Controller')) {
+            call_user_func_array([$this, 'hcdkdataxmlFragmentloopForeachFragment_onConstruct_Controller'], func_get_args());
         }
     }
     }

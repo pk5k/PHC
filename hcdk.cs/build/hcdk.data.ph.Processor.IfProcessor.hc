@@ -1,12 +1,12 @@
-<?php #HYPERCELL hcdk.data.ph.Processor.IfProcessor - BUILD 22.02.15#114
+<?php #HYPERCELL hcdk.data.ph.Processor.IfProcessor - BUILD 22.02.18#116
 namespace hcdk\data\ph\Processor;
 class IfProcessor extends \hcdk\data\ph\Processor {
     use \hcf\core\dryver\Base, IfProcessor\__EO__\Controller, \hcf\core\dryver\Internal;
     const FQN = 'hcdk.data.ph.Processor.IfProcessor';
     const NAME = 'IfProcessor';
     public function __construct() {
-        if (method_exists($this, 'hcdkdataphProcessorIfProcessor_onConstruct')) {
-            call_user_func_array([$this, 'hcdkdataphProcessorIfProcessor_onConstruct'], func_get_args());
+        if (method_exists($this, 'hcdkdataphProcessorIfProcessor_onConstruct_Controller')) {
+            call_user_func_array([$this, 'hcdkdataphProcessorIfProcessor_onConstruct_Controller'], func_get_args());
         }
     }
     }

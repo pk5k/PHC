@@ -1,12 +1,12 @@
-<?php #HYPERCELL hcdk.data.ph.Processor - BUILD 22.02.15#60
+<?php #HYPERCELL hcdk.data.ph.Processor - BUILD 22.02.18#62
 namespace hcdk\data\ph;
 class Processor {
     use Processor\__EO__\Controller, \hcf\core\dryver\Internal;
     const FQN = 'hcdk.data.ph.Processor';
     const NAME = 'Processor';
     public function __construct() {
-        if (method_exists($this, 'hcdkdataphProcessor_onConstruct')) {
-            call_user_func_array([$this, 'hcdkdataphProcessor_onConstruct'], func_get_args());
+        if (method_exists($this, 'hcdkdataphProcessor_onConstruct_Controller')) {
+            call_user_func_array([$this, 'hcdkdataphProcessor_onConstruct_Controller'], func_get_args());
         }
     }
     }

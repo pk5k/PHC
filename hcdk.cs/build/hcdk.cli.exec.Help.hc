@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.cli.exec.Help - BUILD 22.02.15#77
+<?php #HYPERCELL hcdk.cli.exec.Help - BUILD 22.02.18#79
 namespace hcdk\cli\exec;
 class Help extends \hcf\cli\exec {
     use \hcf\core\dryver\Base, Help\__EO__\Controller, \hcf\core\dryver\View, \hcf\core\dryver\Internal;
@@ -6,8 +6,8 @@ class Help extends \hcf\cli\exec {
     const NAME = 'Help';
     public function __construct() {
         call_user_func_array('parent::__construct', func_get_args());
-        if (method_exists($this, 'hcdkcliexecHelp_onConstruct')) {
-            call_user_func_array([$this, 'hcdkcliexecHelp_onConstruct'], func_get_args());
+        if (method_exists($this, 'hcdkcliexecHelp_onConstruct_Controller')) {
+            call_user_func_array([$this, 'hcdkcliexecHelp_onConstruct_Controller'], func_get_args());
         }
     }
     # BEGIN ASSEMBLY FRAME VIEW.TEXT

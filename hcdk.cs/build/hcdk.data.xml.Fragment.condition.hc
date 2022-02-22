@@ -1,12 +1,12 @@
-<?php #HYPERCELL hcdk.data.xml.Fragment.condition - BUILD 22.02.15#78
+<?php #HYPERCELL hcdk.data.xml.Fragment.condition - BUILD 22.02.18#82
 namespace hcdk\data\xml\Fragment;
 abstract class condition extends \hcdk\data\xml\Fragment {
     use \hcf\core\dryver\Base, condition\__EO__\Controller, \hcf\core\dryver\Internal;
     const FQN = 'hcdk.data.xml.Fragment.condition';
     const NAME = 'condition';
     public function __construct() {
-        if (method_exists($this, 'hcdkdataxmlFragmentcondition_onConstruct')) {
-            call_user_func_array([$this, 'hcdkdataxmlFragmentcondition_onConstruct'], func_get_args());
+        if (method_exists($this, 'hcdkdataxmlFragmentcondition_onConstruct_Controller')) {
+            call_user_func_array([$this, 'hcdkdataxmlFragmentcondition_onConstruct_Controller'], func_get_args());
         }
     }
     }
@@ -23,8 +23,8 @@ abstract class condition extends \hcdk\data\xml\Fragment {
      * @author Philipp Kopf
      */
     trait Controller {
-        protected static $possible_conditions = ['is-not-set' => '!isset(#)', 'is-set' => 'isset(#)', 'isset' => 'isset(#)', 'is' => '==', 'is-not' => '!=', 'gt' => '>', 'lt' => '<', 'gte' => '>=', 'lte' => '<=']; // key = attribute name to use this condition, value = the condition in php
-        public static function getConditionAttribute($root) {
+        protected static $possible_conditions = ['is-not-set' => '!isset(#)', 'is-set' => 'isset(#)', 'isset' => 'isset(#)', 'is' => '==', 'is-not' => '!=', 'gt' => '>', 'lt' => '<', 'gte' => '>=', 'lte' => '<=', 'is-bool' => '(bool)']; // key = attribute name to use this condition, value = the condition in php
+        public static function getConditionAttribute($root, $file_scope) {
             // return: [0 => 'attr_php_representation', 1 => 'attr_value']
             foreach ($root->attributes() as $attr_name => $value) {
                 if (isset(self::$possible_conditions[$attr_name])) {
@@ -36,7 +36,7 @@ abstract class condition extends \hcdk\data\xml\Fragment {
                     return [self::$possible_conditions[$attr_name], PlaceholderParser::parse($value, $between_double_quotes) ];
                 }
             }
-            throw new \XMLParseException(self::FQN . ' - No condition set');
+            throw new \XMLParseException(self::FQN . ' - No condition set in ' . $file_scope . ' for element "' . str_replace(XMLParser::TMP_OPT_TAG_MARKER, '?', $root->getName()) . '"');
         }
         public static function buildBody($root, $file_scope) {
             $body = '';

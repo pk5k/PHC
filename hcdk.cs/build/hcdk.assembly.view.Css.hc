@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.view.Css - BUILD 22.02.15#199
+<?php #HYPERCELL hcdk.assembly.view.Css - BUILD 22.02.18#201
 namespace hcdk\assembly\view;
 class Css extends \hcdk\assembly\view {
     use \hcf\core\dryver\Base, Css\__EO__\Controller, \hcf\core\dryver\View, \hcf\core\dryver\Internal;
@@ -6,8 +6,8 @@ class Css extends \hcdk\assembly\view {
     const NAME = 'Css';
     public function __construct() {
         call_user_func_array('parent::__construct', func_get_args());
-        if (method_exists($this, 'hcdkassemblyviewCss_onConstruct')) {
-            call_user_func_array([$this, 'hcdkassemblyviewCss_onConstruct'], func_get_args());
+        if (method_exists($this, 'hcdkassemblyviewCss_onConstruct_Controller')) {
+            call_user_func_array([$this, 'hcdkassemblyviewCss_onConstruct_Controller'], func_get_args());
         }
     }
     # BEGIN ASSEMBLY FRAME VIEW.TEXT

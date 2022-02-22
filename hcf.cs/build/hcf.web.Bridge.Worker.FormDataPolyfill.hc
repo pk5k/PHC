@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.web.Bridge.Worker.FormDataPolyfill - BUILD 22.02.15#13
+<?php #HYPERCELL hcf.web.Bridge.Worker.FormDataPolyfill - BUILD 22.02.15#14
 namespace hcf\web\Bridge\Worker;
 class FormDataPolyfill {
     use \hcf\core\dryver\Controller, \hcf\core\dryver\Controller\Js, \hcf\core\dryver\Internal;

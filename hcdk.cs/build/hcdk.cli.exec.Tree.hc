@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.cli.exec.Tree - BUILD 22.02.15#88
+<?php #HYPERCELL hcdk.cli.exec.Tree - BUILD 22.02.18#90
 namespace hcdk\cli\exec;
 class Tree extends \hcf\cli\exec {
     use \hcf\core\dryver\Base, Tree\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -6,8 +6,8 @@ class Tree extends \hcf\cli\exec {
     const NAME = 'Tree';
     public function __construct() {
         call_user_func_array('parent::__construct', func_get_args());
-        if (method_exists($this, 'hcdkcliexecTree_onConstruct')) {
-            call_user_func_array([$this, 'hcdkcliexecTree_onConstruct'], func_get_args());
+        if (method_exists($this, 'hcdkcliexecTree_onConstruct_Controller')) {
+            call_user_func_array([$this, 'hcdkcliexecTree_onConstruct_Controller'], func_get_args());
         }
     }
     }

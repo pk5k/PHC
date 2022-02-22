@@ -37,7 +37,7 @@ trait Controller
 
 	private function namedConstructor()
 	{
-		return str_replace('.', '', $this->forHypercell()->getName()->long).'_'.self::CONSTRUCTOR;
+		return str_replace('.', '', $this->forHypercell()->getName()->long).'_'.self::CONSTRUCTOR.'_Model';
 	}
 
 	public function checkInput()
@@ -87,7 +87,7 @@ trait Controller
 
 	protected function getConstructorContents()
 	{
-		return [3 => $this->constructorDelegation($this->namedConstructor())];
+		return [3 => $this->constructorDelegation($this->namedConstructor())];// use same index as controller.php's constructor to throw an exception if two assemblies want to add an php-constructor
 	}
 }
 ?>

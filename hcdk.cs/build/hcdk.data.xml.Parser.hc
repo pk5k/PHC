@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.data.xml.Parser - BUILD 22.02.15#94
+<?php #HYPERCELL hcdk.data.xml.Parser - BUILD 22.02.18#96
 namespace hcdk\data\xml;
 class Parser {
     use \hcf\core\dryver\Config, \hcf\core\dryver\Constant, Parser\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -8,8 +8,8 @@ class Parser {
         if (!isset(self::$config)) {
             self::loadConfig();
         }
-        if (method_exists($this, 'hcdkdataxmlParser_onConstruct')) {
-            call_user_func_array([$this, 'hcdkdataxmlParser_onConstruct'], func_get_args());
+        if (method_exists($this, 'hcdkdataxmlParser_onConstruct_Controller')) {
+            call_user_func_array([$this, 'hcdkdataxmlParser_onConstruct_Controller'], func_get_args());
         }
     }
     # BEGIN ASSEMBLY FRAME CONFIG.INI

@@ -12,9 +12,10 @@ use \hcdk\data\ph\Parser as PlaceholderParser;
 	 */
 trait Controller
 {
-	protected static $possible_conditions = ['is-not-set' => '!isset(#)', 'is-set' => 'isset(#)' , 'isset' => 'isset(#)', 'is' => '==', 'is-not' => '!=', 'gt' => '>', 'lt' => '<', 'gte' => '>=', 'lte' => '<='];// key = attribute name to use this condition, value = the condition in php
+	protected static $possible_conditions = ['is-not-set' => '!isset(#)', 'is-set' => 'isset(#)' , 'isset' => 'isset(#)', 'is' => '==', 'is-not' => '!=', 'gt' => '>', 'lt' => '<', 'gte' => '>=', 'lte' => '<=', 
+    'is-bool' => '(bool)'];// key = attribute name to use this condition, value = the condition in php
 
-  public static function getConditionAttribute($root)
+  public static function getConditionAttribute($root, $file_scope)
   {
     // return: [0 => 'attr_php_representation', 1 => 'attr_value']
     foreach($root->attributes() as $attr_name => $value)
@@ -32,7 +33,7 @@ trait Controller
       } 
     }
 
-    throw new \XMLParseException(self::FQN.' - No condition set');
+    throw new \XMLParseException(self::FQN.' - No condition set in '.$file_scope.' for element "'.str_replace(XMLParser::TMP_OPT_TAG_MARKER, '?', $root->getName()).'"');
   }
 
   public static function buildBody($root, $file_scope)

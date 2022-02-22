@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.data.php.ClassParser - BUILD 22.02.15#183
+<?php #HYPERCELL hcdk.data.php.ClassParser - BUILD 22.02.18#185
 namespace hcdk\data\php;
 class ClassParser {
     use \hcf\core\dryver\Config, ClassParser\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -8,8 +8,8 @@ class ClassParser {
         if (!isset(self::$config)) {
             self::loadConfig();
         }
-        if (method_exists($this, 'hcdkdataphpClassParser_onConstruct')) {
-            call_user_func_array([$this, 'hcdkdataphpClassParser_onConstruct'], func_get_args());
+        if (method_exists($this, 'hcdkdataphpClassParser_onConstruct_Controller')) {
+            call_user_func_array([$this, 'hcdkdataphpClassParser_onConstruct_Controller'], func_get_args());
         }
     }
     # BEGIN ASSEMBLY FRAME CONFIG.INI
@@ -46,7 +46,7 @@ class ClassParser {
          *
          * @throws ClassParserException
          */
-        public function hcdkdataphpClassParser_onConstruct() {
+        public function hcdkdataphpClassParser_onConstruct_Controller() {
             if (!extension_loaded('tokenizer')) {
                 throw new \ClassParserException("Compile php with tokenizer extension. Use --enable-tokenizer or don't use --disable-all on configure.");
             }

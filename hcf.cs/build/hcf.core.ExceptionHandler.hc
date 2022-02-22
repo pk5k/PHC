@@ -1,12 +1,12 @@
-<?php #HYPERCELL hcf.core.ExceptionHandler - BUILD 22.02.15#146
+<?php #HYPERCELL hcf.core.ExceptionHandler - BUILD 22.02.15#147
 namespace hcf\core;
 class ExceptionHandler {
     use ExceptionHandler\__EO__\Controller, \hcf\core\dryver\Internal;
     const FQN = 'hcf.core.ExceptionHandler';
     const NAME = 'ExceptionHandler';
     public function __construct() {
-        if (method_exists($this, 'hcfcoreExceptionHandler_onConstruct')) {
-            call_user_func_array([$this, 'hcfcoreExceptionHandler_onConstruct'], func_get_args());
+        if (method_exists($this, 'hcfcoreExceptionHandler_onConstruct_Controller')) {
+            call_user_func_array([$this, 'hcfcoreExceptionHandler_onConstruct_Controller'], func_get_args());
         }
     }
     }

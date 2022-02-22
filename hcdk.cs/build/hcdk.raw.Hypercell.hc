@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.raw.Hypercell - BUILD 22.02.15#331
+<?php #HYPERCELL hcdk.raw.Hypercell - BUILD 22.02.18#333
 namespace hcdk\raw;
 class Hypercell {
     use \hcf\core\dryver\Config, Hypercell\__EO__\Controller, \hcf\core\dryver\View, \hcf\core\dryver\Internal;
@@ -8,8 +8,8 @@ class Hypercell {
         if (!isset(self::$config)) {
             self::loadConfig();
         }
-        if (method_exists($this, 'hcdkrawHypercell_onConstruct')) {
-            call_user_func_array([$this, 'hcdkrawHypercell_onConstruct'], func_get_args());
+        if (method_exists($this, 'hcdkrawHypercell_onConstruct_Controller')) {
+            call_user_func_array([$this, 'hcdkrawHypercell_onConstruct_Controller'], func_get_args());
         }
     }
     # BEGIN ASSEMBLY FRAME CONFIG.INI
@@ -91,7 +91,7 @@ __halt_compiler();#__COMPILER_HALT_OFFSET__
         private $buildable = false;
         private $executable = false;
         private $abstract = false;
-        public function hcdkrawHypercell_onConstruct($cellspace, $offset) {
+        public function hcdkrawHypercell_onConstruct_Controller($cellspace, $offset) {
             $this->init($cellspace, $offset);
         }
         public function getAssemblies() {

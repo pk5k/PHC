@@ -12,11 +12,13 @@ namespace hcf\core\dryver
     private static $_attachment_cache = [];
 
     // To decide, if placeholder-processors like "method" or "property" have to access static or non-static values.
-  	// These placeholder will be translated to executable fragments of php-script, which will use this methods on execution of the specific assembly-methods
-		private static function _constant($name, $__CLASS__, $_this)
-  	{
-  		return constant($__CLASS__.'::'.$name);
-  	}
+    // These placeholder will be translated to executable fragments of php-script, which will use this methods on execution of the specific assembly-methods
+    private static function _constant($name, $__CLASS__, $_this)
+    {
+      $cc = get_called_class();
+      
+      return constant($cc.'::'.$name);
+    }
 
     private static function _dict($key, $args)
     {
@@ -24,11 +26,11 @@ namespace hcf\core\dryver
       return call_user_func_array([$key, 'apply'], $args);
     }
 
-		private static function _call($name, $__CLASS__, $_this, $mirror_map = null)
-  	{
+    private static function _call($name, $__CLASS__, $_this, $mirror_map = null)
+    {
       $pass_args = [];
-  		$args = func_get_args();
-  		array_shift($args);// remove $name
+      $args = func_get_args();
+      array_shift($args);// remove $name
       array_shift($args);// remove $__CLASS__
       array_shift($args);// remove $_this
 
@@ -40,30 +42,30 @@ namespace hcf\core\dryver
         $pass_args = $mirror_map;
       }
 
-  		$method = new \ReflectionMethod($__CLASS__, $name);
+      $method = new \ReflectionMethod(is_null($_this) ? get_called_class() : $_this, $name);
 
       // TODO: remove
-  		if (!$method->isPublic())
-  		{
-  			$method->setAccessible(true);
-  		}
+      if (!$method->isPublic())
+      {
+        $method->setAccessible(true);
+      }
 
-  		if (count($args) > 0) // _call was called with additional arguments at the end -> prefer this due compatibility reasons
-  		{
-  			return $method->invokeArgs($_this, $args);
-  		}
-  		else if (count($pass_args) > 0) // if arguments should be passed do this
+      if (count($args) > 0) // _call was called with additional arguments at the end -> prefer this due compatibility reasons
+      {
+        return $method->invokeArgs($_this, $args);
+      }
+      else if (count($pass_args) > 0) // if arguments should be passed do this
       {
         return $method->invokeArgs($_this, $pass_args);
       }
       else // or just call the method
-  		{
-  			return $method->invoke($_this);
-  		}
-  	}
+      {
+        return $method->invoke($_this);
+      }
+    }
 
-		private static function _property($name, $__CLASS__, $_this)
-  	{
+    private static function _property($name, $__CLASS__, $_this)
+    {
       // access nested properties inside objects by typing {{property:my_prop_obj.key1.level2}}
       $prop_val = null;
       $obj_access = false;
@@ -76,17 +78,17 @@ namespace hcf\core\dryver
         $obj_access = true;
       }
 
-  		$prop = new \ReflectionProperty($__CLASS__, $name);
+      $prop = new \ReflectionProperty(is_null($_this) ? get_called_class() : $_this, $name);
 
-  		if (!$prop->isPublic())
-  		{
-  			$prop->setAccessible(true);
-  		}
+      if (!$prop->isPublic())
+      {
+        $prop->setAccessible(true);
+      }
 
-  		if ($prop->isStatic())
-  		{
-  			$prop_val = static::${$name};
-  		}
+      if ($prop->isStatic())
+      {
+        $prop_val = static::${$name};
+      }
       else
       {
         $prop_val = $_this->$name;
@@ -106,26 +108,26 @@ namespace hcf\core\dryver
       }
 
       return $prop_val;
-  	}
+    }
 
-		private static function _arg($args, $arg_no, $__CLASS__, $_this)
-		{
-			if (!is_array($args))
-			{
-				throw new \Exception('Invalid argument-array passed');
-			}
-			else if (!isset($args[$arg_no]))
-			{
-				throw new \Exception('Argument '.$arg_no.' not found');
-			}
+    private static function _arg($args, $arg_no, $__CLASS__, $_this)
+    {
+      if (!is_array($args))
+      {
+        throw new \Exception('Invalid argument-array passed');
+      }
+      else if (!isset($args[$arg_no]))
+      {
+        throw new \Exception('Argument '.$arg_no.' not found');
+      }
 
-			return $args[$arg_no];
-		}
+      return $args[$arg_no];
+    }
 
-		private static function _attachment($__FILE__, $__COMPILER_HALT_OFFSET__, $assembly, $type)
-		{
-			$assembly = strtolower($assembly);
-			$type = strtolower($type);
+    private static function _attachment($__FILE__, $__COMPILER_HALT_OFFSET__, $assembly, $type)
+    {
+      $assembly = strtolower($assembly);
+      $type = strtolower($type);
       $cache_target = $assembly.'.'.$type;
 
       if (isset(self::$_attachment_cache[$cache_target]))
@@ -133,57 +135,57 @@ namespace hcf\core\dryver
         return self::$_attachment_cache[$cache_target]; 
       }
 
-			if (defined('HCF_ATT_OVERRIDE'))
-			{
-				$path = HCF_ATT_OVERRIDE.self::FQN.'@'.$assembly.'.'.$type;//explicit use our own FQN
+      if (defined('HCF_ATT_OVERRIDE'))
+      {
+        $path = HCF_ATT_OVERRIDE.self::FQN.'@'.$assembly.'.'.$type;//explicit use our own FQN
 
-				if (file_exists($path))
-				{
+        if (file_exists($path))
+        {
           $data = @file_get_contents($path);
           self::$_attachment_cache[$cache_target] = $data;
 
-					return $data;
-				}
-			}
+          return $data;
+        }
+      }
 
-			if (!is_numeric($__COMPILER_HALT_OFFSET__) || $__COMPILER_HALT_OFFSET__ == 0)
-			{
-				throw new \RuntimeException('Unable to read attachment "'.$assembly.'.'.$type.'" of hypercell '.self::FQN.' - __COMPILER_HALT_OFFSET__ is not defined, __halt_compiler(); was not called inside "'.$__FILE__.'"');
-			}
+      if (!is_numeric($__COMPILER_HALT_OFFSET__) || $__COMPILER_HALT_OFFSET__ == 0)
+      {
+        throw new \RuntimeException('Unable to read attachment "'.$assembly.'.'.$type.'" of hypercell '.self::FQN.' - __COMPILER_HALT_OFFSET__ is not defined, __halt_compiler(); was not called inside "'.$__FILE__.'"');
+      }
 
-			$fp = fopen($__FILE__, 'rb');
-			fseek($fp, $__COMPILER_HALT_OFFSET__);
+      $fp = fopen($__FILE__, 'rb');
+      fseek($fp, $__COMPILER_HALT_OFFSET__);
 
-			$all_attachments = (string)stream_get_contents($fp);
-			$assembly = strtoupper($assembly);
-			$type = strtoupper($type);
+      $all_attachments = (string)stream_get_contents($fp);
+      $assembly = strtoupper($assembly);
+      $type = strtoupper($type);
 
-			//matches T_attachmentFrame from hcdk.raw.Hypercell
-			$bs = 'BEGIN['.$assembly;
-			$bs .= (($type != '') ? ('.'.$type) : '').']';
+      //matches T_attachmentFrame from hcdk.raw.Hypercell
+      $bs = 'BEGIN['.$assembly;
+      $bs .= (($type != '') ? ('.'.$type) : '').']';
 
-			$es = 'END['.$assembly;
-			$es .= (($type != '') ? ('.'.$type) : '').']';
+      $es = 'END['.$assembly;
+      $es .= (($type != '') ? ('.'.$type) : '').']';
 
-			$begin = strpos($all_attachments, $bs) + strlen($bs);
-			$end = strpos($all_attachments, $es) - 1;
+      $begin = strpos($all_attachments, $bs) + strlen($bs);
+      $end = strpos($all_attachments, $es) - 1;
 
-			$attachment_data = substr($all_attachments, $begin, $end - $begin);
+      $attachment_data = substr($all_attachments, $begin, $end - $begin);
 
-			if (!$attachment_data)
-			{
-				throw new \RuntimeException('Unable to read attachment "'.$assembly.'.'.$type.'" of hypercell '.self::FQN.' - unable to read from '.$bs.' to '.$es.' in "'.$__FILE__.'"');
-			}
+      if (!$attachment_data)
+      {
+        throw new \RuntimeException('Unable to read attachment "'.$assembly.'.'.$type.'" of hypercell '.self::FQN.' - unable to read from '.$bs.' to '.$es.' in "'.$__FILE__.'"');
+      }
 
-			if (!is_string($attachment_data))
-			{
-				throw new \RuntimeException('Unable to read attachment "'.$assembly.'.'.$type.'" of hypercell '.self::FQN.' - unable to read from '.$bs.' to '.$es.' in "'.$__FILE__.'"');
-			}
+      if (!is_string($attachment_data))
+      {
+        throw new \RuntimeException('Unable to read attachment "'.$assembly.'.'.$type.'" of hypercell '.self::FQN.' - unable to read from '.$bs.' to '.$es.' in "'.$__FILE__.'"');
+      }
 
       self::$_attachment_cache[$cache_target] = $attachment_data;
 
-			return $attachment_data;
-		}
+      return $attachment_data;
+    }
 
     public static function hasAssembly($assembly_name = null)
     {

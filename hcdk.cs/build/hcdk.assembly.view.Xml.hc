@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.view.Xml - BUILD 22.02.15#207
+<?php #HYPERCELL hcdk.assembly.view.Xml - BUILD 22.02.18#209
 namespace hcdk\assembly\view;
 class Xml extends \hcdk\assembly\view {
     use \hcf\core\dryver\Base, Xml\__EO__\Controller, \hcf\core\dryver\View, \hcf\core\dryver\Internal;
@@ -6,8 +6,8 @@ class Xml extends \hcdk\assembly\view {
     const NAME = 'Xml';
     public function __construct() {
         call_user_func_array('parent::__construct', func_get_args());
-        if (method_exists($this, 'hcdkassemblyviewXml_onConstruct')) {
-            call_user_func_array([$this, 'hcdkassemblyviewXml_onConstruct'], func_get_args());
+        if (method_exists($this, 'hcdkassemblyviewXml_onConstruct_Controller')) {
+            call_user_func_array([$this, 'hcdkassemblyviewXml_onConstruct_Controller'], func_get_args());
         }
     }
     # BEGIN ASSEMBLY FRAME VIEW.TEXT

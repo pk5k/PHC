@@ -1,12 +1,12 @@
-<?php #HYPERCELL hcdk.raw.Property - BUILD 22.02.15#298
+<?php #HYPERCELL hcdk.raw.Property - BUILD 22.02.18#300
 namespace hcdk\raw;
 class Property {
     use Property\__EO__\Controller, \hcf\core\dryver\View, \hcf\core\dryver\Internal;
     const FQN = 'hcdk.raw.Property';
     const NAME = 'Property';
     public function __construct() {
-        if (method_exists($this, 'hcdkrawProperty_onConstruct')) {
-            call_user_func_array([$this, 'hcdkrawProperty_onConstruct'], func_get_args());
+        if (method_exists($this, 'hcdkrawProperty_onConstruct_Controller')) {
+            call_user_func_array([$this, 'hcdkrawProperty_onConstruct_Controller'], func_get_args());
         }
     }
     # BEGIN ASSEMBLY FRAME VIEW.TEXT
@@ -26,7 +26,7 @@ class Property {
         private $name = 'unnamedProperty';
         private $modifiers = [];
         private $value = 'null';
-        public function hcdkrawProperty_onConstruct($name, $modifiers = null) {
+        public function hcdkrawProperty_onConstruct_Controller($name, $modifiers = null) {
             $this->setName($name);
             $this->setModifiers($modifiers);
         }

@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.web.Container.Autoloader - BUILD 22.02.17#3297
+<?php #HYPERCELL hcf.web.Container.Autoloader - BUILD 22.02.17#3298
 namespace hcf\web\Container;
 class Autoloader {
     use \hcf\core\dryver\Config, Autoloader\__EO__\Controller, \hcf\core\dryver\View, \hcf\core\dryver\View\Html, \hcf\core\dryver\Internal;
@@ -8,8 +8,8 @@ class Autoloader {
         if (!isset(self::$config)) {
             self::loadConfig();
         }
-        if (method_exists($this, 'hcfwebContainerAutoloader_onConstruct')) {
-            call_user_func_array([$this, 'hcfwebContainerAutoloader_onConstruct'], func_get_args());
+        if (method_exists($this, 'hcfwebContainerAutoloader_onConstruct_Controller')) {
+            call_user_func_array([$this, 'hcfwebContainerAutoloader_onConstruct_Controller'], func_get_args());
         }
     }
     # BEGIN ASSEMBLY FRAME CONFIG.JSON
@@ -103,7 +103,7 @@ class Autoloader {
         /**
          * __construct
          */
-        public function hcfwebContainerAutoloader_onConstruct($autorun = true) {
+        public function hcfwebContainerAutoloader_onConstruct_Controller($autorun = true) {
             if ($autorun) {
                 if (isset(self::config()->shared)) {
                     $this->processSections(self::config()->shared);

@@ -1,12 +1,12 @@
-<?php #HYPERCELL hcdk.cli.exec.Inspect - BUILD 22.02.15#66
+<?php #HYPERCELL hcdk.cli.exec.Inspect - BUILD 22.02.18#68
 namespace hcdk\cli\exec;
 class Inspect extends \hcf\cli\exec {
     use \hcf\core\dryver\Base, Inspect\__EO__\Controller, \hcf\core\dryver\View, \hcf\core\dryver\Internal;
     const FQN = 'hcdk.cli.exec.Inspect';
     const NAME = 'Inspect';
     public function __construct() {
-        if (method_exists($this, 'hcdkcliexecInspect_onConstruct')) {
-            call_user_func_array([$this, 'hcdkcliexecInspect_onConstruct'], func_get_args());
+        if (method_exists($this, 'hcdkcliexecInspect_onConstruct_Controller')) {
+            call_user_func_array([$this, 'hcdkcliexecInspect_onConstruct_Controller'], func_get_args());
         }
     }
     # BEGIN ASSEMBLY FRAME VIEW.TEXT

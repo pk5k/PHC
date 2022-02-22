@@ -1,12 +1,12 @@
-<?php #HYPERCELL hcdk.data.xml.Fragment.render.PipelineFragment - BUILD 22.02.15#44
+<?php #HYPERCELL hcdk.data.xml.Fragment.render.PipelineFragment - BUILD 22.02.18#46
 namespace hcdk\data\xml\Fragment\render;
 class PipelineFragment extends \hcdk\data\xml\Fragment {
     use \hcf\core\dryver\Base, PipelineFragment\__EO__\Controller, \hcf\core\dryver\Internal;
     const FQN = 'hcdk.data.xml.Fragment.render.PipelineFragment';
     const NAME = 'PipelineFragment';
     public function __construct() {
-        if (method_exists($this, 'hcdkdataxmlFragmentrenderPipelineFragment_onConstruct')) {
-            call_user_func_array([$this, 'hcdkdataxmlFragmentrenderPipelineFragment_onConstruct'], func_get_args());
+        if (method_exists($this, 'hcdkdataxmlFragmentrenderPipelineFragment_onConstruct_Controller')) {
+            call_user_func_array([$this, 'hcdkdataxmlFragmentrenderPipelineFragment_onConstruct_Controller'], func_get_args());
         }
     }
     }

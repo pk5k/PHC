@@ -1,6 +1,6 @@
 <dummy.container>
 	<dummy.container>{{method:docType}}</dummy.container>
-	<html lang="{{property:content_language}}">
+	<html lang="{{property:content_language}}" data-version="{{method:appVersion}}">
 		<head>
 			<meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
 			<meta charset="{{property:encoding}}"/>
@@ -27,9 +27,9 @@
 				<link rel="stylesheet" type="text/css" href="{{local:href}}" media="{{local:media}}"/>
 			</loop.foreach>
 
-			<script language="javascript">{{method:script}} {{property:component_reg_data}}</script>
+			<script language="javascript">{{method:ownScript}} {{property:component_reg_data}}</script>
 
-			<style>{{method:style}}</style>
+			<style>{{method:ownStyle}}</style>
 
 			<loop.foreach var="{{property:component_contexts}}" value="component_context">
 				<dummy.container>{{local:component_context}}</dummy.container>
@@ -47,6 +47,6 @@
 
 			<dummy.container>{{method:autoloader}}</dummy.container>
 		</head>
-		<body>{{property:content}}</body>
+		<body>{{method:renderContent}}</body>
 	</html>
 </dummy.container>

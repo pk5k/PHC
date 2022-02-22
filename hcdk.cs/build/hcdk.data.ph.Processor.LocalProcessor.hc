@@ -1,12 +1,12 @@
-<?php #HYPERCELL hcdk.data.ph.Processor.LocalProcessor - BUILD 22.02.15#78
+<?php #HYPERCELL hcdk.data.ph.Processor.LocalProcessor - BUILD 22.02.18#80
 namespace hcdk\data\ph\Processor;
 class LocalProcessor extends \hcdk\data\ph\Processor {
     use \hcf\core\dryver\Base, LocalProcessor\__EO__\Controller, \hcf\core\dryver\Internal;
     const FQN = 'hcdk.data.ph.Processor.LocalProcessor';
     const NAME = 'LocalProcessor';
     public function __construct() {
-        if (method_exists($this, 'hcdkdataphProcessorLocalProcessor_onConstruct')) {
-            call_user_func_array([$this, 'hcdkdataphProcessorLocalProcessor_onConstruct'], func_get_args());
+        if (method_exists($this, 'hcdkdataphProcessorLocalProcessor_onConstruct_Controller')) {
+            call_user_func_array([$this, 'hcdkdataphProcessorLocalProcessor_onConstruct_Controller'], func_get_args());
         }
     }
     }

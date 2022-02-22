@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.cli.Colors - BUILD 22.02.15#49
+<?php #HYPERCELL hcf.cli.Colors - BUILD 22.02.15#50
 namespace hcf\cli;
 class Colors {
     use \hcf\core\dryver\Config, Colors\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -8,8 +8,8 @@ class Colors {
         if (!isset(self::$config)) {
             self::loadConfig();
         }
-        if (method_exists($this, 'hcfcliColors_onConstruct')) {
-            call_user_func_array([$this, 'hcfcliColors_onConstruct'], func_get_args());
+        if (method_exists($this, 'hcfcliColors_onConstruct_Controller')) {
+            call_user_func_array([$this, 'hcfcliColors_onConstruct_Controller'], func_get_args());
         }
     }
     # BEGIN ASSEMBLY FRAME CONFIG.INI
