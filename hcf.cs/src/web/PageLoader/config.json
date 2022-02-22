@@ -1,0 +1,9 @@
+{
+	"//": "Additional resources per Page (page = hcf.web.Component Hypercell that provides a dynamic view)",
+	"my.Hypercell": { 
+		"//": "key = ComponentContext id, if resource should be defined in a component-context, global = light DOM",
+		"global": ["my.additionialResource.Global"],
+		"ui-elements": ["my.additional.WebComponent"]
+	},
+	"gax.web.page.retailer.Home": ["my.global.Resource", "this.is.an.alias.for.componentContext.global"]
+}

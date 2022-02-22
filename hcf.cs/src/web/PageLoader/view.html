@@ -1,0 +1,8 @@
+@+template:
+<dummy.container>
+	<div class="primary-border top-loader" part="loader">&nbsp;</div>
+	<div data-me="{{const:FQN}}" data-router-default="{{method:routerDefault}}" data-router-arg="{{method:routerArg}}" id="content-wrapper" part="wrapper">
+		<slot class="error-fragment" name="error"/>
+		<slot class="main-fragment initialized"/>
+	</div>
+</dummy.container>

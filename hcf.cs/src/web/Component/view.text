@@ -1,0 +1,21 @@
+@+wrappedClientControllerOnly:
+document.registerComponentController('{{arg:0}}', {{arg:1}});
+
+@+wrappedClientControllerWithElement:
+document.registerComponentController('{{arg:0}}', {{arg:1}}, '{{arg:2}}', '{{arg:3}}', {{arg:4}});
+
+@+wrapTemplate:
+if ({{arg:2}} == null) {
+	throw 'Missing component context {{arg:3}}'; 
+} else if ({{arg:2}}.querySelector('div[id="{{arg:0}}"]') == null) {
+	let t_wrapper = document.createElement('div');
+	t_wrapper.innerHTML = '{{method:removeLinebreaks|arg:1}}';
+	t_wrapper.setAttribute('id', '{{arg:0}}');
+	{{arg:2}}.appendChild(t_wrapper);
+}
+
+@-targetHead:
+document.head
+
+@-targetComponentContext:
+document.getElementById('{{arg:0}}').content
