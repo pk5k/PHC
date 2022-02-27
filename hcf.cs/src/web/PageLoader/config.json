@@ -1,9 +1,16 @@
 {
-	"//": "Additional resources per Page (page = hcf.web.Component Hypercell that provides a dynamic view)",
+	"//": "The default render context the page should be load into. Prepend @ to clone this context for each new page:",
+	"context": "@page",
+
+	"//": "If true: the target-page will be pre-rendered inside the PageLoader instance after checking it's permissions. Avoiding an additional Request to the page itself after the loader has finished.",
+	"fastpath": true,
+	
+	"//": "Additional resources per Page (target-page will be added automatically according to the page-context settings)",
 	"my.Hypercell": { 
-		"//": "key = ComponentContext id, if resource should be defined in a component-context, global = light DOM",
+		"//": "key = ComponentContext id, if resource should be load into a render-context, global = light DOM",
 		"global": ["my.additionialResource.Global"],
-		"ui-elements": ["my.additional.WebComponent"]
+		"ui-elements": ["my.additional.WebComponent"],
+		"@page": ["also.goes.to.cloned.Context"]
 	},
-	"gax.web.page.retailer.Home": ["my.global.Resource", "this.is.an.alias.for.componentContext.global"]
+	"gax.web.page.retailer.Home": ["my.defaultContext.Resource", "this.is.an.alias.for.defaultPageContext"]
 }

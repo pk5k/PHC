@@ -1,47 +1,49 @@
 <?php
+
 trait Model
 {
-	public function onConstruct($initial_attributes) // initial_attributes = Attributes of the pages html-element on initialisation time
-	{
-		static::checkPermissions();
-	}
-
 	public static function template()
 	{
 		return static::internalTemplate(static::FQN);
 	}
 
-	public static function elementName()
+	public static function title()
 	{
-		return static::genericElementName();
+		return '';// override this method to set the title of the target browser window if page gets load trough hcf.web.PageLoader
 	}
 
-	protected static function genericElementName()
-	{
-		return strtolower(str_replace('.', '-', static::FQN)); // override this method if you want a specific element name, otherwise the hcfqn with dots replaced by dashes will be used.
-	}
-
-	public static function checkPermissions()
-	{
-		return; // override this method and throw exceptions if page should not be load trough hcf.web.Router. Router will catch and reroute according to this exception (if configured)
-	}
-
-	protected static function fqn()
-	{
-		return static::FQN;
-	}
-
-	public static function wrappedElementName($autoload = true)
+	public static function wrappedElementName($autoload = false, $render_changes = false, $initial_attributes = null)
 	{
 		$en = static::genericElementName();
-		$al = '';
+		$args = '';
 
-		if (!$autoload)
+		if ($autoload)
 		{
-			$al = ' autoload="false"';
+			$args = ' autoload="true"';
 		}
 
-		return '<'.$en.$al.'></'.$en.'>';
+		if ($render_changes)
+		{
+			$args = ' render-changes="true"';
+		}
+
+		if (!is_null($initial_attributes) && $initial_attributes != '')
+		{
+			if (is_string($initial_attributes))
+			{
+				$initial_attributes = json_decode($initial_attributes);
+			}
+
+			if (is_object($initial_attributes))
+			{
+				foreach ($initial_attributes as $key => $val)
+				{
+					$args .= ' '.filter_var($key, FILTER_SANITIZE_STRING).'="'.filter_var($val, FILTER_SANITIZE_STRING).'"';
+				}
+			}
+		}
+
+		return '<'.$en.$args.'></'.$en.'>';
 	}
 }
 ?>

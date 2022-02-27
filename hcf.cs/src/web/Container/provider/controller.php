@@ -26,22 +26,34 @@ trait Controller
 	protected static function provideFileTypeHeader($mime_type)
 	{
 		header('Content-Type: '.$mime_type);
+
+		if (HCF_DEBUG)
+		{
+			return;
+		}
+
+		header('Cache-Control: max-age='.(30 * 24 * 60 * 60).', must-revalidate');// cache 30 days, on productive systems increase APP_VERSION constant to force refresh on dev use disable cache feature of browser
 	}
 
-	protected static function getComponents($hcfqn_str_list)
+	protected static function getComponents($hcfqn_str_list, $allowed_base, $ignore_if_base = null)
 	{
 		$parts = explode(',', $hcfqn_str_list);
 		$out = [];
 
 		foreach ($parts as $fqn) 
 		{
-			$out[] = self::getComponent(trim($fqn));
+			$class = self::getComponent(trim($fqn), $allowed_base, $ignore_if_base);
+
+			if ($class !== false)
+			{
+				$out[] = $class;
+			}
 		}
 
 		return $out;
 	}
 
-	protected static function getComponent($hcfqn)
+	protected static function getComponent($hcfqn, $allowed_base, $ignore_if_base = null)
 	{
 		if (!Utils::isValidRMFQN($hcfqn))
 		{
@@ -52,11 +64,17 @@ trait Controller
 
 		$class = Utils::HCFQN2PHPFQN($hcfqn);
 
-		if (!is_subclass_of($class, WebComponent::class) && $class != WebComponent::class)
+		if (!is_null($ignore_if_base) && (is_subclass_of($class, $ignore_if_base) || $class == $ignore_if_base) && !is_subclass_of($class, $allowed_base))
 		{
+			return false;
+		}
+
+		if (!is_subclass_of($class, $allowed_base) && $class != $allowed_base)
+		{
+			echo $ignore_if_base.' class:'.$class;
 			header(Utils::getHTTPHeader(400));
 
-			throw new \Exception(self::FQN . ' given name ' . $hcfqn . ' does not refer to a hcf.web.Component');
+			throw new \Exception(self::FQN . ' given name ' . $hcfqn . ' does not refer to a ' . $allowed_base::FQN);
 		}
 
 		return $class;

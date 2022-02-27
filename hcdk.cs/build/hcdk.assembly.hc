@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly - BUILD 22.02.18#246
+<?php #HYPERCELL hcdk.assembly - BUILD 22.02.23#248
 namespace hcdk;
 abstract class assembly {
     use assembly\__EO__\Controller, \hcf\core\dryver\View, \hcf\core\dryver\Internal;
@@ -11,7 +11,7 @@ abstract class assembly {
     }
     # BEGIN ASSEMBLY FRAME VIEW.RAW
     static protected function controlSymbols() {
-        $output = "\$__CLASS__ = __CLASS__;
+        $output = "\$__CLASS__ = get_called_class();
 \$_this = (isset(\$this)) ? \$this : null;
 \$_func_args = \\func_get_args();";
         return $output;

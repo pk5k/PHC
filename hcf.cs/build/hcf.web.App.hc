@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.web.App - BUILD 22.02.15#139
+<?php #HYPERCELL hcf.web.App - BUILD 22.02.18#140
 namespace hcf\web;
 class App {
     use \hcf\core\dryver\Config, App\__EO__\Controller, \hcf\core\dryver\Client, \hcf\core\dryver\Client\Js, \hcf\core\dryver\View, \hcf\core\dryver\View\Html, \hcf\core\dryver\Internal;
@@ -27,7 +27,7 @@ exports.default=init;});";
     # END ASSEMBLY FRAME CONTROLLER.TS
     # BEGIN ASSEMBLY FRAME VIEW.HTML
     public function __toString() {
-        $__CLASS__ = __CLASS__;
+        $__CLASS__ = get_called_class();
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
         $output = '';

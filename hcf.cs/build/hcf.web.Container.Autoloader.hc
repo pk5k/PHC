@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.web.Container.Autoloader - BUILD 22.02.17#3298
+<?php #HYPERCELL hcf.web.Container.Autoloader - BUILD 22.02.18#3299
 namespace hcf\web\Container;
 class Autoloader {
     use \hcf\core\dryver\Config, Autoloader\__EO__\Controller, \hcf\core\dryver\View, \hcf\core\dryver\View\Html, \hcf\core\dryver\Internal;
@@ -20,7 +20,7 @@ class Autoloader {
     # END ASSEMBLY FRAME CONFIG.JSON
     # BEGIN ASSEMBLY FRAME VIEW.HTML
     public function __toString() {
-        $__CLASS__ = __CLASS__;
+        $__CLASS__ = get_called_class();
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
         $output = '';
@@ -53,7 +53,7 @@ class Autoloader {
         return self::_postProcess($output, [], []);
     }
     protected function registerHCFQN() {
-        $__CLASS__ = __CLASS__;
+        $__CLASS__ = get_called_class();
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
         $output = '';
@@ -61,7 +61,7 @@ class Autoloader {
         return self::_postProcess($output, [], []);
     }
     protected function stylesheet() {
-        $__CLASS__ = __CLASS__;
+        $__CLASS__ = get_called_class();
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
         $output = '';
@@ -73,7 +73,7 @@ class Autoloader {
         return self::_postProcess($output, [], []);
     }
     protected function javascript() {
-        $__CLASS__ = __CLASS__;
+        $__CLASS__ = get_called_class();
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
         $output = '';

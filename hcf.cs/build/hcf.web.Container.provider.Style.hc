@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.web.Container.provider.Style - BUILD 22.02.20#1
+<?php #HYPERCELL hcf.web.Container.provider.Style - BUILD 22.02.23#3
 namespace hcf\web\Container\provider;
 class Style extends \hcf\web\Container\provider {
     use \hcf\core\dryver\Base, Style\__EO__\Controller, \hcf\core\dryver\View, \hcf\core\dryver\Internal;
@@ -12,7 +12,7 @@ class Style extends \hcf\web\Container\provider {
     }
     # BEGIN ASSEMBLY FRAME VIEW.TEXT
     public function __toString() {
-        $__CLASS__ = __CLASS__;
+        $__CLASS__ = get_called_class();
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
         $output = "{$__CLASS__::_call('provideAssemblies', $__CLASS__, $_this) }";
@@ -24,6 +24,8 @@ class Style extends \hcf\web\Container\provider {
     namespace hcf\web\Container\provider\Style\__EO__;
     # BEGIN EXECUTABLE FRAME OF CONTROLLER.PHP
     use \hcf\core\Utils;
+    use \hcf\web\Component as WebComponent;
+    use \hcf\web\Controller as WebController;
     trait Controller {
         public static function provideAssemblies() {
             parent::provideFileTypeHeader(Utils::getMimeTypeByExtension('mystyle.css'));
@@ -33,7 +35,7 @@ class Style extends \hcf\web\Container\provider {
             return parent::provideAssembliesOfType('style');
         }
         private static function provideComponentStyle($hcfqn) {
-            $classes = parent::getComponents($hcfqn);
+            $classes = parent::getComponents($hcfqn, WebComponent::class, WebController::class);
             $out = '';
             foreach ($classes as $class) {
                 $out.= $class::style();

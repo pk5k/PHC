@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.data.xml.Parser - BUILD 22.02.18#96
+<?php #HYPERCELL hcdk.data.xml.Parser - BUILD 22.02.24#101
 namespace hcdk\data\xml;
 class Parser {
     use \hcf\core\dryver\Config, \hcf\core\dryver\Constant, Parser\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -103,6 +103,14 @@ class Parser {
                 throw new \XMLParseException($message);
             }
         }
+        private static function alias($name) {
+            $c = self::config();
+            if (isset($c->alias) && isset($c->alias->$name)) {
+                return $c->alias->$name;
+            } else {
+                return null;
+            }
+        }
         /**
          * renderFragment
          * Renders a single xml-fragment
@@ -124,22 +132,25 @@ class Parser {
                 $name = str_replace(self::TMP_OPT_TAG_MARKER, '', $name);
                 $is_optional = true;
             }
-            $package = self::config()->fragment->package;
-            $suffix = self::config()->fragment->suffix;
-            if (self::config()->{'dash-to-cc'}) {
-                $name = str_replace(' ', '', ucwords(str_replace('-', ' ', $name)));
+            $type_class = self::alias($name);
+            if (is_null($type_class)) {
+                $package = self::config()->fragment->package;
+                $suffix = self::config()->fragment->suffix;
+                if (self::config()->{'dash-to-cc'}) {
+                    $name = str_replace(' ', '', ucwords(str_replace('-', ' ', $name)));
+                }
+                if (strpos($name, '.') > 0) {
+                    $name_parts = explode('.', $name);
+                    $last = array_pop($name_parts);
+                    $name = strtolower(implode('.', $name_parts));
+                    $name.= '.' . ucfirst($last);
+                }
+                $name.= $suffix;
+                if (substr($package, -1) !== '.') {
+                    $package.= '.';
+                }
+                $type_class = $package . $name;
             }
-            if (strpos($name, '.') > 0) {
-                $name_parts = explode('.', $name);
-                $last = array_pop($name_parts);
-                $name = strtolower(implode('.', $name_parts));
-                $name.= '.' . ucfirst($last);
-            }
-            $name.= $suffix;
-            if (substr($package, -1) !== '.') {
-                $package.= '.';
-            }
-            $type_class = $package . $name;
             RemoteInvoker::implicitConstructor(false);
             $ri = null;
             try {
@@ -288,6 +299,31 @@ dash-to-cc = true; Convert dashed fragment-names to UpperCamelCase before resolv
 base = "hcdk.data.xml.Fragment"; Name of the base processor Hypercell
 package = "hcdk.data.xml.Fragment."; hc-package name which HCs inside implement the fragment-base
 suffix = "Fragment"; must be append to all base generalisations
+
+[alias]
+; use given key as alias for hcdk.data.xml.Fragment.*
+
+; conditions
+if = "hcdk.data.xml.Fragment.condition.IfFragment"
+else = "hcdk.data.xml.Fragment.condition.ElseFragment"
+switch = "hcdk.data.xml.Fragment.condition.SwitchFragment"
+case = "hcdk.data.xml.Fragment.condition.CaseFragment"
+
+; dummys
+unwrap = "hcdk.data.xml.Fragment.dummy.ContainerFragment"
+lorem-ipsum = "hcdk.data.xml.Fragment.dummy.TextFragment"
+
+; embed
+embed-data = "hcdk.data.xml.Fragment.embed.DataFragment"
+embed-file = "hcdk.data.xml.Fragment.embed.FileFragment"
+embed-markdown = "hcdk.data.xml.Fragment.embed.MarkdownFragment"
+
+; loop
+for = "hcdk.data.xml.Fragment.loop.ForeachFragment"
+
+; render
+pipe = "hcdk.data.xml.Fragment.render.PipeFragment"
+set = "hcdk.data.xml.Fragment.render.InstructionFragment"
 
 END[CONFIG.INI]
 

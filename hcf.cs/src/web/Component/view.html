@@ -8,6 +8,8 @@
 <dummy.container>{}</dummy.container>
 
 @+elementName:
-<!-- to embed your view.scss and view.html::template into an hcf.web.Container instance, override this 
-	method in your own component. The string returned is the name of your custom-element. -->
-<dummy.container>no-component</dummy.container>
+<!-- to embed your view.scss and view.html::template into an hcf.web.Container instance a element name is required, 
+	by default it is the components hcfqn in lowercase with dots replaced by dashes.
+	override this template in your own component to use another element name. 
+	The string returned is the name of your custom-element. -->
+<dummy.container>{{method:genericElementName}}</dummy.container>

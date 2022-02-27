@@ -8,26 +8,26 @@ class extends HTMLElement // extend an anonymous class from hcf.web.Component in
 
 	loadTemplate()
 	{
-		if (document.componentMap[this.tagName] == undefined)
+		if (document.componentMap[this.FQN] == undefined)
 		{
 			throw 'Element ' + this.tagName.toLowerCase() + ' is not in the component map and thus cannot be used.';
 		}
 
-		let component_definition = document.componentMap[this.tagName];
+		let render_context = document.componentMap[this.FQN];
 
 		let shadow_root = this.attachShadow({mode: 'open'});
 		let context = null;
 		let tpl = null;
 
-		if (component_definition.context == '')
+		if (render_context == 'global')
 		{
 			context = document.head;// global context
-			tpl = context.querySelector('div[id="' + component_definition.fqn + '"]');
+			tpl = context.querySelector('div[id="' + this.FQN + '"]');
 		}
 		else 
 		{
-			context = document.getElementById(component_definition.context).content;
-			tpl = context.getElementById(component_definition.fqn);
+			context = document.getElementById(render_context).content;
+			tpl = context.getElementById(this.FQN);
 		}
 
       	context.querySelectorAll('style, link').forEach((e) => 
@@ -44,6 +44,21 @@ class extends HTMLElement // extend an anonymous class from hcf.web.Component in
       			shadow_root.appendChild(children[i].cloneNode(true));
       		}
       	}
+	}
+
+	bridge(to)
+	{
+		return hcf.web.Bridge((to == undefined) ? this.FQN : to);// this.FQN is defined in registerComponentController for prototype of your hcf.web.Controller/.Component/.Page
+	}
+
+	renderContext()
+	{
+		if (document.componentMap[this.FQN] == undefined)
+		{
+			throw 'Element ' + this.tagName + ' (' + this.FQN + ') is not registered in component map - render context cannot be determined';
+		}
+
+		return document.getElementById(document.componentMap[this.FQN]);
 	}
 
 	runAfterDomLoad(func)
@@ -63,92 +78,28 @@ class extends HTMLElement // extend an anonymous class from hcf.web.Component in
 	    }
 	}
 
-	static loadDependencies(hcfqn, to_context)
+	dispatchEvent(event)// allow custom event attribute like onsubmit-returned
 	{
-		let component = '&component=';
+	    super.dispatchEvent(event);
 
-		if (hcfqn == undefined || hcfqn == null)
-		{
-			throw 'hcfqn is invalid';
-		}
-		else if (hcfqn.constructor === Array)
-		{
-			component += hcfqn.join(',');
-		}
-		else 
-		{
-			component += hcfqn;
-		}
+	    const eventFire = this['on' + event.type];
+	    
+	    if (eventFire) 
+	    {
+	      return; // already processed by super.dispatchEvent
+	    } 
+	    else 
+	    {
+	      const func = new Function('e',
 
-		let version = (document.APP_VERSION != undefined) ? '&v=' + document.APP_VERSION : '';
-		let context = (to_context != null && to_context != undefined) ? '&context=' + to_context : '';
+	        'with(document) {' +
+	        'with(this) {' +
+	        'let attr = ' + this.getAttribute('on' + event.type) + ';' + 
+	        'if(typeof attr === \'function\') { attr(e)};' +
+	        '}' +
+	      '}');
 
-		let controller = new Promise((resolve, reject) =>
-		{
-			let elem = document.createElement('script');
-			elem.setAttribute('src', '?!=-script' + component + context + version);
-
-			elem.addEventListener('load', (e) => resolve(e));
-			elem.addEventListener('error', (e) => reject(e));
-
-			document.head.appendChild(elem);
-		});
-
-		let template = new Promise((resolve, reject) =>
-		{
-			let elem = document.createElement('script');
-			elem.setAttribute('src', '?!=-template' + component + context + version);
-
-			elem.addEventListener('load', (e) => resolve(e));
-			elem.addEventListener('error', (e) => reject(e));
-
-			document.head.appendChild(elem);// templates will move to their context by themself if neccessary
-		});
-
-		let style = new Promise((resolve, reject) =>
-		{
-			let elem = document.createElement('link');
-			elem.setAttribute('href', '?!=-style' + component + context + version);
-			elem.setAttribute('type', 'text/css');
-			elem.setAttribute('rel', 'stylesheet');
-
-			if (context != '')
-			{
-				let c = document.getElementById(to_context);
-
-				if (c == null)
-				{
-					throw 'component context ' + to_context + ' does not exist';
-				}
-				
-				let global_allowed = (c.getAttribute('data-global') == 'true');
-
-				if (global_allowed)
-				{
-					// load trough light dom and copy to shadow dom later to use load event
-					elem.addEventListener('load', (e) => { 
-						resolve(e);
-						c.content.appendChild(elem.cloneNode(true));
-					});
-
-					elem.addEventListener('error', (e) => reject(e));
-					document.head.appendChild(elem);
-				}
-				else 
-				{
-					resolve();// resolve immediately - links inside shadow dom won't start loading until visible so this promise won't be resolved
-					c.content.appendChild(elem);
-				}
-			}
-			else 
-			{
-				elem.addEventListener('load', (e) => resolve(e));
-				elem.addEventListener('error', (e) => reject(e));
-
-				document.head.appendChild(elem);
-			}
-		});
-
-		return [controller, template, style];
+	      func.call(this, event);
+	    }
 	}
 }

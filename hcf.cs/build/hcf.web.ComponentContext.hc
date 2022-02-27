@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.web.ComponentContext - BUILD 22.02.21#22
+<?php #HYPERCELL hcf.web.ComponentContext - BUILD 22.02.25#40
 namespace hcf\web;
 class ComponentContext {
     use ComponentContext\__EO__\Model, \hcf\core\dryver\View, \hcf\core\dryver\View\Html, \hcf\core\dryver\Internal;
@@ -11,34 +11,50 @@ class ComponentContext {
     }
     # BEGIN ASSEMBLY FRAME VIEW.HTML
     public function __toString() {
-        $__CLASS__ = __CLASS__;
+        $__CLASS__ = get_called_class();
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
         $output = '';
-        if ($__CLASS__::_property('allow_global_style', $__CLASS__, $_this) == "true") {
-            $output.= "<style id=\"{$__CLASS__::_property('id', $__CLASS__, $_this) }-global-base-style\">{$__CLASS__::_call('styles', $__CLASS__, $_this) }</style>";
-            $output.= "<link id=\"{$__CLASS__::_property('id', $__CLASS__, $_this) }-global-component-styles\" rel=\"stylesheet\" href=\"{$__CLASS__::_call('url|map', $__CLASS__, $_this, ['style', $__CLASS__::_property('components', $__CLASS__, $_this) ]) }\"/>";
-        }
-        $output.= "<script src=\"{$__CLASS__::_call('url|map', $__CLASS__, $_this, ['script', $__CLASS__::_property('components', $__CLASS__, $_this) ]) }\"></script>";
         $output.= "<template id=\"{$__CLASS__::_property('id', $__CLASS__, $_this) }\" data-global=\"{$__CLASS__::_property('allow_global_style', $__CLASS__, $_this) }\">";
-        $output.= "<style id=\"base-style\">{$__CLASS__::_call('styles', $__CLASS__, $_this) }</style>";
-        $output.= "<link id=\"component-styles\" rel=\"stylesheet\" href=\"{$__CLASS__::_call('url|map', $__CLASS__, $_this, ['style', $__CLASS__::_property('components', $__CLASS__, $_this) ]) }\"/>";
-        foreach ($__CLASS__::_property('components', $__CLASS__, $_this) as $fqn => $component) {
-            $output.= "<div id=\"$fqn\">{$__CLASS__::_call('templateOf|map', $__CLASS__, $_this, [$component]) }</div>";
+        if ($__CLASS__::_call('styles', $__CLASS__, $_this) != "") {
+            $output.= "<style id=\"base-style\">{$__CLASS__::_call('styles', $__CLASS__, $_this) }</style>";
+        }
+        if ($__CLASS__::_property('import_fonts', $__CLASS__, $_this) === true) {
+            foreach ($__CLASS__::_call('importedFonts', $__CLASS__, $_this) as $path) {
+                $output.= "<link class=\"container-font\" rel=\"stylesheet\" href=\"$path\"/>";
+            }
+        }
+        if ($__CLASS__::_call('componentsLoad', $__CLASS__, $_this) === true) {
+            $output.= "<link id=\"component-styles\" rel=\"stylesheet\" href=\"{$__CLASS__::_call('url|map', $__CLASS__, $_this, ['style', $__CLASS__::_property('components', $__CLASS__, $_this) ]) }\"/>";
         }
         $output.= "</template>";
+        if ($__CLASS__::_property('allow_global_style', $__CLASS__, $_this) == "true") {
+            if ($__CLASS__::_call('styles', $__CLASS__, $_this) != "") {
+                $output.= "<style id=\"{$__CLASS__::_property('id', $__CLASS__, $_this) }-global-base-style\">{$__CLASS__::_call('styles', $__CLASS__, $_this) }</style>";
+            }
+            if ($__CLASS__::_call('componentsLoad', $__CLASS__, $_this) === true) {
+                $output.= "<link id=\"{$__CLASS__::_property('id', $__CLASS__, $_this) }-global-component-styles\" rel=\"stylesheet\" href=\"{$__CLASS__::_call('url|map', $__CLASS__, $_this, ['style', $__CLASS__::_property('components', $__CLASS__, $_this) ]) }\"/>";
+            }
+        }
+        if ($__CLASS__::_call('componentsLoad', $__CLASS__, $_this) === true) {
+            if ($__CLASS__::_call('debugMode', $__CLASS__, $_this) === true) {
+                foreach ($__CLASS__::_property('components', $__CLASS__, $_this) as $component => $class) {
+                    $output.= "<script src=\"{$__CLASS__::_call('url|map', $__CLASS__, $_this, ['template', $component]) }\"></script>";
+                }
+            } else {
+                $output.= "<script src=\"{$__CLASS__::_call('url|map', $__CLASS__, $_this, ['template', $__CLASS__::_property('components', $__CLASS__, $_this) ]) }\"></script>";
+            }
+            $output.= "<script src=\"{$__CLASS__::_call('url|map', $__CLASS__, $_this, ['script', $__CLASS__::_property('components', $__CLASS__, $_this) ]) }\"></script>";
+        }
         return self::_postProcess($output, [], []);
     }
     protected function styles() {
-        $__CLASS__ = __CLASS__;
+        $__CLASS__ = get_called_class();
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
         $output = '';
         foreach ($__CLASS__::_property('stylesheet_embed', $__CLASS__, $_this) as $embed) {
             $output.= "$embed";
-        }
-        foreach ($__CLASS__::_property('components', $__CLASS__, $_this) as $fqn => $component) {
-            $output.= "{$__CLASS__::_call('styleOf|map', $__CLASS__, $_this, [$component]) }";
         }
         return self::_postProcess($output, [], []);
     }
@@ -54,13 +70,16 @@ class ComponentContext {
      *
      */
     use \Exception;
+    use \hcf\web\Controller as WebController;
     use \hcf\web\Component as WebComponent;
+    use \hcf\web\Container;
     trait Model {
         private static $registry = [];
         private $components = [];
         private $id = null;
         private $stylesheet_embed = [];
         private $allow_global_style = 'false';
+        private $import_fonts = false;
         public function hcfwebComponentContext_onConstruct_Model($id) {
             if (is_null($id) || trim($id) == '') {
                 throw new Exception(self::FQN . ' - given id is invalid.');
@@ -76,13 +95,23 @@ class ComponentContext {
             }
             return null;
         }
-        public function allowGlobalStyle($allow) {
+        private function debugMode() {
+            return HCF_DEBUG;
+        }
+        private function importedFonts() {
+            return Container::loadedFonts();
+        }
+        public function importFonts($import = true) {
+            $this->import_fonts = $import; // links the configured fonts of hcf.web.Container to the shadow dom
+            
+        }
+        public function exportStyle($allow) {
             $this->allow_global_style = ($allow) ? 'true' : 'false';
         }
-        public function register( /* WebComponent::class */
+        public function register( /* WebController::class */
         $component_class) {
-            if (!is_subclass_of($component_class, WebComponent::class) && $component_class != WebComponent::class) {
-                throw new Exception(self::FQN . ' - given class ' . $component_class . ' does not implement ' . WebComponent::class);
+            if (!is_subclass_of($component_class, WebController::class) && $component_class != WebController::class) {
+                throw new Exception(self::FQN . ' - given class ' . $component_class . ' does not implement ' . WebController::class);
             }
             $fqn = $component_class::FQN;
             if (isset($this->components[$fqn])) {
@@ -90,17 +119,11 @@ class ComponentContext {
             }
             $this->components[$fqn] = $component_class;
         }
-        private function clientControllerOf($component) {
-            return $component::wrappedClientController($this->id);
-        }
-        private function styleOf($component) {
-            return $component::style();
-        }
-        private function templateOf($component) {
-            return $component::template();
-        }
         public function embedStylesheet($which) {
             $this->stylesheet_embed[] = $which;
+        }
+        private function componentsLoad() {
+            return (count($this->components) > 0);
         }
         private function url($target, $component) {
             if (is_array($component)) {
@@ -110,8 +133,12 @@ class ComponentContext {
                 }
                 $component = substr($c_str, 0, -1);
             }
+            $context = '';
+            if ($target == 'template') {
+                $context = '&context=' . $this->id;
+            }
             $v = (defined('APP_VERSION') ? '&v=' . APP_VERSION : ''); // define APP_VERSION and increment on updates to override caches
-            return '?!=-' . $target . '&context=' . $this->id . '&component=' . $component . $v;
+            return '?!=-' . $target . $context . '&component=' . $component . $v;
         }
     }
     # END EXECUTABLE FRAME OF MODEL.PHP

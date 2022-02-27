@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.web.Container.provider.Template - BUILD 22.02.20#3
+<?php #HYPERCELL hcf.web.Container.provider.Template - BUILD 22.02.23#5
 namespace hcf\web\Container\provider;
 class Template extends \hcf\web\Container\provider {
     use \hcf\core\dryver\Base, Template\__EO__\Controller, \hcf\core\dryver\View, \hcf\core\dryver\Internal;
@@ -12,7 +12,7 @@ class Template extends \hcf\web\Container\provider {
     }
     # BEGIN ASSEMBLY FRAME VIEW.TEXT
     public function __toString() {
-        $__CLASS__ = __CLASS__;
+        $__CLASS__ = get_called_class();
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
         $output = "{$__CLASS__::_call('provideAssemblies', $__CLASS__, $_this) }";
@@ -25,6 +25,7 @@ class Template extends \hcf\web\Container\provider {
     # BEGIN EXECUTABLE FRAME OF CONTROLLER.PHP
     use \hcf\core\Utils;
     use \hcf\web\Component as WebComponent;
+    use \hcf\web\Controller as WebController;
     trait Controller {
         public static function provideAssemblies() {
             parent::provideFileTypeHeader(Utils::getMimeTypeByExtension('mytemplate.js'));
@@ -35,7 +36,7 @@ class Template extends \hcf\web\Container\provider {
         }
         private static function provideComponentTemplate($hcfqn) {
             $context = (isset($_GET['context']) ? htmlspecialchars($_GET['context']) : null);
-            $classes = parent::getComponents($hcfqn);
+            $classes = parent::getComponents($hcfqn, WebComponent::class, WebController::class);
             $out = '';
             foreach ($classes as $class) {
                 $out.= $class::wrappedTemplate($context);

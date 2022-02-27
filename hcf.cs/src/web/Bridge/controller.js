@@ -32,10 +32,17 @@ function (to)
 
 	self.do = function (arg_obj)
 	{
-		var prepared_data = prepareSend(arg_obj, false);
-		send(prepared_data.url_args, prepared_data.passed_files, prepared_data.overwrites, prepared_data.callbacks);
+		if ((arg_obj != undefined || arg_obj != null) && arg_obj.constructor == Array)
+		{
+			arg_obj = {
+				arguments: arg_obj
+			};
+		}
 
-		return self;
+		var prepared_data = prepareSend(arg_obj, false);
+		return new Promise((res, rej) => {
+			send(prepared_data.url_args, prepared_data.passed_files, prepared_data.overwrites, prepared_data.callbacks, { resolve: res, reject: rej});
+		});
 	}
 
 	self.letDo = function (arg_obj)
@@ -456,7 +463,7 @@ function (to)
 		return fd;
 	}
 
-	function send(args, files, overwrites, callbacks)
+	function send(args, files, overwrites, callbacks, promise)
 	{
 		var http_request = false;
 		var async = true;
@@ -504,10 +511,8 @@ function (to)
 				{
 					callbacks.timeout(http_request);
 				}
-				else
-				{
-					throw 'Request timed out';
-				}
+
+				promise.reject(http_request);
 			}
 		}
 
@@ -557,6 +562,8 @@ function (to)
 					{
 						callbacks.success(response);
 					}
+
+					promise.resolve(response);
 				}
 				else if (http_request.readyState == 4 && http_request.status >= 400)// every http-response-code equal or higher 400 counts as error
 				{
@@ -570,6 +577,8 @@ function (to)
 					{
 						callbacks.error(http_request.responseText, http_request.status);
 					}
+
+					promise.reject(http_request.status, http_request.responseText);
 				}
 				else if (http_request.readyState == 3)
 				{

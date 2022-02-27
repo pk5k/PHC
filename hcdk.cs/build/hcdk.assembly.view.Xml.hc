@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.view.Xml - BUILD 22.02.18#209
+<?php #HYPERCELL hcdk.assembly.view.Xml - BUILD 22.02.23#211
 namespace hcdk\assembly\view;
 class Xml extends \hcdk\assembly\view {
     use \hcf\core\dryver\Base, Xml\__EO__\Controller, \hcf\core\dryver\View, \hcf\core\dryver\Internal;
@@ -12,7 +12,7 @@ class Xml extends \hcdk\assembly\view {
     }
     # BEGIN ASSEMBLY FRAME VIEW.TEXT
     protected function buildTemplateMethod() {
-        $__CLASS__ = __CLASS__;
+        $__CLASS__ = get_called_class();
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
         $output = "\$output = '';

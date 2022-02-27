@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.view.Html - BUILD 22.02.18#209
+<?php #HYPERCELL hcdk.assembly.view.Html - BUILD 22.02.23#211
 namespace hcdk\assembly\view;
 class Html extends \hcdk\assembly\view\Xml {
     use \hcf\core\dryver\Base, Html\__EO__\Controller, \hcf\core\dryver\Internal;

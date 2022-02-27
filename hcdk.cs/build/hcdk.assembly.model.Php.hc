@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.model.Php - BUILD 22.02.18#317
+<?php #HYPERCELL hcdk.assembly.model.Php - BUILD 22.02.23#319
 namespace hcdk\assembly\model;
 class Php extends \hcdk\assembly\model {
     use \hcf\core\dryver\Base, \hcf\core\dryver\Constant, Php\__EO__\Controller, \hcf\core\dryver\View, \hcf\core\dryver\Internal;
@@ -16,7 +16,7 @@ class Php extends \hcdk\assembly\model {
     # END ASSEMBLY FRAME CONSTANT
     # BEGIN ASSEMBLY FRAME VIEW.TEXT
     protected function constructorDelegation() {
-        $__CLASS__ = __CLASS__;
+        $__CLASS__ = get_called_class();
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
         $output = "if (method_exists(\$this, '{$__CLASS__::_arg($_func_args, 0, $__CLASS__, $_this) }'))
@@ -26,7 +26,7 @@ class Php extends \hcdk\assembly\model {
         return $output;
     }
     public function defaultInputTemplate() {
-        $__CLASS__ = __CLASS__;
+        $__CLASS__ = get_called_class();
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
         $output = "<?php

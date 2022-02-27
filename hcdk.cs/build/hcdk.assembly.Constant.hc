@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.Constant - BUILD 22.02.18#208
+<?php #HYPERCELL hcdk.assembly.Constant - BUILD 22.02.23#210
 namespace hcdk\assembly;
 class Constant extends \hcdk\assembly {
     use \hcf\core\dryver\Base, Constant\__EO__\Controller, \hcf\core\dryver\Internal;

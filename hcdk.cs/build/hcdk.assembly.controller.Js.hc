@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.controller.Js - BUILD 22.02.18#206
+<?php #HYPERCELL hcdk.assembly.controller.Js - BUILD 22.02.23#208
 namespace hcdk\assembly\controller;
 class Js extends \hcdk\assembly\controller {
     use \hcf\core\dryver\Base, \hcf\core\dryver\Config, Js\__EO__\Controller, \hcf\core\dryver\View, \hcf\core\dryver\Internal;
@@ -22,7 +22,7 @@ class Js extends \hcdk\assembly\controller {
     # END ASSEMBLY FRAME CONFIG.INI
     # BEGIN ASSEMBLY FRAME VIEW.TEXT
     protected function buildClientMethod() {
-        $__CLASS__ = __CLASS__;
+        $__CLASS__ = get_called_class();
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
         $output = "\$js = \"{$__CLASS__::_arg($_func_args, 0, $__CLASS__, $_this) }\";

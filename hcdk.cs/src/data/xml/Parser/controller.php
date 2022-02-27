@@ -103,6 +103,20 @@ trait Controller
 		}
 	}
 
+	private static function alias($name)
+	{
+		$c = self::config();
+
+		if (isset($c->alias) && isset($c->alias->$name))
+		{
+			return $c->alias->$name;
+		}
+		else 
+		{
+			return null;
+		}
+	}
+
 	/**
 	 * renderFragment
 	 * Renders a single xml-fragment
@@ -128,31 +142,36 @@ trait Controller
 			$is_optional = true;
 		}
 
-		$package = self::config()->fragment->package;
-		$suffix = self::config()->fragment->suffix;
+		$type_class = self::alias($name);
 
-		if (self::config()->{'dash-to-cc'})
+		if (is_null($type_class))
 		{
-			$name = str_replace(' ', '', ucwords(str_replace('-', ' ', $name)));
+			$package = self::config()->fragment->package;
+			$suffix = self::config()->fragment->suffix;
+
+			if (self::config()->{'dash-to-cc'})
+			{
+				$name = str_replace(' ', '', ucwords(str_replace('-', ' ', $name)));
+			}
+
+			if (strpos($name, '.') > 0)
+			{
+				$name_parts = explode('.', $name);
+				$last = array_pop($name_parts);
+
+				$name = strtolower(implode('.', $name_parts));
+				$name .= '.'.ucfirst($last);
+			}
+
+			$name .= $suffix;
+
+			if (substr($package, -1) !== '.')
+			{
+				$package .= '.';
+			}
+
+			$type_class = $package.$name;
 		}
-
-		if (strpos($name, '.') > 0)
-		{
-			$name_parts = explode('.', $name);
-			$last = array_pop($name_parts);
-
-			$name = strtolower(implode('.', $name_parts));
-			$name .= '.'.ucfirst($last);
-		}
-
-		$name .= $suffix;
-
-		if (substr($package, -1) !== '.')
-		{
-			$package .= '.';
-		}
-
-		$type_class = $package.$name;
 
 		RemoteInvoker::implicitConstructor(false);
 		$ri = null;

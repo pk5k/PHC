@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.web.Bridge.Worker - BUILD 22.02.15#36
+<?php #HYPERCELL hcf.web.Bridge.Worker - BUILD 22.02.18#37
 namespace hcf\web\Bridge;
 class Worker {
     use \hcf\core\dryver\Controller, \hcf\core\dryver\Controller\Js, Worker\__EO__\Controller, \hcf\core\dryver\View, \hcf\core\dryver\Internal;
@@ -36,7 +36,7 @@ catch(e){console.error('Eval error in following data: '+scripts);}}};";
     # END ASSEMBLY FRAME CONTROLLER.JS
     # BEGIN ASSEMBLY FRAME VIEW.TEXT
     public function __toString() {
-        $__CLASS__ = __CLASS__;
+        $__CLASS__ = get_called_class();
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
         $output = "{$__CLASS__::_call('render', $__CLASS__, $_this) }";

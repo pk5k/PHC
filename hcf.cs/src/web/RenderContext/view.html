@@ -1,0 +1,46 @@
+<dummy.container>
+	<template id="{{property:id}}" data-global="{{property:allow_global_style}}">
+		<condition.if value="{{method:styles}}" is-not="">
+			<style id="base-style">{{method:styles}}</style>
+		</condition.if>
+
+		<condition.if value="{{property:import_fonts}}" is-bool="true">
+			<loop.foreach var="{{method:importedFonts}}" value="path">
+				<link class="container-font" rel="stylesheet" href="{{local:path}}"/>
+			</loop.foreach>
+		</condition.if>
+
+		<condition.if value="{{method:componentsLoad}}" is-bool="true">
+			<link id="component-styles" rel="stylesheet" href="{{method:url|'style', property:components}}"/>		
+		</condition.if>
+	</template>
+
+	<condition.if value="{{property:allow_global_style}}" is="true">
+		<condition.if value="{{method:styles}}" is-not="">
+			<style id="{{property:id}}-global-base-style">{{method:styles}}</style>
+		</condition.if>
+
+		<condition.if value="{{method:componentsLoad}}" is-bool="true">
+			<link id="{{property:id}}-global-component-styles" rel="stylesheet" href="{{method:url|'style', property:components}}"/>
+		</condition.if>
+	</condition.if>
+
+	<condition.if value="{{method:componentsLoad}}" is-bool="true">
+		<condition.if value="{{method:debugMode}}" is-bool="true">
+		<!-- link each template seperately to detect slow loading components in debug mode -->
+			<loop.foreach var="{{property:components}}" key="component" value="class">
+				<script src="{{method:url|'template', local:component}}"/>
+			</loop.foreach>
+		</condition.if>
+		<condition.else>
+			<script src="{{method:url|'template', property:components}}"/>
+		</condition.else>
+		<script src="{{method:url|'script', property:components}}"/>
+	</condition.if>
+
+</dummy.container>
+
+#~styles:
+<dummy.container>
+	<loop.foreach var="{{property:stylesheet_embed}}" value="embed">{{local:embed}}</loop.foreach>
+</dummy.container>

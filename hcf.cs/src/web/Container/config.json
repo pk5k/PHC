@@ -1,7 +1,9 @@
 {
-  "encoding":"utf-8",
   "enable-autoloader": true,
-  "font":{
+  "encoding":"utf-8",
+  "base":"/",
+  "fonts": ["fonts/Roboto/roboto.css", "fonts/FontAwesome/font-awesome.min.css", "fonts/FontAwesome/fa-arithmetic-extension.css"],
+  "default-font":{
     "family":"robotoregular",
     "size":16
   }

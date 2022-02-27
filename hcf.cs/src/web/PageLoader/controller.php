@@ -30,12 +30,20 @@ trait Controller
 			return json_encode($out);
 		}
 
+		$conf = self::config();
+		$fastpath = isset($conf->fastpath) ? $conf->fastpath : true;
+
 		$out = self::applyPreloads($out, $fqn);
 		$out->which = $fqn;
-		$out->view = $target::wrappedElementName(false);// disable autoload to render instance below and add it later (one request less per page and only hcf.web.PageLoader must be add to hcf.web.Bridge config)
+		$out->title = $target::title();
+		$out->view = $target::wrappedElementName(!$fastpath, true, $arguments);
+			// set render-changes to true, disable autoload to render instance below and add it later (one request less per page and only hcf.web.PageLoader must be add to hcf.web.Bridge config)
 
-		$instance = new $target($arguments);
-		$out->rendered = $instance->toString();
+		if ($fastpath)
+		{
+			$instance = new $target($arguments);
+			$out->rendered = $instance->toString();
+		}
 
 		return json_encode($out);
 	}
@@ -53,16 +61,17 @@ trait Controller
 	private static function applyPreloads($out, $fqn)
 	{
 		$c = self::config();
+		$default = isset($c->context) ? $c->context : 'global';
 
 		if (isset($c->{$fqn}))
 		{
 			$out->preload = $c->{$fqn};
 
-			if (is_array($out->preload)) // shorthand if no context except global is required
+			if (is_array($out->preload)) // shorthand if no context except default is required
 			{
 				$old = $out->preload;
 				$out->preload = new \stdClass();
-				$out->preload->global = $old;
+				$out->preload->$default = $old;
 			}
 
 			if (isset($out->preload->{'//'}))
@@ -70,17 +79,17 @@ trait Controller
 				unset($out->preload->{'//'});// remove comment
 			}
 
-			if (!isset($out->preload->global))
+			if (!isset($out->preload->$default))
 			{
-				$out->preload->global = [];
+				$out->preload->$default = [];
 			}
 
-			array_unshift($out->preload->global, $fqn);
+			array_unshift($out->preload->$default, $fqn);
 		}
 		else 
 		{
 			$out->preload = new \stdClass();
-			$out->preload->global = [$fqn];
+			$out->preload->$default = [$fqn];// if nothing set only load the target page resources
 		}
 
 		return $out;

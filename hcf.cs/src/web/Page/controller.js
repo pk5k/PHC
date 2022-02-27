@@ -4,31 +4,18 @@ class extends hcf.web.Component
 	{
 		super();
 		
-		let load_trigger = this.shadowRoot.querySelector('.hcf-load-trigger');
+		this.runAfterDomLoad(()=>{
+			let autoload = this.getAttribute('autoload');
+			this.render_changes = this.getAttribute('render-changes');
 
-		if (this.getAttribute('autoload') == 'false')
-		{
-			load_trigger.remove();
-			load_trigger = null;
-		}
-
-		if (load_trigger != null)
-		{
-			let load_as = load_trigger.getAttribute('data-load');
-
-			this.loadView(load_as)
-				.then((data) => 
-				{
-					this.loaded_as = load_as;
-					this.viewLoadSuccess(data);
-				})
-				.catch((code, msg) =>  this.viewLoadFailed(code, msg));
-
-			load_trigger.remove();
-		}
+			if (autoload != null && autoload != 'false')
+			{
+				this.load();
+			}
+		});
 
 		this.addEventListener('page-rendered', (e) => {
-			this.ready(this.pageRoot());
+			this.loaded(this.pageRoot());
 		});
 	}
 
@@ -37,10 +24,10 @@ class extends hcf.web.Component
 		return this.page_root;// the root element of your view
 	}
 
-	ready(view_root)
+	loaded(view_root)
 	{
 		// called when the page has load it's view.
-		// This does not depend on placement in the dom unlike connectedCallback
+		// This does not depend on placement in the dom unlike connectedCallback and may occur before
 	}
 
 	cacheReload()
@@ -59,6 +46,33 @@ class extends hcf.web.Component
 		return true; // Return false to avoid PageLoaders caching of this page
 	}
 
+	load()// if element was created without autoload="true" load view by using this method (element-attributes will be passed as first arg to constructor)
+	{
+		if (this.loaded_as != undefined)
+		{
+			return this.reload();
+		}
+		else
+		{
+			let load_trigger = this.shadowRoot.querySelector('.hcf-load-trigger');
+
+			if (load_trigger == null)
+			{
+				throw 'page was not loaded yet and load trigger cannot be found.';
+			}
+
+			load_trigger.remove();
+
+			return this.loadView()
+				.then((data) => 
+				{
+					this.loaded_as = this.FQN;
+					this.viewLoadSuccess(data);
+				})
+				.catch((code, msg) =>  this.viewLoadFailed(code, msg));
+		}
+	}
+
 	reload() // use to re-render whole view with current element-attributes passed to the server page instance
 	{
 		if (this.loaded_as == undefined || this.loaded_as == null)
@@ -72,6 +86,43 @@ class extends hcf.web.Component
 	}
 
 	// INTERNAL:
+	static get observedAttributes() 
+	{
+		return [
+			'render-changes'
+		];
+	}
+
+  	attributeChangedCallback(attr, oldValue, newValue) 
+  	{
+  		if (attr.indexOf('-') > -1)
+  		{
+  			attr = attr.replace('-', '_');// attributes containing - need a _ for methodname instead
+  		}
+
+  		if (attr != null && oldValue != newValue)
+  		{
+    		this[attr] = newValue;// triggers setter that'll do the rest
+  		}
+    }
+
+    set render_changes(val)
+    {
+   		if (val != null && val != 'false')
+		{
+			this.setupObserver();
+		}
+		else 
+		{
+			this.removeObserver();
+		}
+    }
+
+    get render_changes()
+    {
+		return this.getAttribute('render-changes');
+    }
+
 	clear()
 	{
 		this.page_root = null;
@@ -118,8 +169,11 @@ class extends hcf.web.Component
 	{
 		this.clear();
 
+		this.style.visibility = 'hidden';
+
 		let wrapper = document.createElement('div');
 		wrapper.innerHTML = view_data;
+
 		let children = wrapper.children;
 		let first = null;
 
@@ -135,50 +189,51 @@ class extends hcf.web.Component
       			this.shadowRoot.appendChild(children[i].cloneNode(true));
       		}
       	}
+		
+		wrapper.remove();
 
       	this.page_root = first;
-      	let e = new Event('page-rendered', {bubbles:true});
-      	
-      	this.dispatchEvent(e);
+      	let me = this;
+
+      	// browser must finish it's rendering first before page can be shown to avoid flickering
+      	setTimeout(function(){
+	      	me.style.visibility = null;
+			
+			let e = new Event('page-rendered', {bubbles:true});
+	      	me.dispatchEvent(e);
+      	}, 50);
 	}
 
 	getOwnAttributes()
 	{
 		let atts = this.attributes;
 		let out = {};
+		let skip = ['render-changes', 'autoload', 'style'];//dont pass these attributes to the page
 
 		for (var i in atts)
 		{
 			if (!isNaN(i))
 			{
-				let att_name = atts[i];
-				let att_val = this.getAttribute(att_name);
-				out[att_name] = att_val;
+				let att = atts[i];
+
+				if (skip.indexOf(att.name) != -1)
+				{
+					continue;
+				}
+
+				out[att.name] = att.value;
 			}
 		}
 
 		return out;
 	}
 
-	loadView(which)
+	loadView()
 	{
-      	let e = new Event('page-load-view-begin', {bubbles:true});
+      	var e = new Event('page-load-view-begin', {bubbles:true});
+		this.dispatchEvent(e);
 
-		if (which == undefined || which == null)
-		{
-			throw 'given hcfqn is invalid.';
-		}
-
-		return new Promise((resolve, reject) =>
-		{
-			hcf.web.Bridge(which).render().do({
-				arguments: [this.getOwnAttributes()],
-				timeout: 0,
-				onSuccess: (data) => { resolve(data) },
-				onError: (code, msg) => { reject(code, msg) },
-				onTimeout: (code, msg) => { reject(code, msg) }
-			});
-		});
+		return this.bridge().render().do([this.getOwnAttributes()]);
 	}
 
 	error(code, msg)
@@ -186,5 +241,34 @@ class extends hcf.web.Component
 		this.loaded_as = null;
 
 		console.error(code, msg);
+	}
+
+	removeObserver()
+	{
+		if (this._observer != undefined)
+		{
+			this._observer.disconnect();
+
+			delete this._observer;
+		}
+	}
+
+	setupObserver()
+	{
+		if (this._observer != undefined)
+		{
+			this.removeObserver();
+		}
+
+		const config = { attributes: true, childList: false, subtree: false };
+		this._observer = new MutationObserver((e) => { 
+			if (e[0].attributeName != 'style')
+			{
+				this.reload()
+			}
+		});
+
+		// Start observing the root element for mutations. If occured, the page will re-render with new attributes passed to server
+		this._observer.observe(this, config);
 	}
 }

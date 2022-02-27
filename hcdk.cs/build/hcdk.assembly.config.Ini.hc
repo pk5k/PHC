@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.config.Ini - BUILD 22.02.18#197
+<?php #HYPERCELL hcdk.assembly.config.Ini - BUILD 22.02.23#199
 namespace hcdk\assembly\config;
 class Ini extends \hcdk\assembly\config {
     use \hcf\core\dryver\Base, Ini\__EO__\Controller, \hcf\core\dryver\View, \hcf\core\dryver\Internal;
@@ -12,7 +12,7 @@ class Ini extends \hcdk\assembly\config {
     }
     # BEGIN ASSEMBLY FRAME VIEW.TEXT
     protected function buildLoadConfigMethod() {
-        $__CLASS__ = __CLASS__;
+        $__CLASS__ = get_called_class();
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
         $output = "\$content = self::_attachment(__FILE__, __COMPILER_HALT_OFFSET__, '{$__CLASS__::_call('getName', $__CLASS__, $_this) }', '{$__CLASS__::_call('getType', $__CLASS__, $_this) }');

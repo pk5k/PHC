@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.raw.Hypercell - BUILD 22.02.18#333
+<?php #HYPERCELL hcdk.raw.Hypercell - BUILD 22.02.23#335
 namespace hcdk\raw;
 class Hypercell {
     use \hcf\core\dryver\Config, Hypercell\__EO__\Controller, \hcf\core\dryver\View, \hcf\core\dryver\Internal;
@@ -21,7 +21,7 @@ class Hypercell {
     # END ASSEMBLY FRAME CONFIG.INI
     # BEGIN ASSEMBLY FRAME VIEW.TEXT
     public function __toString() {
-        $__CLASS__ = __CLASS__;
+        $__CLASS__ = get_called_class();
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
         $output = "<?php #HYPERCELL {$__CLASS__::_property('name.long', $__CLASS__, $_this) } - BUILD {$__CLASS__::_property('build.no', $__CLASS__, $_this) }
@@ -53,21 +53,21 @@ __halt_compiler();#__COMPILER_HALT_OFFSET__
         return $output;
     }
     protected function assemblyFrame() {
-        $__CLASS__ = __CLASS__;
+        $__CLASS__ = get_called_class();
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
         $output = "# {$__CLASS__::_arg($_func_args, 0, $__CLASS__, $_this) } ASSEMBLY FRAME {$__CLASS__::_arg($_func_args, 1, $__CLASS__, $_this) }";
         return $output;
     }
     protected function executableFrame() {
-        $__CLASS__ = __CLASS__;
+        $__CLASS__ = get_called_class();
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
         $output = "# {$__CLASS__::_arg($_func_args, 0, $__CLASS__, $_this) } EXECUTABLE FRAME OF {$__CLASS__::_arg($_func_args, 1, $__CLASS__, $_this) }";
         return $output;
     }
     protected function attachmentFrame() {
-        $__CLASS__ = __CLASS__;
+        $__CLASS__ = get_called_class();
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
         $output = "{$__CLASS__::_arg($_func_args, 0, $__CLASS__, $_this) }[{$__CLASS__::_arg($_func_args, 1, $__CLASS__, $_this) }]";

@@ -6,7 +6,7 @@
 	display: block;
 	
 	z-index: 9999;
-	position: absolute;
+	position: fixed;
 	top: 0;
 	left: 0;
 	right: 0;
@@ -17,19 +17,16 @@
 
 #content-wrapper
 {
-	transition-property: opacity;
+
+	transition-property: filter;
 	transition-duration: .5s;
 
 	&.loading
 	{
-		opacity: .5;
+		filter: grayscale(100%);
+
 		pointer-events: none;
 		user-select: none;
-	}
-
-	&:not(.loading)
-	{
-		opacity: 1;
 	}
 }
 

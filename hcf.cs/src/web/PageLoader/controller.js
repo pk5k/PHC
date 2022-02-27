@@ -1,82 +1,5 @@
 class extends hcf.web.Component
 {
-	static instance = null;
-	static current_request = null;
-	static _cache = {};
-	static _map = {}
-	static _loaded_dependencies = [];
-
-	static cache(page_fqn, set)
-	{
-		let me = hcf.web.PageLoader;
-
-		if (set == undefined)
-		{
-			if (me._cache[page_fqn] == undefined)
-			{
-				return null;
-			}
-			
-			return me._cache[page_fqn];
-		}
-
-		me._cache[page_fqn] = set;
-
-		if (set === false)// disable cache
-		{
-			delete me._map[page_fqn];
-		}
-	}
-
-	static addToMap(route_name, target_page_fqn)
-	{
-		let me = hcf.web.PageLoader;
-
-		if (me._map[target_page_fqn] == undefined)
-		{
-			me._map[target_page_fqn] = [route_name];
-		}
-		else 
-		{
-			me._map[target_page_fqn].push(route_name);
-		}
-	}
-
-	static pageFqnForRoute(route_name)
-	{
-		let me = hcf.web.PageLoader;
-
-		for (let i in me._map)
-		{
-			let o = me._map[i];
-
-			if (o.indexOf(route_name) > -1)
-			{
-				return i;
-			}
-		}
-
-		return null;
-	}
-
-	static activeInstance()
-	{
-		let me = hcf.web.PageLoader;
-
-		if (me.instance != undefined)
-		{
-			let current = me.instance.current_page;
-			let cached = me.cache(current);
-
-			if (cached != null && (cached.instance != null) && cached.instance != undefined)
-			{
-				return cached.instance;
-			}
-		}
-
-		return null;
-	}
-
 	constructor()
 	{
 		super();
@@ -88,6 +11,11 @@ class extends hcf.web.Component
 
 		hcf.web.PageLoader.instance = this;
 		window.addEventListener('popstate', (e) => this.navigationOccured(e));
+
+		// if page reload is triggered fade content
+		this.addEventListener('page-load-view-begin', (e) => this.hideContainer());
+		this.addEventListener('page-rendered', (e) => this.showContainer());
+		this.addEventListener('page-load-view-failed', (e) => this.displayError(0, 'reloading view failed.'));
 	}
 
 	connectedCallback()
@@ -170,6 +98,67 @@ class extends hcf.web.Component
 		return this._loader_color_error;
 	}
 
+	// PAGELOADER:
+	static instance = null;
+	static current_request = null;
+	static _cache = {};
+	static _map = {};
+
+	static cache(page_fqn, set)
+	{
+		let me = hcf.web.PageLoader;
+
+		if (set == undefined)
+		{
+			if (me._cache[page_fqn] == undefined)
+			{
+				return null;
+			}
+			
+			return me._cache[page_fqn];
+		}
+
+		me._cache[page_fqn] = set;
+
+		if (set === false)// disable cache
+		{
+			delete me._map[page_fqn];
+		}
+	}
+
+	static addToMap(route_name, target_page_fqn)
+	{
+		let me = hcf.web.PageLoader;
+
+		if (me._map[target_page_fqn] == undefined)
+		{
+			me._map[target_page_fqn] = [route_name];
+		}
+		else 
+		{
+			me._map[target_page_fqn].push(route_name);
+		}
+	}
+
+	static pageFqnForRoute(route_name)
+	{
+		let me = hcf.web.PageLoader;
+
+		for (let i in me._map)
+		{
+			let o = me._map[i];
+
+			if (o.indexOf(route_name) > -1)
+			{
+				return i;
+			}
+		}
+
+		return null;
+	}
+	
+	// INIT:
+
 	initStateFragments()
 	{
 		let error_slot = this.shadowRoot.querySelector('.error-fragment');
@@ -194,204 +183,44 @@ class extends hcf.web.Component
 		}
 	}
 
+	inspectElementForRouterLinks(search_for_router_links)
+	{
+		if (search_for_router_links.shadowRoot != null && search_for_router_links.shadowRoot != undefined)
+		{
+			// custom elements with this.link_class + -crawl will be searched trough for contained links
+			if (search_for_router_links.classList.contains('crawl-add-all'))
+			{
+				// if custom element also contains class "crawl-add-all" all contained links will be initialized
+				search_for_router_links.shadowRoot.querySelectorAll('a[href]').forEach((shadow_router_link) => 
+				{
+					this.addLinkListener(shadow_router_link);
+				});
+			}
+			else 
+			{
+				// if custom element does not contain "crawl-add-all" class, only links with this.link_class will be initilalized 
+				// (this depends on the custom element implementation itself but is neccessary if not all links should be initialized)
+				search_for_router_links.shadowRoot.querySelectorAll('.' + this._link_class).forEach((shadow_router_link) => 
+				{
+					this.addLinkListener(shadow_router_link);
+				});
+			}
+		}
+	}
+
 	initRouterLinks()
 	{
-		document.querySelectorAll('.' + this._link_class + '-crawl').forEach((search_for_router_links) => 
+		document.querySelectorAll('.' + this._link_class + '-crawl').forEach((e) => this.inspectElementForRouterLinks(e));
+
+		if (this.firstChild instanceof hcf.web.Page)
 		{
-			if (search_for_router_links.shadowRoot != null && search_for_router_links.shadowRoot != undefined)
-			{
-				// custom elements with this.link_class + -crawl will be searched trough for contained links
-				if (search_for_router_links.classList.contains('crawl-add-all'))
-				{
-					// if custom element also contains class "crawl-add-all" all contained links will be initialized
-					search_for_router_links.shadowRoot.querySelectorAll('a[href]').forEach((shadow_router_link) => 
-					{
-						this.addLinkListener(shadow_router_link);
-					});
-				}
-				else 
-				{
-					// if custom element does not contain "crawl-add-all" class, only links with this.link_class will be initilalized 
-					// (this depends on the custom element implementation itself but is neccessary if not all links should be initialized)
-					search_for_router_links.shadowRoot.querySelectorAll('.' + this._link_class).forEach((shadow_router_link) => 
-					{
-						this.addLinkListener(shadow_router_link);
-					});
-				}
-			}
-		});
+			this.inspectElementForRouterLinks(this.firstChild);
+		}
 
 		document.querySelectorAll('.' + this._link_class).forEach((router_link) => 
 		{
 			this.addLinkListener(router_link);
 		});
-	}
-
-	dispatchQuery(href)
-	{
-		let arg = this.contentWrapperElement().getAttribute('data-router-arg');
-		let parts = href.split('&');
-		let route = null;
-		let url_args = {};
-
-		for (var i in parts)
-		{
-			let part = parts[i].split('=');
-			let key = part[0];
-
-			if (key == arg && part[1] != undefined)
-			{
-				route = part[1];
-			}
-			else 
-			{
-				url_args[key] = part[1];
-			}
-		}
-
-		return {
-			fancy: false,
-			'route': route,
-			'args': url_args
-		};
-	}
-
-	extractRouteName(href)
-	{
-		let router_default = this.contentWrapperElement().getAttribute('data-router-default');
-
-		if (href.substr(0, 4) == 'http')
-		{
-			// absolute url, strip down until first / or ?
-			href = href.substr(8); // skip https://
-
-			let qmark_i = href.indexOf('?');
-			let slash_i = href.indexOf('/');
-
-			if (qmark_i == -1 && slash_i == -1)
-			{
-				href = router_default;
-			}
-			else if (qmark_i == -1 || slash_i < qmark_i)
-			{
-				href = href.substr(slash_i);
-			}
-			else if (slash_i == -1 || qmark_i < slash_i)
-			{
-				href = href.substr(qmark_i);
-			}
-			else
-			{
-				href = router_default;	
-			}
-		}
-
-		if (href.substr(0, 1) == '?')//regular urls with route-name as url-arg: ?foo=bar&route=target&other-arg=true
-		{
-			href = href.substr(1);
-
-			return this.dispatchQuery(href);
-		}
-
-		// fancy-urls where route-name is path-part of url: /route?path-is-route=true&foo=bar or route?arg=1&arg=false without leading /
-		if (href.substr(0, 1) == '/')
-		{
-			href = href.substr(1);
-		}
-
-		href = href.split('?');
-
-		let url_args = href[1];
-		if (url_args != undefined)
-		{
-			url_args = this.dispatchQuery(url_args).args;
-		}
-		else 
-		{
-			url_args = {};
-		}
-
-		let route_parts = href[0].split('/');
-		let route = route_parts[0];
-
-		if (route == '')
-		{
-			route = router_default;// try default of hcf.web.Router
-		}
-
-		return {
-			fancy: true,
-			'route': route,
-			'args': url_args
-		};
-	}
-
-	joinUrlArgs(route, args, fancy)
-	{
-		let out = '?';
-
-		if (!fancy)
-		{
-			let arg = this.contentWrapperElement().getAttribute('data-router-arg');
-			out += arg + '=' + route + '&';
-		}
-
-		Object.keys(args).forEach((a) => 
-		{
-			out += a + '=' + args[a] + '&';
-		});
-	
-		if (fancy)
-		{	
-			out = route + out;
-		}
-
-		return out.slice(0, -1);
-	}
-
-	redirected(to_route)
-	{
-		let href = this.extractRouteName(window.location.href);
-
-		this.current_route = to_route;
-		history.pushState(null, null, this.joinUrlArgs(to_route, href.args, href.fancy));
-	}
-
-	navigationOccured(event)
-	{
-		let href = this.extractRouteName(window.location.pathname).route;
-
-		if (hcf.web.PageLoader.pageFqnForRoute(href) != null)
-		{
-			this.loadPage(href);
-		}
-	}
-
-	routerLinkClicked(event)
-	{
-		event.preventDefault();// do not redirect to url
-		let href = null;
-
-		if (!event.target.hasAttribute('href'))
-		{
-			let link_lookup = event.target.closest('a[href]');
-
-			if (link_lookup == null)
-			{
-				throw 'cannot determine route for ' + this._link_class + ' element ' + event.target;
-			}
-
-			href = link_lookup.getAttribute('href');
-		}
-		else 
-		{
-			href = event.target.getAttribute('href');
-		}
-
-		let parts = this.extractRouteName(href);
-
-		history.pushState(null, null, this.joinUrlArgs(parts.route, parts.args, parts.fancy));
-		this.loadPage(parts.route);
 	}
 
 	topLoaderElement()
@@ -402,6 +231,17 @@ class extends hcf.web.Component
 	contentWrapperElement()
 	{
 		return this.shadowRoot.getElementById('content-wrapper');
+	}
+
+	// ACTIONS:
+	syncQuery(new_args)
+	{
+		if (new_args == null)
+		{
+			this.removeAttribute('query');
+		}
+
+		this.setAttribute('query', this.joinUrlArgs('', new_args, false));
 	}
 
 	reload()
@@ -430,8 +270,7 @@ class extends hcf.web.Component
 
 	loadPage(route_name)
 	{
-		
-		if (route_name == undefined || route_name == null || route_name.trim() == '')
+		if (route_name == null || route_name == undefined || route_name.trim() == '')
 		{
 			throw 'Invalid route ' + route_name + ' given.';
 		}
@@ -470,10 +309,24 @@ class extends hcf.web.Component
 
 	loadPageFromServer(route_name)
 	{
-		let me = this.contentWrapperElement().getAttribute('data-me');
+		let query = this.getAttribute('query');
+		let initial_args = null;
 
-		hcf.web.Bridge(me).invoke('load').do({
-			arguments:[route_name, hcf.web.PageLoader._map],
+		if (query != null && query != '')
+		{
+			if (query.substr(0,1) != '?')
+			{
+				query = '?' + query;
+			}
+
+			initial_args = this.extractRouteName(query);
+			initial_args = initial_args.args;
+
+			this.removeAttribute('query');// query is only per page-load basis valid, on navigation the arguments on the used link will be used.
+		}
+
+		this.bridge().invoke('load').do({
+			arguments:[route_name, hcf.web.PageLoader._map, initial_args],
 			timeout: 0,
 			onBefore: (xhr) => { this.current_request = xhr },
 			onUpload: (e) => this.setTopLoaderProgress( (e.loaded / e.total * 100) * .25 ), // first 25% are for uploads 
@@ -616,37 +469,22 @@ class extends hcf.web.Component
 			let me = hcf.web.PageLoader;
 			let preload_data = o.preload;
 			let preload_promises = [];
-			let loaded_dependencies = [];
 
-			for (let component_context in o.preload)
+			for (let render_context in o.preload)
 			{
-				let components = o.preload[component_context];
+				let components = o.preload[render_context];
 
 				if (components.length == 0)
 				{
 					continue;
 				}
 
-				let load = [];
-
-				components.forEach((dependency) => {
-					if (me._loaded_dependencies.indexOf(dependency) == -1)
-					{
-						if (load.indexOf(dependency) == -1)// maybe duplicate?
-						{
-							load.push(dependency);
-						}
-						
-						loaded_dependencies.push(dependency);
-					}
-				});
-
-				if (load.length == 0)
+				if (render_context.substr(0,1) == '@')
 				{
-					continue;
+					render_context = document.cloneRenderContext(render_context.substr(1), o.which).getAttribute('id');
 				}
 
-				let context_promises = hcf.web.Component.loadDependencies(load, (component_context == 'global') ? undefined : component_context);
+				let context_promises = hcf.web.Controller.loadResources(components, (render_context == 'global') ? undefined : render_context);
 				preload_promises = preload_promises.concat(context_promises);
 			}
 
@@ -664,10 +502,7 @@ class extends hcf.web.Component
 				}
 			}
 
-			Promise.all(preload_promises).catch((e) => this.displayError(e, 'Preloading resources failed.')).then(() => { 
-				me._loaded_dependencies = me._loaded_dependencies.concat(loaded_dependencies);
-				this.documentReady(route_name, o);
-			});
+			Promise.all(preload_promises).catch((e) => this.displayError(e, 'Preloading resources failed.')).then(() => this.documentReady(route_name, o));
 		}
 		else 
 		{
@@ -675,6 +510,84 @@ class extends hcf.web.Component
 		}
 	}
 
+	setTitle(to)
+	{
+		document.head.querySelector('title').innerText = to;
+	}
+
+	addView(view_data)
+	{
+		let view = view_data.view;
+		let which = view_data.which;
+		let rendered = view_data.rendered;
+
+		if (view instanceof HTMLElement)// wrapper from cache
+		{
+			let children = view.children;
+			let clone = [];
+
+			for (var i in children)
+			{
+				if (children[i] instanceof hcf.web.Page)
+				{
+					clone.push(children[i]);
+				}
+			}
+
+			clone.forEach((e) => {
+				this.appendChild(view.removeChild(e));
+			});
+
+			this.showContainer();// show container instantly, no page-rendered event will be thrown
+		}
+		else 
+		{
+			this.innerHTML = view;
+			let page_elem = this.firstChild;
+
+			if (!(page_elem instanceof hcf.web.Page))
+			{
+				throw 'given element is no hcf.web.Page instance';
+			}
+
+			if (rendered != undefined)
+			{
+				page_elem.injectView(rendered, which);
+			}
+
+			this.appendChild(page_elem);
+			this.initRouterLinks();
+		}
+
+		return this.firstChild;
+	}
+
+	displayErrorPage()
+	{
+		this.unloadCurrentPage();
+
+		this.error_page_active = true;
+
+		if (this.page_error_fragment != undefined && this.page_error_fragment != null)
+		{
+			this.appendChild(this.page_error_fragment);
+		}
+	}
+
+	displayError(code, msg)
+	{
+		this.current_request = null;
+		this.setTopLoaderColor(this._loader_color_error);
+		//this.setTopLoaderProgress(100);
+		this.displayErrorPage();
+		this.showContainer();
+		console.error('Loading failed: Error ', code, msg);
+
+		let event = new Event('page-load-failed', {bubbles:true});
+		this.dispatchEvent(event);
+	}
+
+	// EVENTS:
 	documentReady(route_name, o, from_cache)
 	{
 		try 
@@ -682,13 +595,17 @@ class extends hcf.web.Component
 			this.unloadCurrentPage();
 			
 			let page_elem = this.addView(o);
-			this.showContainer();
+			this.setTitle((o.title == '') ? o.which : o.title);
 			
-			this.setTopLoaderProgress(99);// rendered
+			this.setTopLoaderProgress(99);// view initialized (rendering happens asnyc)
 			
 			if (o.redirect != undefined)
 			{
 				this.redirected(o.redirect);
+			}
+			else 
+			{
+				this.current_route = route_name;
 			}
 
 			if (from_cache === true)
@@ -722,76 +639,191 @@ class extends hcf.web.Component
 		}
 	}
 
-	addView(view_data)
+	redirected(to_route)
 	{
-		let view = view_data.view;
-		let which = view_data.which;
-		let rendered = view_data.rendered;
+		let href = this.extractRouteName(window.location.href);
 
-		this.contentWrapperElement().style.opacity = 0;// hide completely here
+		this.current_route = to_route;
 
-		if (view instanceof HTMLElement)// from cache
+		this.syncQuery(href.args);
+		history.pushState(null, null, this.joinUrlArgs(to_route, href.args, href.fancy));
+	}
+
+	navigationOccured(event)
+	{
+		let parts = this.extractRouteName(window.location.pathname);
+		let href = parts.route;
+		let args = parts.args;
+
+		this.syncQuery(args);
+		this.loadPage(href);
+	}
+
+	routerLinkClicked(event)
+	{
+		event.preventDefault();// do not redirect to url
+		let href = null;
+
+		if (!event.target.hasAttribute('href'))
 		{
-			let children = view.children;
-			let clone = [];
+			let link_lookup = event.target.closest('a[href]');
 
-			for (var i in children)
+			if (link_lookup == null)
 			{
-				if (children[i] instanceof hcf.web.Page)
-				{
-					clone.push(children[i]);
-				}
+				throw 'cannot determine route for ' + this._link_class + ' element ' + event.target;
 			}
 
-			clone.forEach((e) => {
-				this.appendChild(view.removeChild(e));
-			});
+			href = link_lookup.getAttribute('href');
 		}
 		else 
 		{
-			this.innerHTML = view;
-			let page_elem = this.firstChild;
-
-			if (!(page_elem instanceof hcf.web.Page))
-			{
-				throw 'given element is no hcf.web.Page instance';
-			}
-
-			if (rendered != undefined)
-			{
-				page_elem.injectView(rendered, which);
-			}
-
-			this.initRouterLinks();
+			href = event.target.getAttribute('href');
 		}
 
-		this.contentWrapperElement().style.opacity = null;// unset
+		let parts = this.extractRouteName(href);
 
-		return this.firstChild;
-	}
-
-	displayErrorPage()
-	{
-		this.unloadCurrentPage();
-
-		this.error_page_active = true;
-
-		if (this.page_error_fragment != undefined && this.page_error_fragment != null)
+		if (parts.route == this.current_route)
 		{
-			this.appendChild(this.page_error_fragment);
+			return; // no reload if same page should be load
 		}
+
+		let new_url = this.joinUrlArgs(parts.route, parts.args, parts.fancy);
+
+		this.syncQuery(parts.args);
+		history.pushState(null, null, new_url);
+		this.loadPage(parts.route);
 	}
 
-	displayError(code, msg)
+	// URL STUFF
+	
+	dispatchQuery(href)
 	{
-		this.current_request = null;
-		this.setTopLoaderColor(this._loader_color_error);
-		//this.setTopLoaderProgress(100);
-		this.displayErrorPage();
-		this.showContainer();
-		console.error('Loading failed: Error ', code, msg);
+		let arg = this.contentWrapperElement().getAttribute('data-router-arg');
+		let parts = href.split('&');
+		let route = null;
+		let url_args = {};
 
-		let event = new Event('page-load-failed', {bubbles:true});
-		this.dispatchEvent(event);
+		for (var i in parts)
+		{
+			let part = parts[i].split('=');
+			let key = part[0];
+
+			if (key == arg && part[1] != undefined)
+			{
+				route = part[1];
+			}
+			else 
+			{
+				url_args[key] = part[1];
+			}
+		}
+
+		return {
+			fancy: false,
+			'route': route,
+			'args': url_args
+		};
+	}
+
+	extractRouteName(href)
+	{
+		if (href == '')
+		{
+			return {
+				fancy: false,
+				route: null,
+				args: null
+			};
+		}
+
+		let router_default = this.contentWrapperElement().getAttribute('data-router-default');
+
+		if (href.substr(0, 4) == 'http')
+		{
+			// absolute url, strip down until first / or ?
+			href = href.substr(8); // skip https://
+
+			let qmark_i = href.indexOf('?');
+			let slash_i = href.indexOf('/');
+
+			if (qmark_i == -1 && slash_i == -1)
+			{
+				href = router_default;
+			}
+			else if (qmark_i == -1 || slash_i < qmark_i)
+			{
+				href = href.substr(slash_i);
+			}
+			else if (slash_i == -1 || qmark_i < slash_i)
+			{
+				href = href.substr(qmark_i);
+			}
+			else
+			{
+				href = router_default;	
+			}
+		}
+
+		if (href.substr(0, 1) == '?')//regular urls with route-name as url-arg: ?foo=bar&route=target&other-arg=true
+		{
+			href = href.substr(1);
+
+			return this.dispatchQuery(href);
+		}
+
+		// fancy-urls where route-name is path-part of url: /route?path-is-route=true&foo=bar or route?arg=1&arg=false without leading /
+		if (href.substr(0, 1) == '/')
+		{
+			href = href.substr(1);
+		}
+
+		href = href.split('?');
+
+		let url_args = href[1];
+		if (url_args != undefined)
+		{
+			url_args = this.dispatchQuery(url_args).args;
+		}
+		else 
+		{
+			url_args = {};
+		}
+
+		let route_parts = href[0].split('/');
+		let route = route_parts[0];
+
+		if (route == '')
+		{
+			route = router_default;// try default of hcf.web.Router
+		}
+
+		return {
+			fancy: true,
+			'route': route,
+			'args': url_args
+		};
+	}
+
+	joinUrlArgs(route, args, fancy)
+	{
+		let out = '?';
+
+		if (!fancy)
+		{
+			let arg = this.contentWrapperElement().getAttribute('data-router-arg');
+			out += arg + '=' + route + '&';
+		}
+
+		Object.keys(args).forEach((a) => 
+		{
+			out += a + '=' + args[a] + '&';
+		});
+	
+		if (fancy)
+		{	
+			out = route + out;
+		}
+
+		return out.slice(0, -1);
 	}
 }

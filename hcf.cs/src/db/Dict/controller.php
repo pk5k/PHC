@@ -110,9 +110,53 @@ trait Controller
 		return $out;
 	}
 
+	private static function fromCache()
+	{
+		$c = self::config();
+
+		if (isset($c) && isset($c->cache))
+		{
+			if (isset($c->cache->session) && isset($c->cache->session->key))
+			{
+				if (isset($_SESSION) && isset($_SESSION[$c->cache->session->key]))
+				{
+					return $_SESSION[$c->cache->session->key];
+				}
+			}
+		}
+
+		return [];
+	}
+
+	private static function toCache($data)
+	{
+		$c = self::config();
+
+		if (isset($c) && isset($c->cache))
+		{
+			if (isset($c->cache->session) && isset($c->cache->session->key))
+			{
+				if (!isset($_SESSION) && isset($c->cache->session->autostart) && $c->cache->session->autostart)
+				{
+					session_start();
+				}
+
+				if (isset($_SESSION) && isset($_SESSION[$c->cache->session->key]))
+				{
+					$_SESSION[$c->cache->session->key] = $data;
+				}
+			}
+		}
+	}
+
 	private function loadDictToRawCache($with_comments = false)
 	{
-		self::$raw_cache = [];
+		self::$raw_cache = self::fromCache();
+
+		if (count(self::$raw_cache) > 0)
+		{
+			return;
+		}
 
 		$stmt = DatabaseConnection::to(self::config()->connection->name)->prepare($this->tplloadDict());
 		$cols = self::config()->connection->table->col;
@@ -153,6 +197,8 @@ trait Controller
 				}
 				//IL::log()->info(self::FQN.' - writing raw-cache '.$key.'@'.$locale.' = "'.$value.'"');
 			}
+
+			self::toCache(self::$raw_cache);
 		}
 		else
 		{

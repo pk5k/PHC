@@ -1,6 +1,6 @@
-<?php #HYPERCELL hcf.web.Bridge - BUILD 22.02.21#3325
+<?php #HYPERCELL hcf.web.Bridge - BUILD 22.02.25#3329
 namespace hcf\web;
-class Bridge extends \hcf\web\Component {
+class Bridge extends \hcf\web\Controller {
     use \hcf\core\dryver\Base, \hcf\core\dryver\Config, \hcf\core\dryver\Controller, \hcf\core\dryver\Controller\Js, Bridge\__EO__\Controller, \hcf\core\dryver\View, \hcf\core\dryver\Internal;
     const FQN = 'hcf.web.Bridge';
     const NAME = 'Bridge';
@@ -24,7 +24,8 @@ class Bridge extends \hcf\web\Component {
         $js = "function(to){var self=this;var _internal_route='?!=-bridge';var _worker_address='hcf.web.Bridge.Worker';var _worker_store=_worker_address+'.Store';var _header={action:\"X-Bridge-Action\",target:\"X-Bridge-Target\",method:\"X-Bridge-Method\"};self._target=to;self._action=undefined;self._method=undefined;if(document[_worker_address]==undefined&&window.Worker){document[_worker_address]=new Worker(_internal_route);document[_worker_address].onmessage=receiveWorkerMessage;}
 else if(!window.Worker){console.warn('Your Browser does not support WebWorkers - all requests will be executed on the main-thread.');}
 if(document[_worker_store]==undefined){document[_worker_store]={};}
-self.do=function(arg_obj){var prepared_data=prepareSend(arg_obj,false);send(prepared_data.url_args,prepared_data.passed_files,prepared_data.overwrites,prepared_data.callbacks);return self;}
+self.do=function(arg_obj){if((arg_obj!=undefined||arg_obj!=null)&&arg_obj.constructor==Array){arg_obj={arguments:arg_obj};}
+var prepared_data=prepareSend(arg_obj,false);return new Promise((res,rej)=>{send(prepared_data.url_args,prepared_data.passed_files,prepared_data.overwrites,prepared_data.callbacks,{resolve:res,reject:rej});});}
 self.letDo=function(arg_obj){if(!window.Worker||!document[_worker_address]){return self.do(arg_obj);}
 var prepared_data=prepareSend(arg_obj,true);var req_token=new Date().getTime();document[_worker_store][req_token]=prepared_data;document[_worker_address].postMessage({_:{token:req_token,route:_internal_route,header:_header,target:self.target(),action:self.action(),method:self.method()},overwrites:prepared_data.overwrites,args:prepared_data.url_args,files:prepared_data.passed_files});return self;}
 function receiveWorkerMessage(e){var token=e.data.token;if(document[_worker_store]==undefined){throw'Missing worker-store at document['+_worker_store+']';}
@@ -76,20 +77,22 @@ function argsToFormData(args,files){var fd=new FormData();for(var key in args){i
 fd.append(key,value);}}
 for(var i in files){var file=files[i];fd.append(file.name,file);}
 return fd;}
-function send(args,files,overwrites,callbacks){var http_request=false;var async=true;var req_method='POST';var timeout=4000;var eval_reponse=false;var info=false;if(overwrites!==undefined&&overwrites!==null){http_request=overwrites.xhr||http_request;req_method=overwrites.method||req_method;timeout=(!isNaN(overwrites.timeout))?overwrites.timeout:timeout;eval=overwrites.eval||eval;if(overwrites.async!==undefined&&overwrites.async!==null){async=overwrites.async;}}
+function send(args,files,overwrites,callbacks,promise){var http_request=false;var async=true;var req_method='POST';var timeout=4000;var eval_reponse=false;var info=false;if(overwrites!==undefined&&overwrites!==null){http_request=overwrites.xhr||http_request;req_method=overwrites.method||req_method;timeout=(!isNaN(overwrites.timeout))?overwrites.timeout:timeout;eval=overwrites.eval||eval;if(overwrites.async!==undefined&&overwrites.async!==null){async=overwrites.async;}}
 if(callbacks===undefined||callbacks===null){callbacks={};}
 if(!http_request){if(window.XMLHttpRequest){http_request=new XMLHttpRequest();}
 else{http_request=new ActiveXObject('Microsoft.XMLHTTP');}}
 if(http_request.ontimeout===undefined||http_request.ontimeout===null){http_request.ontimeout=function(){if(callbacks.timeout){callbacks.timeout(http_request);}
-else{throw'Request timed out';}}}
+promise.reject(http_request);}}
 if(callbacks.upload){http_request.upload.onprogress=function(e){callbacks.upload(e,http_request);}}
 if(callbacks.progress){http_request.addEventListener('progress',function(e){callbacks.progress(e,http_request);});}
 var evalClosure=null;if(eval_reponse){evalClosure=eval;}
 if(http_request.onreadystatechange===null){http_request.onreadystatechange=function(){if(http_request.readyState==4&&http_request.status<=300&&http_request.status>=100){var response=http_request.responseText;if(info){console.log('Request was successful - response data:');console.log((response.length>0)?response:'no data was sent');}
 if(eval_reponse){evalClosure(response,false);}
-if(callbacks.success){callbacks.success(response);}}
+if(callbacks.success){callbacks.success(response);}
+promise.resolve(response);}
 else if(http_request.readyState==4&&http_request.status>=400){if(info){console.log('Request failed - Server returned code '+http_request.status+' with following response data:');console.log((http_request.responseText.length>0)?http_request.responseText:'no data was sent');}
-if(callbacks.error){callbacks.error(http_request.responseText,http_request.status);}}
+if(callbacks.error){callbacks.error(http_request.responseText,http_request.status);}
+promise.reject(http_request.status,http_request.responseText);}
 else if(http_request.readyState==3){if(callbacks.download){callbacks.download(http_request.responseText);}
 if(info){console.log('Receiving response-part:');console.log(http_request.responseText);}}}}
 else{if(callbacks.success||callbacks.error){console.warn('Useless callback given in send - XMLHttpRequest.onreadystatechange is overwritten by custom XHR in overwrites-object - callbacks inside the callback-object will be ignored');}}
@@ -111,7 +114,7 @@ return self;}";
     # END ASSEMBLY FRAME CONTROLLER.JS
     # BEGIN ASSEMBLY FRAME VIEW.TEXT
     public function __toString() {
-        $__CLASS__ = __CLASS__;
+        $__CLASS__ = get_called_class();
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
         $output = "{$__CLASS__::_property('output', $__CLASS__, $_this) }";

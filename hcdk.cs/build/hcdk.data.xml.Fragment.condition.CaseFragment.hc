@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.data.xml.Fragment.condition.CaseFragment - BUILD 22.02.18#80
+<?php #HYPERCELL hcdk.data.xml.Fragment.condition.CaseFragment - BUILD 22.02.23#82
 namespace hcdk\data\xml\Fragment\condition;
 class CaseFragment extends \hcdk\data\xml\Fragment\condition {
     use \hcf\core\dryver\Base, CaseFragment\__EO__\Controller, \hcf\core\dryver\Internal;

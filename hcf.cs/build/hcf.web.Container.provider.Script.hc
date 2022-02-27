@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.web.Container.provider.Script - BUILD 22.02.20#1
+<?php #HYPERCELL hcf.web.Container.provider.Script - BUILD 22.02.23#4
 namespace hcf\web\Container\provider;
 class Script extends \hcf\web\Container\provider {
     use \hcf\core\dryver\Base, Script\__EO__\Controller, \hcf\core\dryver\View, \hcf\core\dryver\Internal;
@@ -12,7 +12,7 @@ class Script extends \hcf\web\Container\provider {
     }
     # BEGIN ASSEMBLY FRAME VIEW.TEXT
     public function __toString() {
-        $__CLASS__ = __CLASS__;
+        $__CLASS__ = get_called_class();
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
         $output = "{$__CLASS__::_call('provideAssemblies', $__CLASS__, $_this) }";
@@ -24,7 +24,7 @@ class Script extends \hcf\web\Container\provider {
     namespace hcf\web\Container\provider\Script\__EO__;
     # BEGIN EXECUTABLE FRAME OF CONTROLLER.PHP
     use \hcf\core\Utils;
-    use \hcf\web\Component as WebComponent;
+    use \hcf\web\Controller as WebController;
     trait Controller {
         public static function provideAssemblies() {
             parent::provideFileTypeHeader(Utils::getMimeTypeByExtension('myscript.js'));
@@ -34,11 +34,10 @@ class Script extends \hcf\web\Container\provider {
             return parent::provideAssembliesOfType('script');
         }
         private static function provideComponentScript($hcfqn) {
-            $context = (isset($_GET['context']) ? htmlspecialchars($_GET['context']) : '');
-            $classes = parent::getComponents($hcfqn);
+            $classes = parent::getComponents($hcfqn, WebController::class);
             $out = '';
             foreach ($classes as $class) {
-                $out.= $class::wrappedClientController($context);
+                $out.= $class::wrappedClientController();
             }
             return $out;
         }

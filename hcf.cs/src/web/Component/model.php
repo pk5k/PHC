@@ -1,16 +1,17 @@
 <?php
 trait Model
 {
+	// hcf.web.Components are hcf.web.Controllers with a view, represented by a html-tag in the browser which must be defined by the component itself
 	public static function hasTemplate()
 	{
-		return !(is_null(static::elementName()) || static::elementName() == self::elementName());	
+		return !(is_null(static::elementName()) || static::elementName() == '' || static::FQN == self::FQN);	
 	}
 
-	public static function wrappedClientController($component_context_id = null)
+	public static function wrappedClientController()
 	{
 		if (static::hasTemplate())
 		{
-			return self::wrappedClientControllerWithElement(static::FQN, static::script(), $component_context_id, static::elementName(), static::elementOptions());
+			return self::wrappedClientControllerWithElement(static::FQN, static::script(), static::elementName(), static::elementOptions());
 		}
 		else
 		{
@@ -18,25 +19,28 @@ trait Model
 		}
 	}
 
-	public static function wrappedTemplate($component_context_id = null)
+	public static function wrappedTemplate($render_context_id = null)
 	{
-		// Nur in der Methode die aufgerufen wird gilt static:: wirklich der referenzierten Klasse, in allen Aufrufen aus Templates usw. wird es zur Klasse in der die Methode definiert wurde
-
 		if (static::hasTemplate())
 		{
-			if (is_null($component_context_id))
+			if (is_null($render_context_id))
 			{
 				return static::wrapTemplate(static::FQN, static::escapedTemplate(), self::targetHead(), 'global');
 			}
 			else 
 			{
-				return static::wrapTemplate(static::FQN, static::escapedTemplate(), self::targetComponentContext($component_context_id), $component_context_id);
+				return static::wrapTemplate(static::FQN, static::escapedTemplate(), self::targetRenderContext($render_context_id), $render_context_id);
 			}
 		}
 		else 
 		{
 			return '';
 		}
+	}
+
+	protected static function genericElementName()
+	{
+		return strtolower(str_replace('.', '-', static::FQN)); // override elementName template if you want a specific element name, otherwise the hcfqn in lowercase with dots replaced by dashes will be used.
 	}
 
 	protected static function escapedTemplate()

@@ -1,4 +1,4 @@
 @~controlSymbols:
-\$__CLASS__ = __CLASS__;
+\$__CLASS__ = get_called_class();
 \$_this = (isset(\$this)) ? \$this : null;
 \$_func_args = \\func_get_args();

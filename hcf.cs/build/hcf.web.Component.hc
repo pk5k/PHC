@@ -1,7 +1,7 @@
-<?php #HYPERCELL hcf.web.Component - BUILD 22.02.22#4
+<?php #HYPERCELL hcf.web.Component - BUILD 22.02.27#27
 namespace hcf\web;
-class Component {
-    use \hcf\core\dryver\Controller, \hcf\core\dryver\Controller\Js, Component\__EO__\Model, \hcf\core\dryver\View, \hcf\core\dryver\View\Html, \hcf\core\dryver\View\Css, \hcf\core\dryver\Internal;
+class Component extends \hcf\web\Controller {
+    use \hcf\core\dryver\Base, \hcf\core\dryver\Controller, \hcf\core\dryver\Controller\Js, Component\__EO__\Model, \hcf\core\dryver\View, \hcf\core\dryver\View\Html, \hcf\core\dryver\View\Css, \hcf\core\dryver\Internal;
     const FQN = 'hcf.web.Component';
     const NAME = 'Component';
     public function __construct() {
@@ -12,26 +12,24 @@ class Component {
     # BEGIN ASSEMBLY FRAME CONTROLLER.JS
     public static function script() {
         $js = "class extends HTMLElement{constructor(){super();this.loadTemplate();}
-loadTemplate(){if(document.componentMap[this.tagName]==undefined){throw'Element '+this.tagName.toLowerCase()+' is not in the component map and thus cannot be used.';}
-let component_definition=document.componentMap[this.tagName];let shadow_root=this.attachShadow({mode:'open'});let context=null;let tpl=null;if(component_definition.context==''){context=document.head;tpl=context.querySelector('div[id=\"'+component_definition.fqn+'\"]');}
-else{context=document.getElementById(component_definition.context).content;tpl=context.getElementById(component_definition.fqn);}
+loadTemplate(){if(document.componentMap[this.FQN]==undefined){throw'Element '+this.tagName.toLowerCase()+' is not in the component map and thus cannot be used.';}
+let render_context=document.componentMap[this.FQN];let shadow_root=this.attachShadow({mode:'open'});let context=null;let tpl=null;if(render_context=='global'){context=document.head;tpl=context.querySelector('div[id=\"'+this.FQN+'\"]');}
+else{context=document.getElementById(render_context).content;tpl=context.getElementById(this.FQN);}
 context.querySelectorAll('style, link').forEach((e)=>{shadow_root.appendChild(e.cloneNode(true));});let children=tpl.children;for(let i in children){if(children[i]instanceof HTMLElement){shadow_root.appendChild(children[i].cloneNode(true));}}}
+bridge(to){return hcf.web.Bridge((to==undefined)?this.FQN:to);}
+renderContext(){if(document.componentMap[this.FQN]==undefined){throw'Element '+this.tagName+' ('+this.FQN+') is not registered in component map - render context cannot be determined';}
+return document.getElementById(document.componentMap[this.FQN]);}
 runAfterDomLoad(func){hcf.web.Component.extRunAfterDomLoad(func);}
 static extRunAfterDomLoad(func){if(document.readyState==='loading'){window.addEventListener('DOMContentLoaded',function(){func()});}
 else{func();}}
-static loadDependencies(hcfqn,to_context){let component='&component=';if(hcfqn==undefined||hcfqn==null){throw'hcfqn is invalid';}
-else if(hcfqn.constructor===Array){component+=hcfqn.join(',');}
-else{component+=hcfqn;}
-let version=(document.APP_VERSION!=undefined)?'&v='+document.APP_VERSION:'';let context=(to_context!=null&&to_context!=undefined)?'&context='+to_context:'';let controller=new Promise((resolve,reject)=>{let elem=document.createElement('script');elem.setAttribute('src','?!=-script'+component+context+version);elem.addEventListener('load',(e)=>resolve(e));elem.addEventListener('error',(e)=>reject(e));document.head.appendChild(elem);});let template=new Promise((resolve,reject)=>{let elem=document.createElement('script');elem.setAttribute('src','?!=-template'+component+context+version);elem.addEventListener('load',(e)=>resolve(e));elem.addEventListener('error',(e)=>reject(e));document.head.appendChild(elem);});let style=new Promise((resolve,reject)=>{let elem=document.createElement('link');elem.setAttribute('href','?!=-style'+component+context+version);elem.setAttribute('type','text/css');elem.setAttribute('rel','stylesheet');if(context!=''){let c=document.getElementById(to_context);if(c==null){throw'component context '+to_context+' does not exist';}
-let global_allowed=(c.getAttribute('data-global')=='true');if(global_allowed){elem.addEventListener('load',(e)=>{resolve(e);c.content.appendChild(elem.cloneNode(true));});elem.addEventListener('error',(e)=>reject(e));document.head.appendChild(elem);}
-else{resolve();c.content.appendChild(elem);}}
-else{elem.addEventListener('load',(e)=>resolve(e));elem.addEventListener('error',(e)=>reject(e));document.head.appendChild(elem);}});return[controller,template,style];}}";
+dispatchEvent(event){super.dispatchEvent(event);const eventFire=this['on'+event.type];if(eventFire){eventFire(event);}
+else{const func=new Function('e','with(document) {'+'with(this) {'+'let attr = '+this.getAttribute('on'+event.type)+';'+'if(typeof attr === \'function\') { attr(e)};'+'}'+'}');func.call(this,event);}}}";
         return $js;
     }
     # END ASSEMBLY FRAME CONTROLLER.JS
     # BEGIN ASSEMBLY FRAME VIEW.HTML
     static public function template() {
-        $__CLASS__ = __CLASS__;
+        $__CLASS__ = get_called_class();
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
         $output = '';
@@ -41,7 +39,7 @@ else{elem.addEventListener('load',(e)=>resolve(e));elem.addEventListener('error'
         return self::_postProcess($output, [], []);
     }
     static public function elementOptions() {
-        $__CLASS__ = __CLASS__;
+        $__CLASS__ = get_called_class();
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
         $output = '';
@@ -49,11 +47,11 @@ else{elem.addEventListener('load',(e)=>resolve(e));elem.addEventListener('error'
         return self::_postProcess($output, [], []);
     }
     static public function elementName() {
-        $__CLASS__ = __CLASS__;
+        $__CLASS__ = get_called_class();
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
         $output = '';
-        $output.= "no-component";
+        $output.= "{$__CLASS__::_call('genericElementName', $__CLASS__, $_this) }";
         return self::_postProcess($output, [], []);
     }
     # END ASSEMBLY FRAME VIEW.HTML
@@ -66,27 +64,21 @@ else{elem.addEventListener('load',(e)=>resolve(e));elem.addEventListener('error'
     }
     # END ASSEMBLY FRAME VIEW.SCSS
     # BEGIN ASSEMBLY FRAME VIEW.TEXT
-    static public function wrappedClientControllerOnly() {
-        $__CLASS__ = __CLASS__;
-        $_this = (isset($this)) ? $this : null;
-        $_func_args = \func_get_args();
-        $output = "document.registerComponentController('{$__CLASS__::_arg($_func_args, 0, $__CLASS__, $_this) }', {$__CLASS__::_arg($_func_args, 1, $__CLASS__, $_this) });";
-        return $output;
-    }
     static public function wrappedClientControllerWithElement() {
-        $__CLASS__ = __CLASS__;
+        $__CLASS__ = get_called_class();
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
-        $output = "document.registerComponentController('{$__CLASS__::_arg($_func_args, 0, $__CLASS__, $_this) }', {$__CLASS__::_arg($_func_args, 1, $__CLASS__, $_this) }, '{$__CLASS__::_arg($_func_args, 2, $__CLASS__, $_this) }', '{$__CLASS__::_arg($_func_args, 3, $__CLASS__, $_this) }', {$__CLASS__::_arg($_func_args, 4, $__CLASS__, $_this) });";
+        $output = "document.registerComponentController('{$__CLASS__::_arg($_func_args, 0, $__CLASS__, $_this) }', {$__CLASS__::_arg($_func_args, 1, $__CLASS__, $_this) }, '{$__CLASS__::_arg($_func_args, 2, $__CLASS__, $_this) }', {$__CLASS__::_arg($_func_args, 3, $__CLASS__, $_this) });";
         return $output;
     }
     static public function wrapTemplate() {
-        $__CLASS__ = __CLASS__;
+        $__CLASS__ = get_called_class();
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
         $output = "if ({$__CLASS__::_arg($_func_args, 2, $__CLASS__, $_this) } == null) {
-	throw 'Missing component context {$__CLASS__::_arg($_func_args, 3, $__CLASS__, $_this) }'; 
+	throw 'Missing render context {$__CLASS__::_arg($_func_args, 3, $__CLASS__, $_this) }'; 
 } else if ({$__CLASS__::_arg($_func_args, 2, $__CLASS__, $_this) }.querySelector('div[id=\"{$__CLASS__::_arg($_func_args, 0, $__CLASS__, $_this) }\"]') == null) {
+	document.componentMap['{$__CLASS__::_constant('FQN', $__CLASS__, $_this) }'] = '{$__CLASS__::_arg($_func_args, 3, $__CLASS__, $_this) }';
 	let t_wrapper = document.createElement('div');
 	t_wrapper.innerHTML = '{$__CLASS__::_call('removeLinebreaks|map', $__CLASS__, $_this, [$__CLASS__::_arg($_func_args, 1, $__CLASS__, $_this) ]) }';
 	t_wrapper.setAttribute('id', '{$__CLASS__::_arg($_func_args, 0, $__CLASS__, $_this) }');
@@ -95,14 +87,14 @@ else{elem.addEventListener('load',(e)=>resolve(e));elem.addEventListener('error'
         return $output;
     }
     static private function targetHead() {
-        $__CLASS__ = __CLASS__;
+        $__CLASS__ = get_called_class();
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
         $output = "document.head";
         return $output;
     }
-    static private function targetComponentContext() {
-        $__CLASS__ = __CLASS__;
+    static private function targetRenderContext() {
+        $__CLASS__ = get_called_class();
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
         $output = "document.getElementById('{$__CLASS__::_arg($_func_args, 0, $__CLASS__, $_this) }').content";
@@ -114,27 +106,31 @@ else{elem.addEventListener('load',(e)=>resolve(e));elem.addEventListener('error'
     namespace hcf\web\Component\__EO__;
     # BEGIN EXECUTABLE FRAME OF MODEL.PHP
     trait Model {
+        // hcf.web.Components are hcf.web.Controllers with a view, represented by a html-tag in the browser which must be defined by the component itself
         public static function hasTemplate() {
-            return !(is_null(static ::elementName()) || static ::elementName() == self::elementName());
+            return !(is_null(static ::elementName()) || static ::elementName() == '' || static ::FQN == self::FQN);
         }
-        public static function wrappedClientController($component_context_id = null) {
+        public static function wrappedClientController() {
             if (static ::hasTemplate()) {
-                return self::wrappedClientControllerWithElement(static ::FQN, static ::script(), $component_context_id, static ::elementName(), static ::elementOptions());
+                return self::wrappedClientControllerWithElement(static ::FQN, static ::script(), static ::elementName(), static ::elementOptions());
             } else {
                 return self::wrappedClientControllerOnly(static ::FQN, static ::script());
             }
         }
-        public static function wrappedTemplate($component_context_id = null) {
-            // Nur in der Methode die aufgerufen wird gilt static:: wirklich der referenzierten Klasse, in allen Aufrufen aus Templates usw. wird es zur Klasse in der die Methode definiert wurde
+        public static function wrappedTemplate($render_context_id = null) {
             if (static ::hasTemplate()) {
-                if (is_null($component_context_id)) {
+                if (is_null($render_context_id)) {
                     return static ::wrapTemplate(static ::FQN, static ::escapedTemplate(), self::targetHead(), 'global');
                 } else {
-                    return static ::wrapTemplate(static ::FQN, static ::escapedTemplate(), self::targetComponentContext($component_context_id), $component_context_id);
+                    return static ::wrapTemplate(static ::FQN, static ::escapedTemplate(), self::targetRenderContext($render_context_id), $render_context_id);
                 }
             } else {
                 return '';
             }
+        }
+        protected static function genericElementName() {
+            return strtolower(str_replace('.', '-', static ::FQN)); // override elementName template if you want a specific element name, otherwise the hcfqn in lowercase with dots replaced by dashes will be used.
+            
         }
         protected static function escapedTemplate() {
             return str_replace("'", "\'", static ::template());

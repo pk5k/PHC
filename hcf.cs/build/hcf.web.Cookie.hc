@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.web.Cookie - BUILD 22.02.15#38
+<?php #HYPERCELL hcf.web.Cookie - BUILD 22.02.18#39
 namespace hcf\web;
 class Cookie {
     use \hcf\core\dryver\Config, Cookie\__EO__\Controller, \hcf\core\dryver\Internal;

@@ -55,3 +55,9 @@ select:-moz-focusring {
     text-shadow: 0 0 0 #000;
 }
 // /RESET.CSS
+
+// global templates of component contexts:
+head > div[id]
+{
+  display:none;
+}

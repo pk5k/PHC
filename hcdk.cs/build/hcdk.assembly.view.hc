@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.view - BUILD 22.02.18#256
+<?php #HYPERCELL hcdk.assembly.view - BUILD 22.02.23#258
 namespace hcdk\assembly;
 abstract class view extends \hcdk\assembly {
     use \hcf\core\dryver\Base, view\__EO__\Controller, \hcf\core\dryver\Internal;

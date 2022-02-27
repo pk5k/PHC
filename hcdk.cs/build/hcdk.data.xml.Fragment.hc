@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.data.xml.Fragment - BUILD 22.02.18#70
+<?php #HYPERCELL hcdk.data.xml.Fragment - BUILD 22.02.23#72
 namespace hcdk\data\xml;
 class Fragment {
     use \hcf\core\dryver\Config, Fragment\__EO__\Controller, \hcf\core\dryver\Internal;

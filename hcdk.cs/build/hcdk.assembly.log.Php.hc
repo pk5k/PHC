@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.log.Php - BUILD 22.02.18#195
+<?php #HYPERCELL hcdk.assembly.log.Php - BUILD 22.02.23#197
 namespace hcdk\assembly\log;
 class Php extends \hcdk\assembly\log {
     use \hcf\core\dryver\Base, Php\__EO__\Controller, \hcf\core\dryver\View, \hcf\core\dryver\Internal;
@@ -12,7 +12,7 @@ class Php extends \hcdk\assembly\log {
     }
     # BEGIN ASSEMBLY FRAME VIEW.TEXT
     protected function buildGetLogAttachment() {
-        $__CLASS__ = __CLASS__;
+        $__CLASS__ = get_called_class();
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
         $output = "return self::_attachment(__FILE__, __COMPILER_HALT_OFFSET__, '{$__CLASS__::_call('getName', $__CLASS__, $_this) }', '{$__CLASS__::_call('getType', $__CLASS__, $_this) }');";

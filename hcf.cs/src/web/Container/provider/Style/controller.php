@@ -1,5 +1,7 @@
 <?php
 use \hcf\core\Utils;
+use \hcf\web\Component as WebComponent;
+use \hcf\web\Controller as WebController;
 
 trait Controller
 {
@@ -17,7 +19,7 @@ trait Controller
 
 	private static function provideComponentStyle($hcfqn)
 	{
-		$classes = parent::getComponents($hcfqn);
+		$classes = parent::getComponents($hcfqn, WebComponent::class, WebController::class);
 		$out = '';
 
 		foreach ($classes as $class) 

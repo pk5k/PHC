@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.Base - BUILD 22.02.18#221
+<?php #HYPERCELL hcdk.assembly.Base - BUILD 22.02.23#223
 namespace hcdk\assembly;
 class Base extends \hcdk\assembly {
     use \hcf\core\dryver\Base, \hcf\core\dryver\Constant, Base\__EO__\Controller, \hcf\core\dryver\Internal;

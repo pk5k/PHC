@@ -1,10 +1,12 @@
 <?php
 use \hcf\core\Utils as Utils;
-use \hcf\web\ComponentContext;
+use \hcf\web\RenderContext;
+use \hcf\web\Controller;
 use \hcf\web\Component;
 use \hcf\web\Bridge;
 use \hcf\web\PageLoader;
 use \hcf\web\Page;
+use \hcf\web\Utils as WebUtils;
 
 /**
  * Server
@@ -35,9 +37,10 @@ trait Model
 	protected $meta_http_equiv = [];
 	protected $meta_name = [];
 	protected $autoloading = false;
-	protected $component_reg_data = '';
-	protected $component_reg_data_initialized = false;
-	protected $component_contexts = [];
+	protected $render_contexts = [];
+	protected $base_href = '/';
+
+	protected static $fonts = [];
 
 	/**
 	 * __construct
@@ -47,37 +50,78 @@ trait Model
 	{
 		$config = self::config();
 
-		if(isset($config))
+		if (isset($config))
 		{
-			if(isset($config->font) && is_object($config->font))
+			if (isset($config->{'default-font'}) && is_object($config->{'default-font'}))
 			{
-				$this->font($config->font->family);
-				$this->fontSize($config->font->size);
+				$this->font($config->{'default-font'}->family);
+				$this->fontSize($config->{'default-font'}->size);
 			}
 
-			if(isset($config->{'enable-autoloader'}) && is_bool($config->{'enable-autoloader'}))
+			if (isset($config->{'enable-autoloader'}) && is_bool($config->{'enable-autoloader'}))
 			{
 				$this->autoloading = $config->{'enable-autoloader'};
 			}
 
-			if(isset($config->encoding) && is_string($config->encoding))
+			if (isset($config->encoding) && is_string($config->encoding))
 			{
 				$this->encoding($config->encoding);
 			}
 
-			if(isset($config->{'fav-icon'}) && is_string($config->{'fav-icon'}))
+			if (isset($config->{'fav-icon'}) && is_string($config->{'fav-icon'}))
 			{
 				$this->favicon($config->{'fav-icon'});
 			}
+
+			if (isset($config->{'base'}) && is_string($config->{'base'}))
+			{
+				$this->base($config->{'base'});
+			}
+
+			if (isset($config->fonts) && is_array($config->fonts))
+			{
+				$this->initFonts($config->fonts);
+			}
 		}
 
-		$cc = new ComponentContext('core');
+		$cc = new RenderContext('core');
+		$cc->register(Controller::class);
 		$cc->register(Component::class);
 		$cc->register(Bridge::class);
 		$cc->register(PageLoader::class);
 		$cc->register(Page::class);
+		$cc->register(WebUtils::class);
 
-		$this->registerComponentContext($cc);
+		$this->registerRenderContext($cc);
+	}
+
+	private static function initFonts($font_arr)
+	{
+		if (!is_array($font_arr))
+		{
+			return;
+		}
+
+		$out = [];
+
+		foreach ($font_arr as $font_stylesheet)
+		{
+			if (substr($font_stylesheet, 0, 1) != '/')
+			{
+				$out[] = HCF_SHARED.$font_stylesheet;// prepend HCF_SHARED if given path is relative
+			}
+			else 
+			{
+				$out[] = $font_stylesheet;
+			}
+		}
+
+		self::$fonts = $out;
+	}
+
+	public static function loadedFonts()
+	{
+		return self::$fonts;
 	}
 
 	/**
@@ -91,7 +135,7 @@ trait Model
 	 */
 	public function title($title)
 	{
-		if(!isset($title) || !is_string($title))
+		if (!isset($title) || !is_string($title))
 		{
 			throw new \RuntimeException('Argument $title for "'.self::FQN.'::title($title)" is not a valid string.');
 		}
@@ -110,7 +154,7 @@ trait Model
 	 */
 	public function font($font_family)
 	{
-		if(!isset($font_family) || !is_string($font_family))
+		if (!isset($font_family) || !is_string($font_family))
 		{
 			throw new \RuntimeException('Argument $font_family for "'.self::FQN.'::font($font_family)" is not a valid string.');
 		}
@@ -129,7 +173,7 @@ trait Model
 	 */
 	public function fontSize($font_size = 12)
 	{
-		if(!isset($font_size))
+		if (!isset($font_size))
 		{
 			throw new \RuntimeException('Argument $font_size for "'.self::FQN.'::fontSize($font_size)" is not set');
 		}
@@ -148,7 +192,7 @@ trait Model
 	 */
 	public function content($content)
 	{
-		if(!isset($content) || !is_string($content))
+		if (!isset($content) || !is_string($content))
 		{
 			throw new \RuntimeException('Argument $content for "'.self::FQN.'::content($content)" is not a valid string.');
 		}
@@ -180,7 +224,7 @@ trait Model
 	 */
 	public function embedScript($js_data)
 	{
-		if(!is_string($js_data))
+		if (!is_string($js_data))
 		{
 			throw new \RuntimeException('Argument $js_data for "'.self::FQN.'::embedScript($js_data)" is not a valid string.');
 		}
@@ -213,7 +257,7 @@ trait Model
 	 */
 	public function embedStylesheet($css_data)
 	{
-		if(!is_string($css_data))
+		if (!is_string($css_data))
 		{
 			throw new \RuntimeException('Argument $css_data for "'.self::FQN.'::embedScript($css_data)" is not a valid string.');
 		}
@@ -256,7 +300,7 @@ trait Model
 	 */
 	public function meta($name, $value, $http_equiv = false)
 	{
-		if($http_equiv)
+		if ($http_equiv)
 		{
 			$this->meta_http_equiv[$name][] = $value;
 		}
@@ -291,6 +335,11 @@ trait Model
 	{
 		$this->fav_mimetype = Utils::getMimeTypeByExtension($image_path);
 		$this->fav_path = $image_path;
+	}	
+
+	public function base($base_url)
+	{
+		$this->base_href = $base_url;
 	}
 
 	/**
@@ -311,7 +360,7 @@ trait Model
 	 */
 	public function autoloader()
 	{
-		if($this->autoloading)
+		if ($this->autoloading)
 		{
 			try
 			{
@@ -331,9 +380,9 @@ trait Model
 		return '';
 	}
 
-	public function registerComponentContext(ComponentContext $cc)
+	public function registerRenderContext(RenderContext $cc)
 	{
-		$this->component_contexts[] = $cc;
+		$this->render_contexts[] = $cc;
 	}
 
 	protected function renderContent()
@@ -348,7 +397,7 @@ trait Model
 
 	protected function ownStyle()
 	{
-		return self::style();
+		return  self::style();
 	}
 
 	private function appVersion()

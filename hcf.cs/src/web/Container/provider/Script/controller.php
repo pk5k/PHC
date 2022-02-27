@@ -1,6 +1,6 @@
 <?php
 use \hcf\core\Utils;
-use \hcf\web\Component as WebComponent;
+use \hcf\web\Controller as WebController;
 
 trait Controller
 {
@@ -18,13 +18,12 @@ trait Controller
 
 	private static function provideComponentScript($hcfqn)
 	{
-		$context = (isset($_GET['context']) ? htmlspecialchars($_GET['context']) : '');
-		$classes = parent::getComponents($hcfqn);
+		$classes = parent::getComponents($hcfqn, WebController::class);
 		$out = '';
 
 		foreach ($classes as $class) 
 		{
-			$out .= $class::wrappedClientController($context);
+			$out .= $class::wrappedClientController();
 		}
 
 		return $out;

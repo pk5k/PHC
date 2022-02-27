@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.db.Dict - BUILD 22.02.15#188
+<?php #HYPERCELL hcf.db.Dict - BUILD 22.02.25#190
 namespace hcf\db;
 class Dict {
     use \hcf\core\dryver\Config, \hcf\core\dryver\Constant, Dict\__EO__\Controller, \hcf\core\dryver\View, \hcf\core\dryver\Internal;
@@ -26,21 +26,21 @@ class Dict {
     # END ASSEMBLY FRAME CONSTANT
     # BEGIN ASSEMBLY FRAME VIEW.SQL
     public function tplLookupKey() {
-        $__CLASS__ = __CLASS__;
+        $__CLASS__ = get_called_class();
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
         $sql = "SELECT key FROM {$__CLASS__::_property('config.connection.table.name', $__CLASS__, $_this) } WHERE VALUE = '{$__CLASS__::_arg($_func_args, 0, $__CLASS__, $_this) }'";
         return $sql;
     }
     public function tplLoadDict() {
-        $__CLASS__ = __CLASS__;
+        $__CLASS__ = get_called_class();
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
         $sql = "SELECT * FROM {$__CLASS__::_property('config.connection.table.name', $__CLASS__, $_this) };";
         return $sql;
     }
     public function tplCreateDictTable() {
-        $__CLASS__ = __CLASS__;
+        $__CLASS__ = get_called_class();
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
         $sql = "CREATE TABLE {$__CLASS__::_property('config.connection.table.name', $__CLASS__, $_this) }
@@ -53,35 +53,35 @@ class Dict {
         return $sql;
     }
     public function tplCreateDictEntry() {
-        $__CLASS__ = __CLASS__;
+        $__CLASS__ = get_called_class();
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
         $sql = "INSERT INTO {$__CLASS__::_property('config.connection.table.name', $__CLASS__, $_this) } VALUES ('{$__CLASS__::_arg($_func_args, 0, $__CLASS__, $_this) }', '{$__CLASS__::_arg($_func_args, 1, $__CLASS__, $_this) }', '{$__CLASS__::_arg($_func_args, 2, $__CLASS__, $_this) }', '{$__CLASS__::_arg($_func_args, 3, $__CLASS__, $_this) }')";
         return $sql;
     }
     public function tplUpdateDictEntry() {
-        $__CLASS__ = __CLASS__;
+        $__CLASS__ = get_called_class();
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
         $sql = "UPDATE {$__CLASS__::_property('config.connection.table.name', $__CLASS__, $_this) } SET {$__CLASS__::_property('config.connection.table.col.value', $__CLASS__, $_this) } = '{$__CLASS__::_arg($_func_args, 0, $__CLASS__, $_this) }', {$__CLASS__::_property('config.connection.table.col.comment', $__CLASS__, $_this) } = '{$__CLASS__::_arg($_func_args, 1, $__CLASS__, $_this) }' WHERE {$__CLASS__::_property('config.connection.table.col.key', $__CLASS__, $_this) } = '{$__CLASS__::_property('key', $__CLASS__, $_this) }' AND {$__CLASS__::_property('config.connection.table.col.locale', $__CLASS__, $_this) } = '{$__CLASS__::_property('locale', $__CLASS__, $_this) }'";
         return $sql;
     }
     public function tplDeleteDictEntry() {
-        $__CLASS__ = __CLASS__;
+        $__CLASS__ = get_called_class();
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
         $sql = "DELETE FROM {$__CLASS__::_property('config.connection.table.name', $__CLASS__, $_this) } WHERE {$__CLASS__::_property('config.connection.table.col.key', $__CLASS__, $_this) } = '{$__CLASS__::_property('key', $__CLASS__, $_this) }' AND {$__CLASS__::_property('config.connection.table.col.locale', $__CLASS__, $_this) } = '{$__CLASS__::_property('locale', $__CLASS__, $_this) }'";
         return $sql;
     }
     public function tplTruncate() {
-        $__CLASS__ = __CLASS__;
+        $__CLASS__ = get_called_class();
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
         $sql = "TRUNCATE TABLE {$__CLASS__::_property('config.connection.table.name', $__CLASS__, $_this) }";
         return $sql;
     }
     public function tplTruncateLocale() {
-        $__CLASS__ = __CLASS__;
+        $__CLASS__ = get_called_class();
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
         $sql = "DELETE FROM {$__CLASS__::_property('config.connection.table.name', $__CLASS__, $_this) } WHERE {$__CLASS__::_property('config.connection.table.col.locale', $__CLASS__, $_this) } = '{$__CLASS__::_arg($_func_args, 0, $__CLASS__, $_this) }'";
@@ -90,7 +90,7 @@ class Dict {
     # END ASSEMBLY FRAME VIEW.SQL
     # BEGIN ASSEMBLY FRAME VIEW.TEXT
     public function __toString() {
-        $__CLASS__ = __CLASS__;
+        $__CLASS__ = get_called_class();
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
         $output = "{$__CLASS__::_call('apply', $__CLASS__, $_this) }";
@@ -173,8 +173,35 @@ class Dict {
             $out = call_user_func_array('sprintf', $args);
             return $out;
         }
+        private static function fromCache() {
+            $c = self::config();
+            if (isset($c) && isset($c->cache)) {
+                if (isset($c->cache->session) && isset($c->cache->session->key)) {
+                    if (isset($_SESSION) && isset($_SESSION[$c->cache->session->key])) {
+                        return $_SESSION[$c->cache->session->key];
+                    }
+                }
+            }
+            return [];
+        }
+        private static function toCache($data) {
+            $c = self::config();
+            if (isset($c) && isset($c->cache)) {
+                if (isset($c->cache->session) && isset($c->cache->session->key)) {
+                    if (!isset($_SESSION) && isset($c->cache->session->autostart) && $c->cache->session->autostart) {
+                        session_start();
+                    }
+                    if (isset($_SESSION) && isset($_SESSION[$c->cache->session->key])) {
+                        $_SESSION[$c->cache->session->key] = $data;
+                    }
+                }
+            }
+        }
         private function loadDictToRawCache($with_comments = false) {
-            self::$raw_cache = [];
+            self::$raw_cache = self::fromCache();
+            if (count(self::$raw_cache) > 0) {
+                return;
+            }
             $stmt = DatabaseConnection::to(self::config()->connection->name)->prepare($this->tplloadDict());
             $cols = self::config()->connection->table->col;
             $col_key = $cols->key;
@@ -202,6 +229,7 @@ class Dict {
                     //IL::log()->info(self::FQN.' - writing raw-cache '.$key.'@'.$locale.' = "'.$value.'"');
                     
                 }
+                self::toCache(self::$raw_cache);
             } else {
                 $err = $stmt->errorInfo();
                 $err_str = $err[0] . ' (' . $err[1] . ') ' . $err[2];
@@ -377,6 +405,10 @@ class Dict {
     __halt_compiler();
     #__COMPILER_HALT_OFFSET__
 BEGIN[CONFIG.INI]
+[cache]
+session.key = 'dict-cache'
+session.autostart = true
+
 [locale]
 default = "de_DE"; default locale which will be used, if no other value was specified at runtime; if no value for the target-locale was found, the default locale will be used as fallback
 cookie.name = "page-settings"; lookup for a cookie with this name, that contains the locale

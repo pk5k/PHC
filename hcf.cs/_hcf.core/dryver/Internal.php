@@ -13,20 +13,20 @@ namespace hcf\core\dryver
 
     // To decide, if placeholder-processors like "method" or "property" have to access static or non-static values.
     // These placeholder will be translated to executable fragments of php-script, which will use this methods on execution of the specific assembly-methods
-    private static function _constant($name, $__CLASS__, $_this)
+    protected static function _constant($name, $__CLASS__, $_this)
     {
       $cc = get_called_class();
       
       return constant($cc.'::'.$name);
     }
 
-    private static function _dict($key, $args)
+    protected static function _dict($key, $args)
     {
       $key = Dict::get($key);
       return call_user_func_array([$key, 'apply'], $args);
     }
 
-    private static function _call($name, $__CLASS__, $_this, $mirror_map = null)
+    protected static function _call($name, $__CLASS__, $_this, $mirror_map = null)
     {
       $pass_args = [];
       $args = func_get_args();
@@ -64,7 +64,7 @@ namespace hcf\core\dryver
       }
     }
 
-    private static function _property($name, $__CLASS__, $_this)
+    protected static function _property($name, $__CLASS__, $_this)
     {
       // access nested properties inside objects by typing {{property:my_prop_obj.key1.level2}}
       $prop_val = null;
@@ -110,7 +110,7 @@ namespace hcf\core\dryver
       return $prop_val;
     }
 
-    private static function _arg($args, $arg_no, $__CLASS__, $_this)
+    protected static function _arg($args, $arg_no, $__CLASS__, $_this)
     {
       if (!is_array($args))
       {
@@ -124,7 +124,7 @@ namespace hcf\core\dryver
       return $args[$arg_no];
     }
 
-    private static function _attachment($__FILE__, $__COMPILER_HALT_OFFSET__, $assembly, $type)
+    protected static function _attachment($__FILE__, $__COMPILER_HALT_OFFSET__, $assembly, $type)
     {
       $assembly = strtolower($assembly);
       $type = strtolower($type);

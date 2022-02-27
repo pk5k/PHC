@@ -105,6 +105,16 @@ else
 	define('HCF_STRICT', false);
 }
 
+// DEBUG FLAG
+if (!isset($hcf_config->debug) || $hcf_config->debug == true)
+{
+	define('HCF_DEBUG', true);
+}
+else 
+{
+	define('HCF_DEBUG', false);
+}
+
 // ERROR REPORTING
 if (isset($hcf_config->{'display-errors'}) && $hcf_config->{'display-errors'} == true)
 {

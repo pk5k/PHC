@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.assembly.view.Scss - BUILD 22.02.18#202
+<?php #HYPERCELL hcdk.assembly.view.Scss - BUILD 22.02.23#204
 namespace hcdk\assembly\view;
 class Scss extends \hcdk\assembly\view\Css {
     use \hcf\core\dryver\Base, Scss\__EO__\Controller, \hcf\core\dryver\View, \hcf\core\dryver\Internal;
@@ -12,7 +12,7 @@ class Scss extends \hcdk\assembly\view\Css {
     }
     # BEGIN ASSEMBLY FRAME VIEW.TEXT
     protected function tplBuildStyle() {
-        $__CLASS__ = __CLASS__;
+        $__CLASS__ = get_called_class();
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
         $output = "if(\$as_array)
