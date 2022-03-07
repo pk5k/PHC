@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.web.Page - BUILD 22.02.26#30
+<?php #HYPERCELL hcf.web.Page - BUILD 22.03.01#53
 namespace hcf\web;
 class Page extends \hcf\web\Component {
     use \hcf\core\dryver\Base, \hcf\core\dryver\Controller, \hcf\core\dryver\Controller\Js, Page\__EO__\Controller, Page\__EO__\Model, \hcf\core\dryver\View, \hcf\core\dryver\View\Html, \hcf\core\dryver\Internal;
@@ -14,7 +14,9 @@ class Page extends \hcf\web\Component {
     }
     # BEGIN ASSEMBLY FRAME CONTROLLER.JS
     public static function script() {
-        $js = "class extends hcf.web.Component{constructor(){super();this.runAfterDomLoad(()=>{let autoload=this.getAttribute('autoload');this.render_changes=this.getAttribute('render-changes');if(autoload!=null&&autoload!='false'){this.load();}});this.addEventListener('page-rendered',(e)=>{this.loaded(this.pageRoot());});}
+        $js = "class extends hcf.web.Component{constructor(){super();this.addEventListener('page-rendered',(e)=>{this.loaded(this.pageRoot());});}
+connectedCallback(){if(this.initial_load_complete!==true){this.runAfterDomLoad(()=>{let autoload=this.getAttribute('autoload');this.render_changes=this.getAttribute('render-changes');if(autoload!=null&&autoload!='false'){this.load();}});}
+this.initial_load_complete=true;}
 pageRoot(){return this.page_root;}
 loaded(view_root){}
 cacheReload(){}
@@ -31,22 +33,25 @@ if(attr!=null&&oldValue!=newValue){this[attr]=newValue;}}
 set render_changes(val){if(val!=null&&val!='false'){this.setupObserver();}
 else{this.removeObserver();}}
 get render_changes(){return this.getAttribute('render-changes');}
-clear(){this.page_root=null;let children=this.shadowRoot.children;let remove=[];for(let i in children){let t_name=children[i].tagName;if(children[i]instanceof HTMLElement&&t_name!='STYLE'&&t_name!='LINK'){remove.push(children[i]);}}
-remove.forEach((e)=>{e.remove();});}
-viewLoadSuccess(data){let e=new Event('page-load-view-success',{bubbles:true});this.dispatchEvent(e);this.render(data);}
-viewLoadFailed(code,msg){let e=new Event('page-load-view-failed',{bubbles:true});this.dispatchEvent(e);this.error(code,msg);}
+clear(return_nodes){this.page_root=null;let children=this.shadowRoot.children;let remove=[];for(let i in children){let t_name=children[i].tagName;if(children[i]instanceof HTMLElement&&t_name!='STYLE'&&t_name!='LINK'){remove.push(children[i]);}}
+if(return_nodes!==true){remove.forEach((e)=>{e.remove();});}
+else{let ret=[];remove.forEach((e)=>{ret.push(this.shadowRoot.removeChild(e));});return ret;}}
+viewLoadSuccess(data){let e=new Event('page-load-view-success',{bubbles:true,composed:true});this.dispatchEvent(e);this.render(data);}
+viewLoadFailed(code,msg){let e=new Event('page-load-view-failed',{bubbles:true,composed:true});this.dispatchEvent(e);this.error(code,msg);}
 injectView(view_data,load_as){this.loaded_as=load_as;return this.render(view_data);}
-render(view_data){this.clear();this.style.visibility='hidden';let wrapper=document.createElement('div');wrapper.innerHTML=view_data;let children=wrapper.children;let first=null;for(let i in children){if(children[i]instanceof HTMLElement){if(first==null){first=children[i];}
-this.shadowRoot.appendChild(children[i].cloneNode(true));}}
-wrapper.remove();this.page_root=first;let me=this;setTimeout(function(){me.style.visibility=null;let e=new Event('page-rendered',{bubbles:true});me.dispatchEvent(e);},50);}
-getOwnAttributes(){let atts=this.attributes;let out={};let skip=['render-changes','autoload','style'];for(var i in atts){if(!isNaN(i)){let att=atts[i];if(skip.indexOf(att.name)!=-1){continue;}
+render(view_data){this.clear();this.style.visibility='hidden';let nodes=[];let first=null;let wrapper=null;if(view_data.constructor===Array){nodes=view_data;}
+else{let wrapper=document.createElement('div');wrapper.innerHTML=view_data;for(var i in wrapper.children){nodes.push(wrapper.children[i]);}}
+nodes.forEach((node)=>{if(node instanceof HTMLElement){if(first==null){first=node;}
+this.shadowRoot.appendChild(node);}});if(wrapper!=null){wrapper.remove();}
+this.page_root=first;let me=this;setTimeout(function(){me.style.visibility=null;let e=new Event('page-rendered',{bubbles:true,composed:true});me.dispatchEvent(e);},50);}
+getOwnAttributes(){let atts=this.attributes;let out={};let skip=['render-changes','autoload','style','class'];for(var i in atts){if(!isNaN(i)){let att=atts[i];if(skip.indexOf(att.name)!=-1){continue;}
 out[att.name]=att.value;}}
 return out;}
-loadView(){var e=new Event('page-load-view-begin',{bubbles:true});this.dispatchEvent(e);return this.bridge().render().do([this.getOwnAttributes()]);}
+loadView(){var e=new Event('page-load-view-begin',{bubbles:true,composed:true});this.dispatchEvent(e);return this.bridge().render().do([this.getOwnAttributes()]);}
 error(code,msg){this.loaded_as=null;console.error(code,msg);}
 removeObserver(){if(this._observer!=undefined){this._observer.disconnect();delete this._observer;}}
 setupObserver(){if(this._observer!=undefined){this.removeObserver();}
-const config={attributes:true,childList:false,subtree:false};this._observer=new MutationObserver((e)=>{if(e[0].attributeName!='style'){this.reload()}});this._observer.observe(this,config);}}";
+const config={attributes:true,childList:false,subtree:false};this._observer=new MutationObserver((e)=>{if(e[0].attributeName!='style'&&e[0].attributeName!='class'){this.reload()}});this._observer.observe(this,config);}}";
         return $js;
     }
     # END ASSEMBLY FRAME CONTROLLER.JS
@@ -74,7 +79,7 @@ const config={attributes:true,childList:false,subtree:false};this._observer=new 
     # BEGIN EXECUTABLE FRAME OF CONTROLLER.PHP
     trait Controller {
         protected static $_ARGS = [];
-        public function hcfwebPage_onConstruct_Controller($initial_attributes) // initial_attributes = Attributes of the pages html-element on initialisation time
+        public function hcfwebPage_onConstruct_Controller($initial_attributes = null) // initial_attributes = Attributes of the pages html-element on initialisation time
         {
             self::initAttributes($initial_attributes);
             static ::checkPermissions();

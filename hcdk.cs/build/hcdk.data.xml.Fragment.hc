@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.data.xml.Fragment - BUILD 22.02.23#72
+<?php #HYPERCELL hcdk.data.xml.Fragment - BUILD 22.02.23#73
 namespace hcdk\data\xml;
 class Fragment {
     use \hcf\core\dryver\Config, Fragment\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -49,6 +49,9 @@ class Fragment {
         public static function build($node, $file_scope) {
             $root_name = $node->getName();
             $is_optional = (strpos($root_name, XMLParser::TMP_OPT_TAG_MARKER) !== false);
+            if (substr($root_name, -1, 1) == XMLParser::ESCAPE_FRAGMENT) {
+                $root_name = substr($root_name, 0, -1);
+            }
             $output = self::FRGMNT_OUTPUT_START() . '<' . $root_name;
             foreach ($node->attributes() as $name => $value) {
                 $output.= ' ' . $name . '=\"' . PlaceholderParser::parse($value) . '\"';

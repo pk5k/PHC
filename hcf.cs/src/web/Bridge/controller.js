@@ -468,7 +468,7 @@ function (to)
 		var http_request = false;
 		var async = true;
 		var req_method = 'POST';//use POST so the POST-HOOK will be executed
-		var timeout = 4000;// 4 seconds for timeout as default
+		var timeout = 30000;// 30 seconds for timeout as default
 		var eval_reponse = false;//eval http-response on success for possible javascript content
 		var info = false;//log infos to console
 

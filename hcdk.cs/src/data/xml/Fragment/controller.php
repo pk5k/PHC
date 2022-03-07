@@ -29,7 +29,12 @@ trait Controller
 		$root_name 	= $node->getName();
 		$is_optional = (strpos($root_name, XMLParser::TMP_OPT_TAG_MARKER) !== false);
 
-		$output 	= self::FRGMNT_OUTPUT_START().'<'.$root_name;
+		if (substr($root_name, -1, 1) == XMLParser::ESCAPE_FRAGMENT)
+		{
+			$root_name = substr($root_name, 0, -1);
+		}
+
+		$output = self::FRGMNT_OUTPUT_START().'<'.$root_name;
 
 		foreach ($node->attributes() as $name=>$value)
 		{

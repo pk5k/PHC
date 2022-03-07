@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.data.ph.Processor.LocalProcessor - BUILD 22.02.23#82
+<?php #HYPERCELL hcdk.data.ph.Processor.LocalProcessor - BUILD 22.03.04#86
 namespace hcdk\data\ph\Processor;
 class LocalProcessor extends \hcdk\data\ph\Processor {
     use \hcf\core\dryver\Base, LocalProcessor\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -32,6 +32,13 @@ class LocalProcessor extends \hcdk\data\ph\Processor {
          * @return string - a line of php-script to get the requested locale from inside the raw-merge
          */
         public static function process($content, $between_double_quotes = true, $mirror_map = null) {
+            if (strpos($content, '.') !== false) {
+                $parts = explode('.', $content);
+                $content = implode('->', $parts);
+                if ($between_double_quotes) {
+                    return '{$' . $content . '}';
+                }
+            }
             return '$' . $content;
         }
     }

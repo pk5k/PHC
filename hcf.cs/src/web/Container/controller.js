@@ -112,7 +112,7 @@ document.cloneRenderContext = function(which, register_to_fqn)
       throw 'render context cannot be registered without fqn';
     }
 
-    let dyn_cc = 'dyncc-' + register_to_fqn.replace('.', '-').toLowerCase();// name for dynamically created context
+    let dyn_cc = 'dyncc-' + register_to_fqn.replace(/\./g, '-').toLowerCase();// name for dynamically created context
     let ecc = document.getElementById(dyn_cc);
 
     if (ecc != null)

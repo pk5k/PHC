@@ -3,7 +3,7 @@ trait Controller
 {
 	protected static $_ARGS = [];
 
-	public function onConstruct($initial_attributes) // initial_attributes = Attributes of the pages html-element on initialisation time
+	public function onConstruct($initial_attributes = null) // initial_attributes = Attributes of the pages html-element on initialisation time
 	{
 		self::initAttributes($initial_attributes);
 		static::checkPermissions();

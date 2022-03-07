@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.web.Component - BUILD 22.02.27#27
+<?php #HYPERCELL hcf.web.Component - BUILD 22.02.28#33
 namespace hcf\web;
 class Component extends \hcf\web\Controller {
     use \hcf\core\dryver\Base, \hcf\core\dryver\Controller, \hcf\core\dryver\Controller\Js, Component\__EO__\Model, \hcf\core\dryver\View, \hcf\core\dryver\View\Html, \hcf\core\dryver\View\Css, \hcf\core\dryver\Internal;
@@ -22,8 +22,8 @@ return document.getElementById(document.componentMap[this.FQN]);}
 runAfterDomLoad(func){hcf.web.Component.extRunAfterDomLoad(func);}
 static extRunAfterDomLoad(func){if(document.readyState==='loading'){window.addEventListener('DOMContentLoaded',function(){func()});}
 else{func();}}
-dispatchEvent(event){super.dispatchEvent(event);const eventFire=this['on'+event.type];if(eventFire){eventFire(event);}
-else{const func=new Function('e','with(document) {'+'with(this) {'+'let attr = '+this.getAttribute('on'+event.type)+';'+'if(typeof attr === \'function\') { attr(e)};'+'}'+'}');func.call(this,event);}}}";
+dispatchEvent(event){let ret=super.dispatchEvent(event);const eventFire=this['on'+event.type];if(eventFire){return ret;}
+else{const func=new Function('e','with(document) {'+'with(this) {'+'let attr = '+this.getAttribute('on'+event.type)+';'+'if(typeof attr === \'function\' && this instanceof HTMLElement) { return attr(e)};'+'}'+'}');let ret_own=func.call(this,event);return ret_own||ret;}}}";
         return $js;
     }
     # END ASSEMBLY FRAME CONTROLLER.JS

@@ -132,6 +132,7 @@ trait Controller
 		$class = null;
 		$name = $xml_root->getName();
 		$is_optional = false;
+		$type_class = null;
 
 		if (strpos($name, self::TMP_OPT_TAG_MARKER) !== false)
 		{
@@ -142,7 +143,10 @@ trait Controller
 			$is_optional = true;
 		}
 
-		$type_class = self::alias($name);
+		if (substr($name, -1, 1) != self::ESCAPE_FRAGMENT)
+		{
+			$type_class = self::alias($name);
+		}
 
 		if (is_null($type_class))
 		{

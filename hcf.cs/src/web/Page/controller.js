@@ -4,19 +4,27 @@ class extends hcf.web.Component
 	{
 		super();
 		
-		this.runAfterDomLoad(()=>{
-			let autoload = this.getAttribute('autoload');
-			this.render_changes = this.getAttribute('render-changes');
-
-			if (autoload != null && autoload != 'false')
-			{
-				this.load();
-			}
-		});
-
 		this.addEventListener('page-rendered', (e) => {
 			this.loaded(this.pageRoot());
 		});
+	}
+
+	connectedCallback()
+	{
+		if (this.initial_load_complete !== true)
+		{
+			this.runAfterDomLoad(()=>{
+				let autoload = this.getAttribute('autoload');
+				this.render_changes = this.getAttribute('render-changes');
+
+				if (autoload != null && autoload != 'false')
+				{
+					this.load();
+				}
+			});
+		}
+
+		this.initial_load_complete = true;
 	}
 
 	pageRoot()
@@ -123,7 +131,7 @@ class extends hcf.web.Component
 		return this.getAttribute('render-changes');
     }
 
-	clear()
+	clear(return_nodes)
 	{
 		this.page_root = null;
 		let children = this.shadowRoot.children;
@@ -139,21 +147,34 @@ class extends hcf.web.Component
       		}
       	}
 
-      	remove.forEach((e) => {
-      		e.remove();
-      	});
+      	if (return_nodes !== true)
+      	{
+	      	remove.forEach((e) => {
+	      		e.remove();
+	      	});
+      	}
+      	else 
+      	{
+      		let ret = [];
+
+      		remove.forEach((e) => {
+      			ret.push(this.shadowRoot.removeChild(e));
+      		});
+
+      		return ret;
+      	}
 	}
 
 	viewLoadSuccess(data)
 	{
-		let e = new Event('page-load-view-success', {bubbles:true});
+		let e = new Event('page-load-view-success', {bubbles:true, composed:true});
 		this.dispatchEvent(e);
 		this.render(data);
 	}
 
 	viewLoadFailed(code, msg)
 	{
-		let e = new Event('page-load-view-failed', {bubbles:true});
+		let e = new Event('page-load-view-failed', {bubbles:true, composed:true});
 		this.dispatchEvent(e);
 		this.error(code, msg);
 	}
@@ -170,36 +191,50 @@ class extends hcf.web.Component
 		this.clear();
 
 		this.style.visibility = 'hidden';
+		let nodes = [];
+		let first = null;			
+		let wrapper = null;
+		if (view_data.constructor === Array)
+		{
+			// node list
+			nodes = view_data;
+		}
+		else 
+		{
+			let wrapper = document.createElement('div');
+			wrapper.innerHTML = view_data;
+			
+			for (var i in wrapper.children)
+			{
+				nodes.push(wrapper.children[i]);
+			}
+		}
 
-		let wrapper = document.createElement('div');
-		wrapper.innerHTML = view_data;
-
-		let children = wrapper.children;
-		let first = null;
-
-		for (let i in children)
-      	{
-      		if (children[i] instanceof HTMLElement)
+		nodes.forEach((node) => {
+      		if (node instanceof HTMLElement)
       		{
       			if (first == null)
       			{
-      				first = children[i];
+      				first = node;
       			}
 
-      			this.shadowRoot.appendChild(children[i].cloneNode(true));
+      			this.shadowRoot.appendChild(node);
       		}
-      	}
-		
-		wrapper.remove();
+		});
+			
+		if (wrapper != null)
+		{
+			wrapper.remove();
+		}
 
       	this.page_root = first;
       	let me = this;
 
-      	// browser must finish it's rendering first before page can be shown to avoid flickering
+      	// browser must finish it's rendering first before page can be shown to avoid flickering (without cache it may take too long)
       	setTimeout(function(){
 	      	me.style.visibility = null;
 			
-			let e = new Event('page-rendered', {bubbles:true});
+			let e = new Event('page-rendered', {bubbles:true, composed:true});
 	      	me.dispatchEvent(e);
       	}, 50);
 	}
@@ -208,7 +243,7 @@ class extends hcf.web.Component
 	{
 		let atts = this.attributes;
 		let out = {};
-		let skip = ['render-changes', 'autoload', 'style'];//dont pass these attributes to the page
+		let skip = ['render-changes', 'autoload', 'style', 'class'];//dont pass these attributes to the page
 
 		for (var i in atts)
 		{
@@ -230,7 +265,7 @@ class extends hcf.web.Component
 
 	loadView()
 	{
-      	var e = new Event('page-load-view-begin', {bubbles:true});
+      	var e = new Event('page-load-view-begin', {bubbles:true, composed:true});
 		this.dispatchEvent(e);
 
 		return this.bridge().render().do([this.getOwnAttributes()]);
@@ -262,7 +297,7 @@ class extends hcf.web.Component
 
 		const config = { attributes: true, childList: false, subtree: false };
 		this._observer = new MutationObserver((e) => { 
-			if (e[0].attributeName != 'style')
+			if (e[0].attributeName != 'style' && e[0].attributeName != 'class')
 			{
 				this.reload()
 			}

@@ -5,6 +5,9 @@
 	"//": "If true: the target-page will be pre-rendered inside the PageLoader instance after checking it's permissions. Avoiding an additional Request to the page itself after the loader has finished.",
 	"fastpath": true,
 	
+	"//": "If true, page loads that were redirected from hcf.web.Router will pass the new route to the client and change url in the browser accordingly.",
+	"redirect": true,
+
 	"//": "Additional resources per Page (target-page will be added automatically according to the page-context settings)",
 	"my.Hypercell": { 
 		"//": "key = ComponentContext id, if resource should be load into a render-context, global = light DOM",

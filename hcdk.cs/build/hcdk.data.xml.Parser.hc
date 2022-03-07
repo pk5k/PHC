@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcdk.data.xml.Parser - BUILD 22.02.24#101
+<?php #HYPERCELL hcdk.data.xml.Parser - BUILD 22.03.02#108
 namespace hcdk\data\xml;
 class Parser {
     use \hcf\core\dryver\Config, \hcf\core\dryver\Constant, Parser\__EO__\Controller, \hcf\core\dryver\Internal;
@@ -22,7 +22,8 @@ class Parser {
     # BEGIN ASSEMBLY FRAME CONSTANT
     const TMP_OPT_ATTR_MARKER = '_--TMP-OPT-ATTR--_';
     const TMP_OPT_TAG_MARKER = '_--TMP-OPT-TAG--_';
-    private static $_constant_list = ['TMP_OPT_ATTR_MARKER', 'TMP_OPT_TAG_MARKER'];
+    const ESCAPE_FRAGMENT = '_';
+    private static $_constant_list = ['TMP_OPT_ATTR_MARKER', 'TMP_OPT_TAG_MARKER', 'ESCAPE_FRAGMENT'];
     # END ASSEMBLY FRAME CONSTANT
     
     }
@@ -125,6 +126,7 @@ class Parser {
             $class = null;
             $name = $xml_root->getName();
             $is_optional = false;
+            $type_class = null;
             if (strpos($name, self::TMP_OPT_TAG_MARKER) !== false) {
                 // remove optional-tag-name for lookup of processor tags
                 // if a processor is found this way, it'll be executed anyway - the optional flag will be ignored
@@ -132,7 +134,9 @@ class Parser {
                 $name = str_replace(self::TMP_OPT_TAG_MARKER, '', $name);
                 $is_optional = true;
             }
-            $type_class = self::alias($name);
+            if (substr($name, -1, 1) != self::ESCAPE_FRAGMENT) {
+                $type_class = self::alias($name);
+            }
             if (is_null($type_class)) {
                 $package = self::config()->fragment->package;
                 $suffix = self::config()->fragment->suffix;
@@ -311,12 +315,12 @@ case = "hcdk.data.xml.Fragment.condition.CaseFragment"
 
 ; dummys
 unwrap = "hcdk.data.xml.Fragment.dummy.ContainerFragment"
-lorem-ipsum = "hcdk.data.xml.Fragment.dummy.TextFragment"
+loremipsum = "hcdk.data.xml.Fragment.dummy.TextFragment"
 
 ; embed
-embed-data = "hcdk.data.xml.Fragment.embed.DataFragment"
-embed-file = "hcdk.data.xml.Fragment.embed.FileFragment"
-embed-markdown = "hcdk.data.xml.Fragment.embed.MarkdownFragment"
+embeddata = "hcdk.data.xml.Fragment.embed.DataFragment"
+embedfile = "hcdk.data.xml.Fragment.embed.FileFragment"
+embedmarkdown = "hcdk.data.xml.Fragment.embed.MarkdownFragment"
 
 ; loop
 for = "hcdk.data.xml.Fragment.loop.ForeachFragment"

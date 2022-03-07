@@ -13,9 +13,45 @@ class extends hcf.web.Component
 		window.addEventListener('popstate', (e) => this.navigationOccured(e));
 
 		// if page reload is triggered fade content
-		this.addEventListener('page-load-view-begin', (e) => this.hideContainer());
-		this.addEventListener('page-rendered', (e) => this.showContainer());
+		this.addEventListener('page-load-view-begin', (e) => { this.hideContainer(); this.removeObserver()});
+		this.addEventListener('page-rendered', (e) => {this.showContainer(); this.setupObserver()});
 		this.addEventListener('page-load-view-failed', (e) => this.displayError(0, 'reloading view failed.'));
+	}
+
+	setupObserver()
+	{
+		// Options for the observer (which mutations to observe)
+		const config = { attributes: false, childList: true, subtree: true };
+
+		// Callback function to execute when mutations are observed
+		const callback = (mutationsList, observer) =>
+		{
+		  this.initRouterLinks();
+		};
+
+		// Create an observer instance linked to the callback function
+		this.observer = new MutationObserver(callback);
+
+		// Start observing own contents for mutations
+		for (let i in this.children)
+		{
+			let child = this.children[i];
+			if (child instanceof hcf.web.Page)
+			{
+				this.observer.observe(child.shadowRoot, config);
+			}
+		}
+	}
+
+	removeObserver()
+	{
+		if (this.observer == null || this.observer == undefined)
+		{
+		  return;
+		}
+
+		this.observer.disconnect();
+		this.observer = null;
 	}
 
 	connectedCallback()
@@ -156,7 +192,7 @@ class extends hcf.web.Component
 
 		return null;
 	}
-	
+
 	// INIT:
 
 	initStateFragments()
@@ -205,6 +241,9 @@ class extends hcf.web.Component
 					this.addLinkListener(shadow_router_link);
 				});
 			}
+
+			// search recursive
+			search_for_router_links.shadowRoot.querySelectorAll('.' + this._link_class + '-crawl').forEach((e) => this.inspectElementForRouterLinks(e));
 		}
 	}
 
@@ -481,7 +520,8 @@ class extends hcf.web.Component
 
 				if (render_context.substr(0,1) == '@')
 				{
-					render_context = document.cloneRenderContext(render_context.substr(1), o.which).getAttribute('id');
+					let first_component = components[0];
+					render_context = document.cloneRenderContext(render_context.substr(1), first_component).getAttribute('id');
 				}
 
 				let context_promises = hcf.web.Controller.loadResources(components, (render_context == 'global') ? undefined : render_context);
@@ -661,6 +701,11 @@ class extends hcf.web.Component
 
 	routerLinkClicked(event)
 	{
+		if (event.which != 1 || event.ctrlKey || event.shiftKey || event.metaKey)
+		{
+			return;// on mousewheel-click or ctrl/shift/cmd-key hold while click open in new tab/window -> no internal navigation
+		}
+
 		event.preventDefault();// do not redirect to url
 		let href = null;
 

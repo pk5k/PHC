@@ -18,8 +18,9 @@ trait Controller
 
 		$fqn = $target::FQN;
 		$out = new \stdClass();
+		$conf = self::config();
 
-		if ($chosen_route != $route)
+		if ($chosen_route != $route && isset($conf->redirect) && $conf->redirect)
 		{
 			$out->redirect = $chosen_route;
 		}
@@ -30,7 +31,6 @@ trait Controller
 			return json_encode($out);
 		}
 
-		$conf = self::config();
 		$fastpath = isset($conf->fastpath) ? $conf->fastpath : true;
 
 		$out = self::applyPreloads($out, $fqn);

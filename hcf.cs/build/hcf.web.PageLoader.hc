@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.web.PageLoader - BUILD 22.02.26#20
+<?php #HYPERCELL hcf.web.PageLoader - BUILD 22.03.07#47
 namespace hcf\web;
 class PageLoader extends \hcf\web\Component {
     use \hcf\core\dryver\Base, \hcf\core\dryver\Config, \hcf\core\dryver\Controller, \hcf\core\dryver\Controller\Js, PageLoader\__EO__\Controller, \hcf\core\dryver\View, \hcf\core\dryver\View\Html, \hcf\core\dryver\View\Css, \hcf\core\dryver\Internal;
@@ -21,7 +21,10 @@ class PageLoader extends \hcf\web\Component {
     # BEGIN ASSEMBLY FRAME CONTROLLER.JS
     public static function script() {
         $js = "class extends hcf.web.Component{constructor(){super();if(hcf.web.PageLoader.instance!=undefined){throw'only one hcf.web.PageLoader instance (= 1 page-loader element) can exist per document';}
-hcf.web.PageLoader.instance=this;window.addEventListener('popstate',(e)=>this.navigationOccured(e));this.addEventListener('page-load-view-begin',(e)=>this.hideContainer());this.addEventListener('page-rendered',(e)=>this.showContainer());this.addEventListener('page-load-view-failed',(e)=>this.displayError(0,'reloading view failed.'));}
+hcf.web.PageLoader.instance=this;window.addEventListener('popstate',(e)=>this.navigationOccured(e));this.addEventListener('page-load-view-begin',(e)=>{this.hideContainer();this.removeObserver()});this.addEventListener('page-rendered',(e)=>{this.showContainer();this.setupObserver()});this.addEventListener('page-load-view-failed',(e)=>this.displayError(0,'reloading view failed.'));}
+setupObserver(){const config={attributes:false,childList:true,subtree:true};const callback=(mutationsList,observer)=>{this.initRouterLinks();};this.observer=new MutationObserver(callback);for(let i in this.children){let child=this.children[i];if(child instanceof hcf.web.Page){this.observer.observe(child.shadowRoot,config);}}}
+removeObserver(){if(this.observer==null||this.observer==undefined){return;}
+this.observer.disconnect();this.observer=null;}
 connectedCallback(){if(this.current_route==undefined){this.runAfterDomLoad(()=>{this.loader_color=this.getAttribute('loader-color');this.loader_color_error=this.getAttribute('loader-color-error');this.link_class=this.getAttribute('link-class');if(!this.hasAttribute('route')){throw'route attribute required.';}
 this.initStateFragments();this.initRouterLinks();this.loadPage(this.getAttribute('route'));});super.instance=this;}}
 static get observedAttributes(){return['loader-color-error','loader-color','link-class'];}
@@ -45,7 +48,8 @@ initStateFragments(){let error_slot=this.shadowRoot.querySelector('.error-fragme
 error_slot.classList.add('initialized');}
 addLinkListener(to_elem){if(!to_elem.classList.contains('router-link-initialized')){to_elem.addEventListener('click',(e)=>{this.routerLinkClicked(e);});to_elem.classList.add('router-link-initialized');}}
 inspectElementForRouterLinks(search_for_router_links){if(search_for_router_links.shadowRoot!=null&&search_for_router_links.shadowRoot!=undefined){if(search_for_router_links.classList.contains('crawl-add-all')){search_for_router_links.shadowRoot.querySelectorAll('a[href]').forEach((shadow_router_link)=>{this.addLinkListener(shadow_router_link);});}
-else{search_for_router_links.shadowRoot.querySelectorAll('.'+this._link_class).forEach((shadow_router_link)=>{this.addLinkListener(shadow_router_link);});}}}
+else{search_for_router_links.shadowRoot.querySelectorAll('.'+this._link_class).forEach((shadow_router_link)=>{this.addLinkListener(shadow_router_link);});}
+search_for_router_links.shadowRoot.querySelectorAll('.'+this._link_class+'-crawl').forEach((e)=>this.inspectElementForRouterLinks(e));}}
 initRouterLinks(){document.querySelectorAll('.'+this._link_class+'-crawl').forEach((e)=>this.inspectElementForRouterLinks(e));if(this.firstChild instanceof hcf.web.Page){this.inspectElementForRouterLinks(this.firstChild);}
 document.querySelectorAll('.'+this._link_class).forEach((router_link)=>{this.addLinkListener(router_link);});}
 topLoaderElement(){return this.shadowRoot.querySelector('.top-loader');}
@@ -82,7 +86,7 @@ else{throw'missing cache data.';}}
 return false;}
 preloadDependencies(route_name,data){this.current_request=null;let o=JSON.parse(data);if(this.wasCached(route_name,o)){return;}
 if(o.preload!=undefined){let me=hcf.web.PageLoader;let preload_data=o.preload;let preload_promises=[];for(let render_context in o.preload){let components=o.preload[render_context];if(components.length==0){continue;}
-if(render_context.substr(0,1)=='@'){render_context=document.cloneRenderContext(render_context.substr(1),o.which).getAttribute('id');}
+if(render_context.substr(0,1)=='@'){let first_component=components[0];render_context=document.cloneRenderContext(render_context.substr(1),first_component).getAttribute('id');}
 let context_promises=hcf.web.Controller.loadResources(components,(render_context=='global')?undefined:render_context);preload_promises=preload_promises.concat(context_promises);}
 if(preload_promises.length>0){let part=48 / preload_promises.length;for(var i in preload_promises){let cp=preload_promises[i];cp.then(()=>{this.setTopLoaderProgress(this.getTopLoaderProgress()+part);});}}
 Promise.all(preload_promises).catch((e)=>this.displayError(e,'Preloading resources failed.')).then(()=>this.documentReady(route_name,o));}
@@ -105,7 +109,8 @@ this.current_page=o.which;this.setTopLoaderProgress(100);let event=new Event('pa
 catch(e){this.displayError(0,'Failed on initialisation: '+e);}}
 redirected(to_route){let href=this.extractRouteName(window.location.href);this.current_route=to_route;this.syncQuery(href.args);history.pushState(null,null,this.joinUrlArgs(to_route,href.args,href.fancy));}
 navigationOccured(event){let parts=this.extractRouteName(window.location.pathname);let href=parts.route;let args=parts.args;this.syncQuery(args);this.loadPage(href);}
-routerLinkClicked(event){event.preventDefault();let href=null;if(!event.target.hasAttribute('href')){let link_lookup=event.target.closest('a[href]');if(link_lookup==null){throw'cannot determine route for '+this._link_class+' element '+event.target;}
+routerLinkClicked(event){if(event.which!=1||event.ctrlKey||event.shiftKey||event.metaKey){return;}
+event.preventDefault();let href=null;if(!event.target.hasAttribute('href')){let link_lookup=event.target.closest('a[href]');if(link_lookup==null){throw'cannot determine route for '+this._link_class+' element '+event.target;}
 href=link_lookup.getAttribute('href');}
 else{href=event.target.getAttribute('href');}
 let parts=this.extractRouteName(href);if(parts.route==this.current_route){return;}
@@ -178,14 +183,14 @@ return out.slice(0,-1);}}";
             }
             $fqn = $target::FQN;
             $out = new \stdClass();
-            if ($chosen_route != $route) {
+            $conf = self::config();
+            if ($chosen_route != $route && isset($conf->redirect) && $conf->redirect) {
                 $out->redirect = $chosen_route;
             } else if (isset($cache_map->{$fqn})) // no caching on redirects
             {
                 $out->is_cached_as = $fqn;
                 return json_encode($out);
             }
-            $conf = self::config();
             $fastpath = isset($conf->fastpath) ? $conf->fastpath : true;
             $out = self::applyPreloads($out, $fqn);
             $out->which = $fqn;
@@ -242,6 +247,9 @@ BEGIN[CONFIG.JSON]
 	"//": "If true: the target-page will be pre-rendered inside the PageLoader instance after checking it's permissions. Avoiding an additional Request to the page itself after the loader has finished.",
 	"fastpath": true,
 	
+	"//": "If true, page loads that were redirected from hcf.web.Router will pass the new route to the client and change url in the browser accordingly.",
+	"redirect": true,
+
 	"//": "Additional resources per Page (target-page will be added automatically according to the page-context settings)",
 	"my.Hypercell": { 
 		"//": "key = ComponentContext id, if resource should be load into a render-context, global = light DOM",

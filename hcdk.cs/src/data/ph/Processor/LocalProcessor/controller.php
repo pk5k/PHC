@@ -20,6 +20,17 @@ trait Controller
 	 */
 	public static function process($content, $between_double_quotes = true, $mirror_map = null)
 	{
+		if (strpos($content, '.') !== false)
+		{
+			$parts = explode('.', $content);
+			$content = implode('->', $parts);
+
+			if ($between_double_quotes)
+			{
+				return '{$'.$content.'}';
+			}
+		}
+
 		return '$'.$content;
 	}
 }

@@ -17,7 +17,14 @@ namespace hcf\core\dryver
     {
       $cc = get_called_class();
       
-      return constant($cc.'::'.$name);
+      if (defined($cc.'::'.$name))
+      {
+        return constant($cc.'::'.$name);
+      }
+      else
+      {
+        return constant($name);// can be used for global constants too
+      }
     }
 
     protected static function _dict($key, $args)

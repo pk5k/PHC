@@ -78,28 +78,30 @@ class extends HTMLElement // extend an anonymous class from hcf.web.Component in
 	    }
 	}
 
-	dispatchEvent(event)// allow custom event attribute like onsubmit-returned
+	dispatchEvent(event)// allow custom event attribute like onsubmit-before
 	{
-	    super.dispatchEvent(event);
-
+	    let ret = super.dispatchEvent(event);
 	    const eventFire = this['on' + event.type];
 	    
 	    if (eventFire) 
 	    {
-	      return; // already processed by super.dispatchEvent
+	    	return ret; // already processed by super.dispatchEvent
 	    } 
 	    else 
 	    {
-	      const func = new Function('e',
 
+	      const func = new Function('e',
 	        'with(document) {' +
 	        'with(this) {' +
 	        'let attr = ' + this.getAttribute('on' + event.type) + ';' + 
-	        'if(typeof attr === \'function\') { attr(e)};' +
+	        'if(typeof attr === \'function\' && this instanceof HTMLElement) { return attr(e)};' +
 	        '}' +
 	      '}');
 
-	      func.call(this, event);
+
+	      let ret_own = func.call(this, event);
+
+	      return ret_own || ret;
 	    }
 	}
 }

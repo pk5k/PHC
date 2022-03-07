@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.web.Bridge - BUILD 22.02.25#3329
+<?php #HYPERCELL hcf.web.Bridge - BUILD 22.02.25#3330
 namespace hcf\web;
 class Bridge extends \hcf\web\Controller {
     use \hcf\core\dryver\Base, \hcf\core\dryver\Config, \hcf\core\dryver\Controller, \hcf\core\dryver\Controller\Js, Bridge\__EO__\Controller, \hcf\core\dryver\View, \hcf\core\dryver\Internal;
@@ -77,7 +77,7 @@ function argsToFormData(args,files){var fd=new FormData();for(var key in args){i
 fd.append(key,value);}}
 for(var i in files){var file=files[i];fd.append(file.name,file);}
 return fd;}
-function send(args,files,overwrites,callbacks,promise){var http_request=false;var async=true;var req_method='POST';var timeout=4000;var eval_reponse=false;var info=false;if(overwrites!==undefined&&overwrites!==null){http_request=overwrites.xhr||http_request;req_method=overwrites.method||req_method;timeout=(!isNaN(overwrites.timeout))?overwrites.timeout:timeout;eval=overwrites.eval||eval;if(overwrites.async!==undefined&&overwrites.async!==null){async=overwrites.async;}}
+function send(args,files,overwrites,callbacks,promise){var http_request=false;var async=true;var req_method='POST';var timeout=30000;var eval_reponse=false;var info=false;if(overwrites!==undefined&&overwrites!==null){http_request=overwrites.xhr||http_request;req_method=overwrites.method||req_method;timeout=(!isNaN(overwrites.timeout))?overwrites.timeout:timeout;eval=overwrites.eval||eval;if(overwrites.async!==undefined&&overwrites.async!==null){async=overwrites.async;}}
 if(callbacks===undefined||callbacks===null){callbacks={};}
 if(!http_request){if(window.XMLHttpRequest){http_request=new XMLHttpRequest();}
 else{http_request=new ActiveXObject('Microsoft.XMLHTTP');}}
