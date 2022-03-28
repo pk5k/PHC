@@ -15,7 +15,8 @@ function (to)
 	self._action = undefined;
 	self._method = undefined;
 
-	if (document[_worker_address] == undefined && window.Worker)
+	// WebWorker currently disabled due to memory leaks
+	/*if (document[_worker_address] == undefined && window.Worker)
 	{
 		document[_worker_address] = new Worker(_internal_route);
 		document[_worker_address].onmessage = receiveWorkerMessage;
@@ -23,7 +24,7 @@ function (to)
 	else if (!window.Worker)
 	{
 		console.warn('Your Browser does not support WebWorkers - all requests will be executed on the main-thread.');
-	}
+	}*/
 
 	if (document[_worker_store] == undefined) 
 	{

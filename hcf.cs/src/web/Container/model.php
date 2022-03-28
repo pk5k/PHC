@@ -1,7 +1,7 @@
 <?php
 use \hcf\core\Utils as Utils;
 use \hcf\web\RenderContext;
-use \hcf\web\Controller;
+use \hcf\web\Controller as WebController;
 use \hcf\web\Component;
 use \hcf\web\Bridge;
 use \hcf\web\PageLoader;
@@ -85,13 +85,13 @@ trait Model
 		}
 
 		$cc = new RenderContext('core');
-		$cc->register(Controller::class);
+		$cc->register(WebController::class);
 		$cc->register(Component::class);
+		$cc->register(Component\Polyfill::class);
 		$cc->register(Bridge::class);
 		$cc->register(PageLoader::class);
 		$cc->register(Page::class);
 		$cc->register(WebUtils::class);
-
 		$this->registerRenderContext($cc);
 	}
 

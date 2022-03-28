@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.web.PageLoader - BUILD 22.03.07#47
+<?php #HYPERCELL hcf.web.PageLoader - BUILD 22.03.28#59
 namespace hcf\web;
 class PageLoader extends \hcf\web\Component {
     use \hcf\core\dryver\Base, \hcf\core\dryver\Config, \hcf\core\dryver\Controller, \hcf\core\dryver\Controller\Js, PageLoader\__EO__\Controller, \hcf\core\dryver\View, \hcf\core\dryver\View\Html, \hcf\core\dryver\View\Css, \hcf\core\dryver\Internal;
@@ -21,11 +21,12 @@ class PageLoader extends \hcf\web\Component {
     # BEGIN ASSEMBLY FRAME CONTROLLER.JS
     public static function script() {
         $js = "class extends hcf.web.Component{constructor(){super();if(hcf.web.PageLoader.instance!=undefined){throw'only one hcf.web.PageLoader instance (= 1 page-loader element) can exist per document';}
-hcf.web.PageLoader.instance=this;window.addEventListener('popstate',(e)=>this.navigationOccured(e));this.addEventListener('page-load-view-begin',(e)=>{this.hideContainer();this.removeObserver()});this.addEventListener('page-rendered',(e)=>{this.showContainer();this.setupObserver()});this.addEventListener('page-load-view-failed',(e)=>this.displayError(0,'reloading view failed.'));}
+hcf.web.PageLoader.instance=this;window.addEventListener('popstate',(e)=>this.navigationOccured(e));}
 setupObserver(){const config={attributes:false,childList:true,subtree:true};const callback=(mutationsList,observer)=>{this.initRouterLinks();};this.observer=new MutationObserver(callback);for(let i in this.children){let child=this.children[i];if(child instanceof hcf.web.Page){this.observer.observe(child.shadowRoot,config);}}}
 removeObserver(){if(this.observer==null||this.observer==undefined){return;}
 this.observer.disconnect();this.observer=null;}
-connectedCallback(){if(this.current_route==undefined){this.runAfterDomLoad(()=>{this.loader_color=this.getAttribute('loader-color');this.loader_color_error=this.getAttribute('loader-color-error');this.link_class=this.getAttribute('link-class');if(!this.hasAttribute('route')){throw'route attribute required.';}
+constructedCallback(){this.addEventListener('page-load-view-begin',(e)=>{this.hideContainer();this.removeObserver()});this.addEventListener('page-rendered',(e)=>{this.showContainer();this.setupObserver()});this.addEventListener('page-load-view-failed',(e)=>this.displayError(0,'reloading view failed.'));}
+connectedCallback(){super.connectedCallback();if(this.current_route==undefined){this.runAfterDomLoad(()=>{this.loader_color=this.getAttribute('loader-color');this.loader_color_error=this.getAttribute('loader-color-error');this.link_class=this.getAttribute('link-class');if(!this.hasAttribute('route')){throw'route attribute required.';}
 this.initStateFragments();this.initRouterLinks();this.loadPage(this.getAttribute('route'));});super.instance=this;}}
 static get observedAttributes(){return['loader-color-error','loader-color','link-class'];}
 attributeChangedCallback(attr,oldValue,newValue){if(attr.indexOf('-')>-1){attr=attr.replace('-','_');}
@@ -46,7 +47,10 @@ static pageFqnForRoute(route_name){let me=hcf.web.PageLoader;for(let i in me._ma
 return null;}
 initStateFragments(){let error_slot=this.shadowRoot.querySelector('.error-fragment');let main_slot=this.shadowRoot.querySelector('.main-fragment');if(error_slot.assignedElements().length>0){let ae=error_slot.assignedElements();let elem=ae[0];this.page_error_fragment=elem.parentNode.removeChild(elem);}
 error_slot.classList.add('initialized');}
-addLinkListener(to_elem){if(!to_elem.classList.contains('router-link-initialized')){to_elem.addEventListener('click',(e)=>{this.routerLinkClicked(e);});to_elem.classList.add('router-link-initialized');}}
+removeLinkListeners(){if(this.link_list==undefined){return;}
+this.link_list.forEach((elem)=>{elem.classList.remove('router-link-initialized');});this.link_list=[];}
+addLinkListener(to_elem){if(!to_elem.classList.contains('router-link-initialized')){if(this.link_list==undefined){this.link_list=[];}
+this.link_list.push(to_elem);to_elem.addEventListener('click',(e)=>{this.routerLinkClicked(e);});to_elem.classList.add('router-link-initialized');}}
 inspectElementForRouterLinks(search_for_router_links){if(search_for_router_links.shadowRoot!=null&&search_for_router_links.shadowRoot!=undefined){if(search_for_router_links.classList.contains('crawl-add-all')){search_for_router_links.shadowRoot.querySelectorAll('a[href]').forEach((shadow_router_link)=>{this.addLinkListener(shadow_router_link);});}
 else{search_for_router_links.shadowRoot.querySelectorAll('.'+this._link_class).forEach((shadow_router_link)=>{this.addLinkListener(shadow_router_link);});}
 search_for_router_links.shadowRoot.querySelectorAll('.'+this._link_class+'-crawl').forEach((e)=>this.inspectElementForRouterLinks(e));}}
@@ -77,7 +81,7 @@ setTopLoaderColor(to){this.topLoaderElement().style.background=to;}
 unloadCurrentPage(){if(this.initial_page_unloaded!==true){this.innerHTML='';this.initial_page_unloaded=true;return;}
 if(this.error_page_active===true){this.error_page_active=false;this.page_error_fragment=this.removeChild(this.page_error_fragment);this.current_route=null;this.current_page=null;return;}
 let me=hcf.web.PageLoader;let fqn=this.current_page;let c=me.cache(fqn);let store=document.createElement('div');let children=this.children;let clone=[];for(let i in children){let e=children[i];if(e instanceof hcf.web.Page){clone.push(e);}}
-clone.forEach((page)=>{page.beforeUnload();store.appendChild(this.removeChild(page));});if(c===false){}
+clone.forEach((page)=>{page.preserve=(c!==false);page.beforeUnload();let e=new Event('page-unload');page.dispatchEvent(e);store.appendChild(this.removeChild(page));});if(c===false){this.removeLinkListeners();}
 else{if(c!=null){c.view=store;}
 me.cache(fqn,c);}
 this.current_route=null;this.current_page=null;}
@@ -91,7 +95,7 @@ let context_promises=hcf.web.Controller.loadResources(components,(render_context
 if(preload_promises.length>0){let part=48 / preload_promises.length;for(var i in preload_promises){let cp=preload_promises[i];cp.then(()=>{this.setTopLoaderProgress(this.getTopLoaderProgress()+part);});}}
 Promise.all(preload_promises).catch((e)=>this.displayError(e,'Preloading resources failed.')).then(()=>this.documentReady(route_name,o));}
 else{this.documentReady(route_name,o);}}
-setTitle(to){document.head.querySelector('title').innerText=to;}
+setTitle(to){document.head.querySelector('title').innerHTML=to;}
 addView(view_data){let view=view_data.view;let which=view_data.which;let rendered=view_data.rendered;if(view instanceof HTMLElement){let children=view.children;let clone=[];for(var i in children){if(children[i]instanceof hcf.web.Page){clone.push(children[i]);}}
 clone.forEach((e)=>{this.appendChild(view.removeChild(e));});this.showContainer();}
 else{this.innerHTML=view;let page_elem=this.firstChild;if(!(page_elem instanceof hcf.web.Page)){throw'given element is no hcf.web.Page instance';}
@@ -105,7 +109,7 @@ else{this.current_route=route_name;}
 if(from_cache===true){page_elem.cacheReload(page_elem);}
 else{let me=hcf.web.PageLoader;if(page_elem.cache()){me.cache(o.which,o);me.addToMap(route_name,o.which);}
 else{me.cache(o.which,false);}}
-this.current_page=o.which;this.setTopLoaderProgress(100);let event=new Event('page-load-success',{bubbles:true});this.dispatchEvent(event);}
+this.current_page=o.which;this.setTopLoaderProgress(100);let event=new Event('page-load-success',{bubbles:true});page_elem.dispatchEvent(event);}
 catch(e){this.displayError(0,'Failed on initialisation: '+e);}}
 redirected(to_route){let href=this.extractRouteName(window.location.href);this.current_route=to_route;this.syncQuery(href.args);history.pushState(null,null,this.joinUrlArgs(to_route,href.args,href.fancy));}
 navigationOccured(event){let parts=this.extractRouteName(window.location.pathname);let href=parts.route;let args=parts.args;this.syncQuery(args);this.loadPage(href);}

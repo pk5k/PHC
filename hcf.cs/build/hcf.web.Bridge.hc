@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.web.Bridge - BUILD 22.02.25#3330
+<?php #HYPERCELL hcf.web.Bridge - BUILD 22.03.04#3331
 namespace hcf\web;
 class Bridge extends \hcf\web\Controller {
     use \hcf\core\dryver\Base, \hcf\core\dryver\Config, \hcf\core\dryver\Controller, \hcf\core\dryver\Controller\Js, Bridge\__EO__\Controller, \hcf\core\dryver\View, \hcf\core\dryver\Internal;
@@ -21,9 +21,7 @@ class Bridge extends \hcf\web\Controller {
     # END ASSEMBLY FRAME CONFIG.INI
     # BEGIN ASSEMBLY FRAME CONTROLLER.JS
     public static function script() {
-        $js = "function(to){var self=this;var _internal_route='?!=-bridge';var _worker_address='hcf.web.Bridge.Worker';var _worker_store=_worker_address+'.Store';var _header={action:\"X-Bridge-Action\",target:\"X-Bridge-Target\",method:\"X-Bridge-Method\"};self._target=to;self._action=undefined;self._method=undefined;if(document[_worker_address]==undefined&&window.Worker){document[_worker_address]=new Worker(_internal_route);document[_worker_address].onmessage=receiveWorkerMessage;}
-else if(!window.Worker){console.warn('Your Browser does not support WebWorkers - all requests will be executed on the main-thread.');}
-if(document[_worker_store]==undefined){document[_worker_store]={};}
+        $js = "function(to){var self=this;var _internal_route='?!=-bridge';var _worker_address='hcf.web.Bridge.Worker';var _worker_store=_worker_address+'.Store';var _header={action:\"X-Bridge-Action\",target:\"X-Bridge-Target\",method:\"X-Bridge-Method\"};self._target=to;self._action=undefined;self._method=undefined;if(document[_worker_store]==undefined){document[_worker_store]={};}
 self.do=function(arg_obj){if((arg_obj!=undefined||arg_obj!=null)&&arg_obj.constructor==Array){arg_obj={arguments:arg_obj};}
 var prepared_data=prepareSend(arg_obj,false);return new Promise((res,rej)=>{send(prepared_data.url_args,prepared_data.passed_files,prepared_data.overwrites,prepared_data.callbacks,{resolve:res,reject:rej});});}
 self.letDo=function(arg_obj){if(!window.Worker||!document[_worker_address]){return self.do(arg_obj);}

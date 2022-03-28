@@ -64,10 +64,14 @@ class  // hcf.web.Controller is just an internal function collection, no need to
 			let elem = document.createElement('script');
 			elem.setAttribute('src', base_href+'?!=-script' + component + version);// controller is always global so context not required -> url will not differ if component loaded to multiple contexts -> cache will be used more
 
-			elem.addEventListener('load', (e) => resolve(e));
-			elem.addEventListener('error', (e) => reject(e));
+			let cbres = (e) => { resolve(e); e.target.removeEventListener('load', cbres) };
+			let cbrej = (e) => { reject(e); e.target.removeEventListener('error', cbrej) };
+
+			elem.addEventListener('load', cbres);
+			elem.addEventListener('error', cbrej);
 
 			document.head.appendChild(elem);
+			elem = null;
 		});
 
 		let template = new Promise((resolve, reject) =>
@@ -75,54 +79,27 @@ class  // hcf.web.Controller is just an internal function collection, no need to
 			let elem = document.createElement('script');
 			elem.setAttribute('src', base_href+'?!=-template' + component + context + version);// context required to load to correct context
 
-			elem.addEventListener('load', (e) => resolve(e));
-			elem.addEventListener('error', (e) => reject(e));
+			let cbres = (e) => { resolve(e); e.target.removeEventListener('load', cbres) };
+			let cbrej = (e) => { reject(e); e.target.removeEventListener('error', cbrej) };
+
+			elem.addEventListener('load', cbres);
+			elem.addEventListener('error', cbrej);
 
 			document.head.appendChild(elem);// templates will move to their context by themself if neccessary
 		});
 
 		let style = new Promise((resolve, reject) =>
 		{
-			let elem = document.createElement('link');
-			elem.setAttribute('href', base_href+'?!=-style' + component + version);// link element is placed inside context, keep context away from path to use cache more often
-			elem.setAttribute('type', 'text/css');
-			elem.setAttribute('rel', 'stylesheet');
+			let elem = document.createElement('script');
+			elem.setAttribute('src', base_href+'?!=-style' + component + context + version);// context required to load
+			
+			let cbres = (e) => { resolve(e); e.target.removeEventListener('load', cbres) };
+			let cbrej = (e) => { reject(e); e.target.removeEventListener('error', cbrej) };
 
-			if (context != '')
-			{
-				let c = document.getElementById(to_context);
+			elem.addEventListener('load', cbres);
+			elem.addEventListener('error', cbrej);
 
-				if (c == null)
-				{
-					throw 'render context ' + to_context + ' does not exist';
-				}
-				
-				let global_allowed = (c.getAttribute('data-global') == 'true');
-
-				if (global_allowed)
-				{
-					// load trough light dom and copy to shadow dom later to use load event
-					elem.addEventListener('load', (e) => { 
-						resolve(e);
-						c.content.appendChild(elem.cloneNode(true));
-					});
-
-					elem.addEventListener('error', (e) => reject(e));
-					document.head.appendChild(elem);
-				}
-				else 
-				{
-					resolve();// resolve immediately - links inside shadow dom won't start loading until visible so this promise won't be resolved
-					c.content.appendChild(elem);
-				}
-			}
-			else 
-			{
-				elem.addEventListener('load', (e) => resolve(e));
-				elem.addEventListener('error', (e) => reject(e));
-
-				document.head.appendChild(elem);
-			}
+			document.head.appendChild(elem);// styles will be load into document.componentStyleMap
 		});
 
 		let promises = [controller, template, style];

@@ -110,7 +110,8 @@ trait Model
 		}
 		
 		$context = '';
-		if ($target == 'template')
+		
+		if ($target == 'template' || $target == 'style')
 		{
 			$context = '&context='.$this->id;
 		}

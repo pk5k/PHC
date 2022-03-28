@@ -12,6 +12,14 @@ if ({{arg:2}} == null) {
 	{{arg:2}}.appendChild(t_wrapper);
 }
 
+@+wrapStyle:
+(function(){
+	let css = new CSSStyleSheet();
+	css.replaceSync('{{method:removeLinebreaks|arg:0}}');
+	if (document.componentStyleMap['{{arg:1}}'] == undefined){ document.componentStyleMap['{{arg:1}}'] = [css] }else{ document.componentStyleMap['{{arg:1}}'].push(css) }
+	document.exportStylesheet(css, '{{arg:1}}');
+})();
+
 @-targetHead:
 document.head
 

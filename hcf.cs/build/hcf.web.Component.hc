@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.web.Component - BUILD 22.02.28#33
+<?php #HYPERCELL hcf.web.Component - BUILD 22.03.28#107
 namespace hcf\web;
 class Component extends \hcf\web\Controller {
     use \hcf\core\dryver\Base, \hcf\core\dryver\Controller, \hcf\core\dryver\Controller\Js, Component\__EO__\Model, \hcf\core\dryver\View, \hcf\core\dryver\View\Html, \hcf\core\dryver\View\Css, \hcf\core\dryver\Internal;
@@ -11,16 +11,42 @@ class Component extends \hcf\web\Controller {
     }
     # BEGIN ASSEMBLY FRAME CONTROLLER.JS
     public static function script() {
-        $js = "class extends HTMLElement{constructor(){super();this.loadTemplate();}
-loadTemplate(){if(document.componentMap[this.FQN]==undefined){throw'Element '+this.tagName.toLowerCase()+' is not in the component map and thus cannot be used.';}
-let render_context=document.componentMap[this.FQN];let shadow_root=this.attachShadow({mode:'open'});let context=null;let tpl=null;if(render_context=='global'){context=document.head;tpl=context.querySelector('div[id=\"'+this.FQN+'\"]');}
-else{context=document.getElementById(render_context).content;tpl=context.getElementById(this.FQN);}
-context.querySelectorAll('style, link').forEach((e)=>{shadow_root.appendChild(e.cloneNode(true));});let children=tpl.children;for(let i in children){if(children[i]instanceof HTMLElement){shadow_root.appendChild(children[i].cloneNode(true));}}}
+        $js = "class extends HTMLElement{constructor(){super();this.attachShadow({mode:'open'});this.loadTemplate();}
+construct(){if(this._constructed){return;}
+if(this._constructed===false){this.loadTemplate();}
+this._constructed=true;this.linkStylesheets();this.constructedCallback();}
+constructedCallback(){}
+destruct(){if(!this._constructed){return;}
+this._constructed=false;this.destructedCallback();this.unlinkStylesheets();this.removeEventListeners();this.shadowRoot.removeEventListeners();this.shadowRoot.innerHTML='';this.innerHTML='';}
+destructedCallback(){}
+connectedCallback(){if(!this._constructed){this.construct();}
+this._connected=true;}
+disconnectedCallback(){let c=this;setTimeout(function(){if(c.getRootNode().host==undefined&&!document.body.contains(c)&&!c.inPreservedContext()){c.destruct();}},0);this._connected=false;}
+inPreservedContext(){if(this.preserve==true||this.getAttribute('preserve')=='true'){return true;}
+let p=this.parentNode;while(p!=null){if(p.preserve==true||p.getAttribute('preserve')){return true;}
+p=p.parentNode;}
+return false;}
+loadTemplate(){if(this.shadowRoot==undefined){throw'No shadow root attached to load template - in '+this.FQN;}
+let tpl=this.renderContextTemplate();let children=tpl.children;for(let i in children){if(children[i]instanceof HTMLElement){this.shadowRoot.appendChild(children[i].cloneNode(true));}}}
+contextStylesheets(){let context_styles=document.componentStyleMap[this.renderContextId()];let context_fonts=[];if(this.renderContext().getAttribute('data-import-fonts')=='true'){let fonts=document.importFontList();context_styles=fonts.concat(context_styles);}
+return context_styles;}
+linkStylesheets(){if(this._styles_setup){return;}
+if(this.shadowRoot==undefined){throw'No shadowRoot initialized for '+this.FQN;}
+let context_styles=this.contextStylesheets();if(context_styles!=undefined){this.shadowRoot.adoptedStyleSheets=context_styles;}
+this._styles_setup=true;}
+unlinkStylesheets(){if(!this._styles_setup){return;}
+if(this.shadowRoot==undefined){throw'No shadowRoot initialized for '+this.FQN;}
+delete this.shadowRoot.adoptedStyleSheets;this._styles_setup=null;}
 bridge(to){return hcf.web.Bridge((to==undefined)?this.FQN:to);}
+renderContextTemplate(){let render_context_id=this.renderContextId();let rc=this.renderContext();if(render_context_id=='global'){return rc.querySelector('div[id=\"'+this.FQN+'\"]');}
+else{let context=rc.content;return context.getElementById(this.FQN);}}
+renderContextId(){if(document.componentMap[this.FQN]==undefined){throw'Element '+this.tagName.toLowerCase()+' is not in the component map and thus cannot be used.';}
+return document.componentMap[this.FQN];}
 renderContext(){if(document.componentMap[this.FQN]==undefined){throw'Element '+this.tagName+' ('+this.FQN+') is not registered in component map - render context cannot be determined';}
-return document.getElementById(document.componentMap[this.FQN]);}
+let render_context=this.renderContextId();if(render_context=='global'){return document.head;}
+else{return document.getElementById(render_context);}}
 runAfterDomLoad(func){hcf.web.Component.extRunAfterDomLoad(func);}
-static extRunAfterDomLoad(func){if(document.readyState==='loading'){window.addEventListener('DOMContentLoaded',function(){func()});}
+static extRunAfterDomLoad(func){if(document.readyState==='loading'){let loadedFunc=function(){func();window.removeEventListener('DOMContentLoaded',loadedFunc);};window.addEventListener('DOMContentLoaded',loadedFunc);}
 else{func();}}
 dispatchEvent(event){let ret=super.dispatchEvent(event);const eventFire=this['on'+event.type];if(eventFire){return ret;}
 else{const func=new Function('e','with(document) {'+'with(this) {'+'let attr = '+this.getAttribute('on'+event.type)+';'+'if(typeof attr === \'function\' && this instanceof HTMLElement) { return attr(e)};'+'}'+'}');let ret_own=func.call(this,event);return ret_own||ret;}}}";
@@ -86,6 +112,18 @@ else{const func=new Function('e','with(document) {'+'with(this) {'+'let attr = '
 }";
         return $output;
     }
+    static public function wrapStyle() {
+        $__CLASS__ = get_called_class();
+        $_this = (isset($this)) ? $this : null;
+        $_func_args = \func_get_args();
+        $output = "(function(){
+	let css = new CSSStyleSheet();
+	css.replaceSync('{$__CLASS__::_call('removeLinebreaks|map', $__CLASS__, $_this, [$__CLASS__::_arg($_func_args, 0, $__CLASS__, $_this) ]) }');
+	if (document.componentStyleMap['{$__CLASS__::_arg($_func_args, 1, $__CLASS__, $_this) }'] == undefined){ document.componentStyleMap['{$__CLASS__::_arg($_func_args, 1, $__CLASS__, $_this) }'] = [css] }else{ document.componentStyleMap['{$__CLASS__::_arg($_func_args, 1, $__CLASS__, $_this) }'].push(css) }
+	document.exportStylesheet(css, '{$__CLASS__::_arg($_func_args, 1, $__CLASS__, $_this) }');
+})();";
+        return $output;
+    }
     static private function targetHead() {
         $__CLASS__ = get_called_class();
         $_this = (isset($this)) ? $this : null;
@@ -120,9 +158,20 @@ else{const func=new Function('e','with(document) {'+'with(this) {'+'let attr = '
         public static function wrappedTemplate($render_context_id = null) {
             if (static ::hasTemplate()) {
                 if (is_null($render_context_id)) {
-                    return static ::wrapTemplate(static ::FQN, static ::escapedTemplate(), self::targetHead(), 'global');
+                    return static ::wrapTemplate(static ::FQN, static ::escaped(static ::template()), self::targetHead(), 'global');
                 } else {
-                    return static ::wrapTemplate(static ::FQN, static ::escapedTemplate(), self::targetRenderContext($render_context_id), $render_context_id);
+                    return static ::wrapTemplate(static ::FQN, static ::escaped(static ::template()), self::targetRenderContext($render_context_id), $render_context_id);
+                }
+            } else {
+                return '';
+            }
+        }
+        public static function wrappedStyle($render_context_id = null, $style_override = null) {
+            if (method_exists(static ::class, 'style')) {
+                if (is_null($render_context_id)) {
+                    return static ::wrapStyle(static ::escaped(is_null($style_override) ? static ::style() : $style_override), 'global');
+                } else {
+                    return static ::wrapStyle(static ::escaped(is_null($style_override) ? static ::style() : $style_override), $render_context_id);
                 }
             } else {
                 return '';
@@ -132,8 +181,8 @@ else{const func=new Function('e','with(document) {'+'with(this) {'+'let attr = '
             return strtolower(str_replace('.', '-', static ::FQN)); // override elementName template if you want a specific element name, otherwise the hcfqn in lowercase with dots replaced by dashes will be used.
             
         }
-        protected static function escapedTemplate() {
-            return str_replace("'", "\'", static ::template());
+        protected static function escaped($input) {
+            return str_replace("'", "\'", $input);
         }
         protected static function removeLinebreaks($from) {
             return trim(str_replace("\n", '', $from)); // linebreaks in javascript strings lead to invalid result. Newlines in HTML aren't neccessary anyway

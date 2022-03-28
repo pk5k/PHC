@@ -23,6 +23,7 @@ hcf\web\Utils=build/hcf.web.Utils.hc
 hcf\web\App\RequireJS=build/hcf.web.App.RequireJS.hc
 hcf\web\Bridge\Worker=build/hcf.web.Bridge.Worker.hc
 hcf\web\Bridge\Worker\FormDataPolyfill=build/hcf.web.Bridge.Worker.FormDataPolyfill.hc
+hcf\web\Component\Polyfill=build/hcf.web.Component.Polyfill.hc
 hcf\web\Container\Autoloader=build/hcf.web.Container.Autoloader.hc
 hcf\web\Container\provider=build/hcf.web.Container.provider.hc
 hcf\web\Container\provider\Script=build/hcf.web.Container.provider.Script.hc

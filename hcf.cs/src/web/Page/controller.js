@@ -1,30 +1,23 @@
 class extends hcf.web.Component
 {
-	constructor()
+	constructedCallback()
 	{
-		super();
-		
 		this.addEventListener('page-rendered', (e) => {
-			this.loaded(this.pageRoot());
+			if (e.target == this)
+			{
+				this.loaded(this.pageRoot());
+			}
 		});
-	}
 
-	connectedCallback()
-	{
-		if (this.initial_load_complete !== true)
-		{
-			this.runAfterDomLoad(()=>{
-				let autoload = this.getAttribute('autoload');
-				this.render_changes = this.getAttribute('render-changes');
+		this.runAfterDomLoad(() => {
+			let autoload = this.getAttribute('autoload');
+			this.render_changes = this.getAttribute('render-changes');
 
-				if (autoload != null && autoload != 'false')
-				{
-					this.load();
-				}
-			});
-		}
-
-		this.initial_load_complete = true;
+			if (autoload != null && autoload != 'false')
+			{
+				this.load();
+			}
+		});
 	}
 
 	pageRoot()
@@ -150,6 +143,7 @@ class extends hcf.web.Component
       	if (return_nodes !== true)
       	{
 	      	remove.forEach((e) => {
+	      		e.preserve = false;
 	      		e.remove();
 	      	});
       	}
@@ -158,6 +152,7 @@ class extends hcf.web.Component
       		let ret = [];
 
       		remove.forEach((e) => {
+      			e.preserve = true;// do not delete if detached
       			ret.push(this.shadowRoot.removeChild(e));
       		});
 
@@ -230,13 +225,13 @@ class extends hcf.web.Component
       	this.page_root = first;
       	let me = this;
 
-      	// browser must finish it's rendering first before page can be shown to avoid flickering (without cache it may take too long)
+      	// browser must finish it's rendering first before page can be shown
       	setTimeout(function(){
 	      	me.style.visibility = null;
 			
-			let e = new Event('page-rendered', {bubbles:true, composed:true});
+			let e = new Event('page-rendered', {bubbles:true});
 	      	me.dispatchEvent(e);
-      	}, 50);
+      	}, 0);// let browser render first
 	}
 
 	getOwnAttributes()

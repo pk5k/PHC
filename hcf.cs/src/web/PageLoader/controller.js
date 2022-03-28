@@ -11,11 +11,6 @@ class extends hcf.web.Component
 
 		hcf.web.PageLoader.instance = this;
 		window.addEventListener('popstate', (e) => this.navigationOccured(e));
-
-		// if page reload is triggered fade content
-		this.addEventListener('page-load-view-begin', (e) => { this.hideContainer(); this.removeObserver()});
-		this.addEventListener('page-rendered', (e) => {this.showContainer(); this.setupObserver()});
-		this.addEventListener('page-load-view-failed', (e) => this.displayError(0, 'reloading view failed.'));
 	}
 
 	setupObserver()
@@ -54,8 +49,18 @@ class extends hcf.web.Component
 		this.observer = null;
 	}
 
+	constructedCallback()
+	{
+		// if page reload is triggered fade content
+		this.addEventListener('page-load-view-begin', (e) => { this.hideContainer(); this.removeObserver()});
+		this.addEventListener('page-rendered', (e) => {this.showContainer(); this.setupObserver()});
+		this.addEventListener('page-load-view-failed', (e) => this.displayError(0, 'reloading view failed.'));
+	}
+
 	connectedCallback()
 	{
+		super.connectedCallback();
+
 		if (this.current_route == undefined)
 		{
 			this.runAfterDomLoad(() => {
@@ -210,10 +215,30 @@ class extends hcf.web.Component
 		error_slot.classList.add('initialized');
 	}
 
+	removeLinkListeners()
+	{
+		if (this.link_list == undefined)
+		{
+			return;
+		}
+
+		this.link_list.forEach((elem) => {
+			elem.classList.remove('router-link-initialized');
+		});
+
+		this.link_list = [];// reset each page
+	}
+
 	addLinkListener(to_elem)
 	{
 		if (!to_elem.classList.contains('router-link-initialized'))
 		{
+			if (this.link_list == undefined)
+			{
+				this.link_list = [];
+			}
+
+			this.link_list.push(to_elem);
 			to_elem.addEventListener('click', (e) => { this.routerLinkClicked(e); });
 			to_elem.classList.add('router-link-initialized');
 		}
@@ -447,12 +472,16 @@ class extends hcf.web.Component
 		
 		clone.forEach((page) => 
 		{
+			page.preserve = (c !== false);// dont destroy element if cache should be used
 			page.beforeUnload();
+			let e = new Event('page-unload');
+			page.dispatchEvent(e);
 			store.appendChild(this.removeChild(page));
 		});
 
 		if (c === false)
 		{
+			this.removeLinkListeners();
 			// cache disabled for this page
 		}
 		else 
@@ -552,7 +581,7 @@ class extends hcf.web.Component
 
 	setTitle(to)
 	{
-		document.head.querySelector('title').innerText = to;
+		document.head.querySelector('title').innerHTML = to;
 	}
 
 	addView(view_data)
@@ -671,7 +700,7 @@ class extends hcf.web.Component
 			this.setTopLoaderProgress(100);//fully initialized
 
 			let event = new Event('page-load-success', {bubbles:true});
-			this.dispatchEvent(event);
+			page_elem.dispatchEvent(event);
 		}
 		catch (e)
 		{

@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.web.Page - BUILD 22.03.01#53
+<?php #HYPERCELL hcf.web.Page - BUILD 22.03.28#70
 namespace hcf\web;
 class Page extends \hcf\web\Component {
     use \hcf\core\dryver\Base, \hcf\core\dryver\Controller, \hcf\core\dryver\Controller\Js, Page\__EO__\Controller, Page\__EO__\Model, \hcf\core\dryver\View, \hcf\core\dryver\View\Html, \hcf\core\dryver\Internal;
@@ -14,9 +14,7 @@ class Page extends \hcf\web\Component {
     }
     # BEGIN ASSEMBLY FRAME CONTROLLER.JS
     public static function script() {
-        $js = "class extends hcf.web.Component{constructor(){super();this.addEventListener('page-rendered',(e)=>{this.loaded(this.pageRoot());});}
-connectedCallback(){if(this.initial_load_complete!==true){this.runAfterDomLoad(()=>{let autoload=this.getAttribute('autoload');this.render_changes=this.getAttribute('render-changes');if(autoload!=null&&autoload!='false'){this.load();}});}
-this.initial_load_complete=true;}
+        $js = "class extends hcf.web.Component{constructedCallback(){this.addEventListener('page-rendered',(e)=>{if(e.target==this){this.loaded(this.pageRoot());}});this.runAfterDomLoad(()=>{let autoload=this.getAttribute('autoload');this.render_changes=this.getAttribute('render-changes');if(autoload!=null&&autoload!='false'){this.load();}});}
 pageRoot(){return this.page_root;}
 loaded(view_root){}
 cacheReload(){}
@@ -34,8 +32,8 @@ set render_changes(val){if(val!=null&&val!='false'){this.setupObserver();}
 else{this.removeObserver();}}
 get render_changes(){return this.getAttribute('render-changes');}
 clear(return_nodes){this.page_root=null;let children=this.shadowRoot.children;let remove=[];for(let i in children){let t_name=children[i].tagName;if(children[i]instanceof HTMLElement&&t_name!='STYLE'&&t_name!='LINK'){remove.push(children[i]);}}
-if(return_nodes!==true){remove.forEach((e)=>{e.remove();});}
-else{let ret=[];remove.forEach((e)=>{ret.push(this.shadowRoot.removeChild(e));});return ret;}}
+if(return_nodes!==true){remove.forEach((e)=>{e.preserve=false;e.remove();});}
+else{let ret=[];remove.forEach((e)=>{e.preserve=true;ret.push(this.shadowRoot.removeChild(e));});return ret;}}
 viewLoadSuccess(data){let e=new Event('page-load-view-success',{bubbles:true,composed:true});this.dispatchEvent(e);this.render(data);}
 viewLoadFailed(code,msg){let e=new Event('page-load-view-failed',{bubbles:true,composed:true});this.dispatchEvent(e);this.error(code,msg);}
 injectView(view_data,load_as){this.loaded_as=load_as;return this.render(view_data);}
@@ -43,7 +41,7 @@ render(view_data){this.clear();this.style.visibility='hidden';let nodes=[];let f
 else{let wrapper=document.createElement('div');wrapper.innerHTML=view_data;for(var i in wrapper.children){nodes.push(wrapper.children[i]);}}
 nodes.forEach((node)=>{if(node instanceof HTMLElement){if(first==null){first=node;}
 this.shadowRoot.appendChild(node);}});if(wrapper!=null){wrapper.remove();}
-this.page_root=first;let me=this;setTimeout(function(){me.style.visibility=null;let e=new Event('page-rendered',{bubbles:true,composed:true});me.dispatchEvent(e);},50);}
+this.page_root=first;let me=this;setTimeout(function(){me.style.visibility=null;let e=new Event('page-rendered',{bubbles:true});me.dispatchEvent(e);},0);}
 getOwnAttributes(){let atts=this.attributes;let out={};let skip=['render-changes','autoload','style','class'];for(var i in atts){if(!isNaN(i)){let att=atts[i];if(skip.indexOf(att.name)!=-1){continue;}
 out[att.name]=att.value;}}
 return out;}

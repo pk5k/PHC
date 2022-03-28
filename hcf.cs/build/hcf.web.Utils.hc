@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.web.Utils - BUILD 22.03.04#13
+<?php #HYPERCELL hcf.web.Utils - BUILD 22.03.28#32
 namespace hcf\web;
 class Utils extends \hcf\web\Controller {
     use \hcf\core\dryver\Base, \hcf\core\dryver\Controller, \hcf\core\dryver\Controller\Js, \hcf\core\dryver\Internal;
@@ -8,8 +8,19 @@ class Utils extends \hcf\web\Controller {
     }
     # BEGIN ASSEMBLY FRAME CONTROLLER.JS
     public static function script() {
-        $js = "class{static extendHTMLElements(){HTMLElement.prototype.find=function(elem_with_id){return this.getRootNode().getElementById(elem_with_id);}
-HTMLElement.prototype.host=function(){return this.getRootNode().host;}}
+        $js = "class{static extendHTMLElements(){HTMLElement.prototype.find=function(elem_with_id){if(elem_with_id==null||elem_with_id==undefined||elem_with_id==''){return null;}
+return this.getRootNode().getElementById(elem_with_id);}
+HTMLElement.prototype.elemHost=function(){return this.getRootNode().host;}
+let addEventListenerFunc=function(a,b,c){if(c==undefined){c=false;}
+this._addEventListener(a,b,c);if(!this._event_registry){this._event_registry={};}
+if(!this._event_registry[a]){this._event_registry[a]=[];}
+this._event_registry[a].push({type:a,listener:b,options:c});};let removeEventListenerFunc=function(a,b,c){if(c==undefined){c=false;}
+this._removeEventListener(a,b,c);let reg=this.eventRegistry(a);for(let i in reg){let event=reg[i];if(event.listener==b&&event.options==c){if(this instanceof Document){console.log('remove',a,b,c);}
+this._event_registry[a][i].type=null;this._event_registry[a][i].listener=null;this._event_registry[a][i].options=null;this._event_registry[a][i]=null;delete this._event_registry[a][i];if(this._event_registry[a].length==0){delete this._event_registry[a];}}}};let eventRegistryFunc=function(for_event){if(this._event_registry==undefined){return[];}
+if(for_event==undefined){let ev_arr=this._event_registry;let list=[];for(let ev_type in ev_arr){ev_arr[ev_type].forEach((ev)=>list.push(ev));}
+return list;}
+if(this._event_registry[for_event]==undefined){return[];}
+return this._event_registry[for_event];};let removeEventListenersFunc=function(for_event){this.eventRegistry(for_event).forEach((ev_data)=>{this.removeEventListener(ev_data.type,ev_data.listener,ev_data.options);});};Window.prototype._addEventListener=Window.prototype.addEventListener;Window.prototype.addEventListener=addEventListenerFunc;Window.prototype._removeEventListener=Window.prototype.removeEventListener;Window.prototype.removeEventListener=removeEventListenerFunc;Window.prototype.eventRegistry=eventRegistryFunc;Window.prototype.removeEventListeners=removeEventListenersFunc;EventTarget.prototype._addEventListener=EventTarget.prototype.addEventListener;EventTarget.prototype.addEventListener=addEventListenerFunc;EventTarget.prototype._removeEventListener=EventTarget.prototype.removeEventListener;EventTarget.prototype.removeEventListener=removeEventListenerFunc;EventTarget.prototype.eventRegistry=eventRegistryFunc;EventTarget.prototype.removeEventListeners=removeEventListenersFunc;}
 static registerMd5Module(\$){function safeAdd(x,y){var lsw=(x&0xFFFF)+(y&0xFFFF)
 var msw=(x>>16)+(y>>16)+(lsw>>16)
 return(msw<<16)|(lsw&0xFFFF)}
@@ -157,7 +168,8 @@ return currOffset;}
 static cursor(){return hcf.web.Utils._cursor;}
 static registerCursorMoved(){document.onmousemove=hcf.web.Utils.cursorMoved;}
 static cursorMoved(e){let me=hcf.web.Utils;if(typeof e=='undefined'||e==null){me._cursor={x:0,y:0};return;}
-if(me.cursor_timeout==null||me.cursor_timeout==undefined){var doc=document.documentElement||document.body;var target=e.srcElement||e.target;var offsetpos=me.recursiveOffset(doc);let pos_x=e.clientX+offsetpos.x;let pos_y=e.clientY+offsetpos.y;me._cursor={x:pos_x,y:pos_y};me.cursor_timeout=setTimeout(function(){me.cursor_timeout=null;},100);}}}";
+if(me.cursor_timeout==null||me.cursor_timeout==undefined){var doc=document.documentElement||document.body;var target=e.srcElement||e.target;var offsetpos=me.recursiveOffset(doc);let pos_x=e.clientX+offsetpos.x;let pos_y=e.clientY+offsetpos.y;me._cursor={x:pos_x,y:pos_y};me.cursor_timeout=setTimeout(function(){me.cursor_timeout=null;},100);}}
+static getUrlVars(){var vars={};var parts=window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi,function(m,key,value){vars[key]=value;});return vars;}}";
         return $js;
     }
     # END ASSEMBLY FRAME CONTROLLER.JS

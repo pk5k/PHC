@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.web.RenderContext - BUILD 22.02.26#43
+<?php #HYPERCELL hcf.web.RenderContext - BUILD 22.03.17#60
 namespace hcf\web;
 class RenderContext {
     use RenderContext\__EO__\Model, \hcf\core\dryver\View, \hcf\core\dryver\View\Html, \hcf\core\dryver\Internal;
@@ -15,34 +15,18 @@ class RenderContext {
         $_this = (isset($this)) ? $this : null;
         $_func_args = \func_get_args();
         $output = '';
-        $output.= "<template id=\"{$__CLASS__::_property('id', $__CLASS__, $_this) }\" data-global=\"{$__CLASS__::_property('allow_global_style', $__CLASS__, $_this) }\">";
-        if ($__CLASS__::_call('styles', $__CLASS__, $_this) != "") {
-            $output.= "<style id=\"base-style\">{$__CLASS__::_call('styles', $__CLASS__, $_this) }</style>";
-        }
-        if ($__CLASS__::_property('import_fonts', $__CLASS__, $_this) === true) {
-            foreach ($__CLASS__::_call('importedFonts', $__CLASS__, $_this) as $path) {
-                $output.= "<link class=\"container-font\" rel=\"stylesheet\" href=\"$path\"/>";
-            }
-        }
-        if ($__CLASS__::_call('componentsLoad', $__CLASS__, $_this) === true) {
-            $output.= "<link id=\"component-styles\" rel=\"stylesheet\" href=\"{$__CLASS__::_call('url|map', $__CLASS__, $_this, ['style', $__CLASS__::_property('components', $__CLASS__, $_this) ]) }\"/>";
-        }
-        $output.= "</template>";
-        if ($__CLASS__::_property('allow_global_style', $__CLASS__, $_this) == "true") {
-            if ($__CLASS__::_call('styles', $__CLASS__, $_this) != "") {
-                $output.= "<style id=\"{$__CLASS__::_property('id', $__CLASS__, $_this) }-global-base-style\">{$__CLASS__::_call('styles', $__CLASS__, $_this) }</style>";
-            }
-            if ($__CLASS__::_call('componentsLoad', $__CLASS__, $_this) === true) {
-                $output.= "<link id=\"{$__CLASS__::_property('id', $__CLASS__, $_this) }-global-component-styles\" rel=\"stylesheet\" href=\"{$__CLASS__::_call('url|map', $__CLASS__, $_this, ['style', $__CLASS__::_property('components', $__CLASS__, $_this) ]) }\"/>";
-            }
-        }
+        $output.= "<template id=\"{$__CLASS__::_property('id', $__CLASS__, $_this) }\" data-import-fonts=\"" . (($__CLASS__::_property('import_fonts', $__CLASS__, $_this)) ? 'true' : 'false') . "\" data-global=\"{$__CLASS__::_property('allow_global_style', $__CLASS__, $_this) }\">
+		
+	</template>";
         if ($__CLASS__::_call('componentsLoad', $__CLASS__, $_this) === true) {
             if ($__CLASS__::_call('debugMode', $__CLASS__, $_this) === true) {
                 foreach ($__CLASS__::_property('components', $__CLASS__, $_this) as $component => $class) {
                     $output.= "<script src=\"{$__CLASS__::_call('url|map', $__CLASS__, $_this, ['template', $component]) }\"></script>";
+                    $output.= "<script src=\"{$__CLASS__::_call('url|map', $__CLASS__, $_this, ['style', $component]) }\"></script>";
                 }
             } else {
                 $output.= "<script src=\"{$__CLASS__::_call('url|map', $__CLASS__, $_this, ['template', $__CLASS__::_property('components', $__CLASS__, $_this) ]) }\"></script>";
+                $output.= "<script src=\"{$__CLASS__::_call('url|map', $__CLASS__, $_this, ['style', $__CLASS__::_property('components', $__CLASS__, $_this) ]) }\"></script>";
             }
             $output.= "<script src=\"{$__CLASS__::_call('url|map', $__CLASS__, $_this, ['script', $__CLASS__::_property('components', $__CLASS__, $_this) ]) }\"></script>";
         }
@@ -137,7 +121,7 @@ class RenderContext {
                 $component = substr($c_str, 0, -1);
             }
             $context = '';
-            if ($target == 'template') {
+            if ($target == 'template' || $target == 'style') {
                 $context = '&context=' . $this->id;
             }
             $v = (defined('APP_VERSION') ? '&v=' . APP_VERSION : ''); // define APP_VERSION and increment on updates to override caches

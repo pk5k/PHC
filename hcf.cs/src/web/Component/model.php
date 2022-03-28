@@ -25,11 +25,30 @@ trait Model
 		{
 			if (is_null($render_context_id))
 			{
-				return static::wrapTemplate(static::FQN, static::escapedTemplate(), self::targetHead(), 'global');
+				return static::wrapTemplate(static::FQN, static::escaped(static::template()), self::targetHead(), 'global');
 			}
 			else 
 			{
-				return static::wrapTemplate(static::FQN, static::escapedTemplate(), self::targetRenderContext($render_context_id), $render_context_id);
+				return static::wrapTemplate(static::FQN, static::escaped(static::template()), self::targetRenderContext($render_context_id), $render_context_id);
+			}
+		}
+		else 
+		{
+			return '';
+		}
+	}
+
+	public static function wrappedStyle($render_context_id = null, $style_override = null)
+	{
+		if (method_exists(static::class, 'style'))
+		{
+			if (is_null($render_context_id))
+			{
+				return static::wrapStyle(static::escaped(is_null($style_override) ? static::style() : $style_override), 'global');
+			}
+			else 
+			{
+				return static::wrapStyle(static::escaped(is_null($style_override) ? static::style() : $style_override), $render_context_id);
 			}
 		}
 		else 
@@ -43,9 +62,9 @@ trait Model
 		return strtolower(str_replace('.', '-', static::FQN)); // override elementName template if you want a specific element name, otherwise the hcfqn in lowercase with dots replaced by dashes will be used.
 	}
 
-	protected static function escapedTemplate()
+	protected static function escaped($input)
 	{
-		return str_replace("'", "\'", static::template());
+		return str_replace("'", "\'", $input);
 	}
 
 	protected static function removeLinebreaks($from)
