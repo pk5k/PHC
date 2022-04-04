@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.web.Utils - BUILD 22.03.28#32
+<?php #HYPERCELL hcf.web.Utils - BUILD 22.03.28#33
 namespace hcf\web;
 class Utils extends \hcf\web\Controller {
     use \hcf\core\dryver\Base, \hcf\core\dryver\Controller, \hcf\core\dryver\Controller\Js, \hcf\core\dryver\Internal;
@@ -15,8 +15,7 @@ let addEventListenerFunc=function(a,b,c){if(c==undefined){c=false;}
 this._addEventListener(a,b,c);if(!this._event_registry){this._event_registry={};}
 if(!this._event_registry[a]){this._event_registry[a]=[];}
 this._event_registry[a].push({type:a,listener:b,options:c});};let removeEventListenerFunc=function(a,b,c){if(c==undefined){c=false;}
-this._removeEventListener(a,b,c);let reg=this.eventRegistry(a);for(let i in reg){let event=reg[i];if(event.listener==b&&event.options==c){if(this instanceof Document){console.log('remove',a,b,c);}
-this._event_registry[a][i].type=null;this._event_registry[a][i].listener=null;this._event_registry[a][i].options=null;this._event_registry[a][i]=null;delete this._event_registry[a][i];if(this._event_registry[a].length==0){delete this._event_registry[a];}}}};let eventRegistryFunc=function(for_event){if(this._event_registry==undefined){return[];}
+this._removeEventListener(a,b,c);let reg=this.eventRegistry(a);for(let i in reg){let event=reg[i];if(event.listener==b&&event.options==c){this._event_registry[a][i].type=null;this._event_registry[a][i].listener=null;this._event_registry[a][i].options=null;this._event_registry[a][i]=null;delete this._event_registry[a][i];if(this._event_registry[a].length==0){delete this._event_registry[a];}}}};let eventRegistryFunc=function(for_event){if(this._event_registry==undefined){return[];}
 if(for_event==undefined){let ev_arr=this._event_registry;let list=[];for(let ev_type in ev_arr){ev_arr[ev_type].forEach((ev)=>list.push(ev));}
 return list;}
 if(this._event_registry[for_event]==undefined){return[];}

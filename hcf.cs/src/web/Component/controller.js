@@ -172,6 +172,17 @@ class extends HTMLElement // extend an anonymous class from hcf.web.Component in
 		this._styles_setup = null;
 	}
 
+	view()
+	{
+		if (this.shadowRoot == undefined)
+		{
+			throw 'View for ' + this.FQN + ' was not initialized yet.';
+		}
+
+		// Components view is always in shadowRoot
+		return this.shadowRoot;
+	}
+
 	bridge(to)
 	{
 		return hcf.web.Bridge((to == undefined) ? this.FQN : to);// this.FQN is defined in registerComponentController for prototype of your hcf.web.Controller/.Component/.Page

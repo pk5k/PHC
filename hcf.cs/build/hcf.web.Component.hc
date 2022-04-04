@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.web.Component - BUILD 22.03.28#107
+<?php #HYPERCELL hcf.web.Component - BUILD 22.03.28#108
 namespace hcf\web;
 class Component extends \hcf\web\Controller {
     use \hcf\core\dryver\Base, \hcf\core\dryver\Controller, \hcf\core\dryver\Controller\Js, Component\__EO__\Model, \hcf\core\dryver\View, \hcf\core\dryver\View\Html, \hcf\core\dryver\View\Css, \hcf\core\dryver\Internal;
@@ -37,6 +37,8 @@ this._styles_setup=true;}
 unlinkStylesheets(){if(!this._styles_setup){return;}
 if(this.shadowRoot==undefined){throw'No shadowRoot initialized for '+this.FQN;}
 delete this.shadowRoot.adoptedStyleSheets;this._styles_setup=null;}
+view(){if(this.shadowRoot==undefined){throw'View for '+this.FQN+' was not initialized yet.';}
+return this.shadowRoot;}
 bridge(to){return hcf.web.Bridge((to==undefined)?this.FQN:to);}
 renderContextTemplate(){let render_context_id=this.renderContextId();let rc=this.renderContext();if(render_context_id=='global'){return rc.querySelector('div[id=\"'+this.FQN+'\"]');}
 else{let context=rc.content;return context.getElementById(this.FQN);}}
