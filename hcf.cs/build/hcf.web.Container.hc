@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.web.Container - BUILD 22.03.18#75
+<?php #HYPERCELL hcf.web.Container - BUILD 22.04.05#78
 namespace hcf\web;
 class Container {
     use \hcf\core\dryver\Config, \hcf\core\dryver\Controller, \hcf\core\dryver\Controller\Js, Container\__EO__\Controller, Container\__EO__\Model, \hcf\core\dryver\View, \hcf\core\dryver\View\Html, \hcf\core\dryver\View\Css, \hcf\core\dryver\Internal;
@@ -59,7 +59,7 @@ function isNonConstructedStyleSheetInstance(instance){return typeof instance==='
 var \$basicStyleElement=new WeakMap();var \$locations=new WeakMap();var \$adoptersByLocation=new WeakMap();var \$appliedMethods=new WeakMap();function addAdopterLocation(sheet,location){var adopter=document.createElement('style');\$adoptersByLocation.get(sheet).set(location,adopter);\$locations.get(sheet).push(location);return adopter;}
 function getAdopterByLocation(sheet,location){return \$adoptersByLocation.get(sheet).get(location);}
 function removeAdopterLocation(sheet,location){\$adoptersByLocation.get(sheet).delete(location);\$locations.set(sheet,\$locations.get(sheet).filter(function(_location){return _location!==location;}));}
-function restyleAdopter(sheet,adopter){requestAnimationFrame(function(){adopter.textContent=\$basicStyleElement.get(sheet).textContent;\$appliedMethods.get(sheet).forEach(function(command){return adopter.sheet[command.method].apply(adopter.sheet,command.args);});});}
+function restyleAdopter(sheet,adopter){requestAnimationFrame(function(){adopter.textContent=\$basicStyleElement.get(sheet).textContent;\$appliedMethods.get(sheet).forEach(function(command){if(adopter.sheet!=null){return adopter.sheet[command.method].apply(adopter.sheet,command.args);}else{return null;}});});}
 function checkInvocationCorrectness(self){if(!\$basicStyleElement.has(self)){throw new TypeError('Illegal invocation');}}
 function ConstructedStyleSheet(){var self=this;var style=document.createElement('style');bootstrapper.body.appendChild(style);\$basicStyleElement.set(self,style);\$locations.set(self,[]);\$adoptersByLocation.set(self,new WeakMap());\$appliedMethods.set(self,[]);}
 var proto\$1=ConstructedStyleSheet.prototype;proto\$1.replace=function replace(contents){try{this.replaceSync(contents);return Promise.resolve(this);}

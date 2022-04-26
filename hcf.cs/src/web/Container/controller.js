@@ -313,7 +313,11 @@ document.cloneRenderContext = function(which, register_to_fqn)
             $appliedMethods
                 .get(sheet)
                 .forEach(function (command) {
-                return adopter.sheet[command.method].apply(adopter.sheet, command.args);
+                if (adopter.sheet != null) {
+                    return adopter.sheet[command.method].apply(adopter.sheet, command.args);
+                } else {
+                    return null;
+                }
             });
         });
     }

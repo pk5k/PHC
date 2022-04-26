@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.web.Utils - BUILD 22.03.28#33
+<?php #HYPERCELL hcf.web.Utils - BUILD 22.04.06#36
 namespace hcf\web;
 class Utils extends \hcf\web\Controller {
     use \hcf\core\dryver\Base, \hcf\core\dryver\Controller, \hcf\core\dryver\Controller\Js, \hcf\core\dryver\Internal;
@@ -14,12 +14,12 @@ HTMLElement.prototype.elemHost=function(){return this.getRootNode().host;}
 let addEventListenerFunc=function(a,b,c){if(c==undefined){c=false;}
 this._addEventListener(a,b,c);if(!this._event_registry){this._event_registry={};}
 if(!this._event_registry[a]){this._event_registry[a]=[];}
-this._event_registry[a].push({type:a,listener:b,options:c});};let removeEventListenerFunc=function(a,b,c){if(c==undefined){c=false;}
+let new_obj={type:a,listener:b,options:c};this._event_registry[a].push(new_obj);return new_obj;};let removeEventListenerFunc=function(a,b,c){if(c==undefined){c=false;}
 this._removeEventListener(a,b,c);let reg=this.eventRegistry(a);for(let i in reg){let event=reg[i];if(event.listener==b&&event.options==c){this._event_registry[a][i].type=null;this._event_registry[a][i].listener=null;this._event_registry[a][i].options=null;this._event_registry[a][i]=null;delete this._event_registry[a][i];if(this._event_registry[a].length==0){delete this._event_registry[a];}}}};let eventRegistryFunc=function(for_event){if(this._event_registry==undefined){return[];}
 if(for_event==undefined){let ev_arr=this._event_registry;let list=[];for(let ev_type in ev_arr){ev_arr[ev_type].forEach((ev)=>list.push(ev));}
 return list;}
 if(this._event_registry[for_event]==undefined){return[];}
-return this._event_registry[for_event];};let removeEventListenersFunc=function(for_event){this.eventRegistry(for_event).forEach((ev_data)=>{this.removeEventListener(ev_data.type,ev_data.listener,ev_data.options);});};Window.prototype._addEventListener=Window.prototype.addEventListener;Window.prototype.addEventListener=addEventListenerFunc;Window.prototype._removeEventListener=Window.prototype.removeEventListener;Window.prototype.removeEventListener=removeEventListenerFunc;Window.prototype.eventRegistry=eventRegistryFunc;Window.prototype.removeEventListeners=removeEventListenersFunc;EventTarget.prototype._addEventListener=EventTarget.prototype.addEventListener;EventTarget.prototype.addEventListener=addEventListenerFunc;EventTarget.prototype._removeEventListener=EventTarget.prototype.removeEventListener;EventTarget.prototype.removeEventListener=removeEventListenerFunc;EventTarget.prototype.eventRegistry=eventRegistryFunc;EventTarget.prototype.removeEventListeners=removeEventListenersFunc;}
+return this._event_registry[for_event];};let removeEventListenersFunc=function(for_event){this.eventRegistry(for_event).forEach((ev_data)=>{this.removeEventListener(ev_data.type,ev_data.listener,ev_data.options);});};let prependEventListenerFunc=function(a,b,c){let append=[];this.eventRegistry(a).forEach((event)=>{append.push(event);this.removeEventListener(event.type,event.listener,event.options);});this.addEventListener(a,b,c);append.forEach((event)=>{this.addEventListener(event.type,event.listener,event.options);});};Window.prototype._addEventListener=Window.prototype.addEventListener;Window.prototype.addEventListener=addEventListenerFunc;Window.prototype._removeEventListener=Window.prototype.removeEventListener;Window.prototype.removeEventListener=removeEventListenerFunc;Window.prototype.eventRegistry=eventRegistryFunc;Window.prototype.removeEventListeners=removeEventListenersFunc;EventTarget.prototype._addEventListener=EventTarget.prototype.addEventListener;EventTarget.prototype.addEventListener=addEventListenerFunc;EventTarget.prototype._removeEventListener=EventTarget.prototype.removeEventListener;EventTarget.prototype.removeEventListener=removeEventListenerFunc;EventTarget.prototype.eventRegistry=eventRegistryFunc;EventTarget.prototype.removeEventListeners=removeEventListenersFunc;EventTarget.prototype.prependEventListener=prependEventListenerFunc;}
 static registerMd5Module(\$){function safeAdd(x,y){var lsw=(x&0xFFFF)+(y&0xFFFF)
 var msw=(x>>16)+(y>>16)+(lsw>>16)
 return(msw<<16)|(lsw&0xFFFF)}

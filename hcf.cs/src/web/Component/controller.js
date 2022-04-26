@@ -168,6 +168,7 @@ class extends HTMLElement // extend an anonymous class from hcf.web.Component in
 			throw 'No shadowRoot initialized for ' + this.FQN;
 		}
 
+		//this.shadowRoot.adoptedStyleSheets = [];
 		delete this.shadowRoot.adoptedStyleSheets;
 		this._styles_setup = null;
 	}

@@ -26,7 +26,7 @@ class
    			{
    				c = false;
    			}
-
+   			
    			this._addEventListener(a,b,c);
    			
    			if (!this._event_registry)
@@ -39,7 +39,10 @@ class
    				this._event_registry[a] = [];	
    			}
 
-   			this._event_registry[a].push({type:a,listener:b,options:c});
+   			let new_obj = {type:a,listener:b,options:c};
+   			this._event_registry[a].push(new_obj);
+
+   			return new_obj;
 		};
 
 		let removeEventListenerFunc = function(a, b, c) 
@@ -108,6 +111,22 @@ class
 			});
 		};
 
+		let prependEventListenerFunc = function(a,b,c)
+		{
+			let append = [];
+
+			this.eventRegistry(a).forEach((event) => {
+				append.push(event);
+				this.removeEventListener(event.type, event.listener, event.options);
+			});
+
+			this.addEventListener(a, b, c);
+
+			append.forEach((event) => {
+				this.addEventListener(event.type, event.listener, event.options);
+			});
+		};
+
 		Window.prototype._addEventListener = Window.prototype.addEventListener;
 		Window.prototype.addEventListener = addEventListenerFunc;
 		Window.prototype._removeEventListener = Window.prototype.removeEventListener;
@@ -121,6 +140,7 @@ class
 		EventTarget.prototype.removeEventListener = removeEventListenerFunc;
 		EventTarget.prototype.eventRegistry = eventRegistryFunc;
 		EventTarget.prototype.removeEventListeners = removeEventListenersFunc;
+		EventTarget.prototype.prependEventListener = prependEventListenerFunc;
 	}
 
 	static registerMd5Module($) 
