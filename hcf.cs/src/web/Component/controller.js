@@ -173,7 +173,7 @@ class extends HTMLElement // extend an anonymous class from hcf.web.Component in
 		this._styles_setup = null;
 	}
 
-	view()
+	view(get_by_id)
 	{
 		if (this.shadowRoot == undefined)
 		{
@@ -181,7 +181,14 @@ class extends HTMLElement // extend an anonymous class from hcf.web.Component in
 		}
 
 		// Components view is always in shadowRoot
-		return this.shadowRoot;
+		if (get_by_id == undefined)
+		{
+			return this.shadowRoot;
+		}
+		else 
+		{
+			return this.shadowRoot.getElementById(get_by_id);
+		}
 	}
 
 	bridge(to)
