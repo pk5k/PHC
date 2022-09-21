@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.web.PageLoader - BUILD 22.03.28#59
+<?php #HYPERCELL hcf.web.PageLoader - BUILD 22.07.22#71
 namespace hcf\web;
 class PageLoader extends \hcf\web\Component {
     use \hcf\core\dryver\Base, \hcf\core\dryver\Config, \hcf\core\dryver\Controller, \hcf\core\dryver\Controller\Js, PageLoader\__EO__\Controller, \hcf\core\dryver\View, \hcf\core\dryver\View\Html, \hcf\core\dryver\View\Css, \hcf\core\dryver\Internal;
@@ -59,7 +59,7 @@ document.querySelectorAll('.'+this._link_class).forEach((router_link)=>{this.add
 topLoaderElement(){return this.shadowRoot.querySelector('.top-loader');}
 contentWrapperElement(){return this.shadowRoot.getElementById('content-wrapper');}
 syncQuery(new_args){if(new_args==null){this.removeAttribute('query');}
-this.setAttribute('query',this.joinUrlArgs('',new_args,false));}
+this.setAttribute('query',this.joinUrlArgs('',new_args,false,''));}
 reload(){let route_name=this.current_route;if(this.error_page_active||this.current_page==undefined||this.current_page==null){route_name=this.extractRouteName(window.location.pathname);}
 else{if(route_name==null){route_name=this.extractRouteName(window.location.pathname);}
 let me=hcf.web.PageLoader;let fqn=this.current_page;me.cache(fqn,false);}
@@ -71,7 +71,7 @@ this.current_route=route_name;let me=hcf.web.PageLoader;let page_fqn=me.pageFqnF
 this.loadPageFromServer(route_name);}
 loadPageFromServer(route_name){let query=this.getAttribute('query');let initial_args=null;if(query!=null&&query!=''){if(query.substr(0,1)!='?'){query='?'+query;}
 initial_args=this.extractRouteName(query);initial_args=initial_args.args;this.removeAttribute('query');}
-this.bridge().invoke('load').do({arguments:[route_name,hcf.web.PageLoader._map,initial_args],timeout:0,onBefore:(xhr)=>{this.current_request=xhr},onUpload:(e)=>this.setTopLoaderProgress((e.loaded / e.total*100)*.25),onProgress:(e)=>{this.setTopLoaderProgress(((e.loaded /(e.lengthComputable?e.total:e.loaded)*100)*.25)+25)},onSuccess:(data)=>this.preloadDependencies(route_name,data),onError:(msg,code)=>this.displayError(code,msg),onTimeout:(code,msg)=>this.displayError(code,msg)});}
+this.bridge().invoke('load').do({arguments:[route_name,hcf.web.PageLoader._map,initial_args],timeout:0,onBefore:(xhr)=>{this.current_request=xhr},onUpload:(e)=>this.setTopLoaderProgress((e.loaded / e.total*100)*.5),onProgress:(e)=>{this.setTopLoaderProgress(((e.loaded /(e.lengthComputable?e.total:e.loaded)*100)*.25)+50)},onSuccess:(data)=>this.preloadDependencies(route_name,data),onError:(msg,code)=>this.displayError(code,msg),onTimeout:(code,msg)=>this.displayError(code,msg)});}
 hideContainer(){this.contentWrapperElement().classList.add('loading');}
 showContainer(){this.contentWrapperElement().classList.remove('loading');}
 resetTopLoader(){this.setTopLoaderColor(this._loader_color);this.topLoaderElement().style.width=0;}
@@ -92,7 +92,7 @@ preloadDependencies(route_name,data){this.current_request=null;let o=JSON.parse(
 if(o.preload!=undefined){let me=hcf.web.PageLoader;let preload_data=o.preload;let preload_promises=[];for(let render_context in o.preload){let components=o.preload[render_context];if(components.length==0){continue;}
 if(render_context.substr(0,1)=='@'){let first_component=components[0];render_context=document.cloneRenderContext(render_context.substr(1),first_component).getAttribute('id');}
 let context_promises=hcf.web.Controller.loadResources(components,(render_context=='global')?undefined:render_context);preload_promises=preload_promises.concat(context_promises);}
-if(preload_promises.length>0){let part=48 / preload_promises.length;for(var i in preload_promises){let cp=preload_promises[i];cp.then(()=>{this.setTopLoaderProgress(this.getTopLoaderProgress()+part);});}}
+if(preload_promises.length>0){let part=23 / preload_promises.length;for(var i in preload_promises){let cp=preload_promises[i];cp.then(()=>{this.setTopLoaderProgress(this.getTopLoaderProgress()+part);});}}
 Promise.all(preload_promises).catch((e)=>this.displayError(e,'Preloading resources failed.')).then(()=>this.documentReady(route_name,o));}
 else{this.documentReady(route_name,o);}}
 setTitle(to){document.head.querySelector('title').innerHTML=to;}
@@ -111,31 +111,33 @@ else{let me=hcf.web.PageLoader;if(page_elem.cache()){me.cache(o.which,o);me.addT
 else{me.cache(o.which,false);}}
 this.current_page=o.which;this.setTopLoaderProgress(100);let event=new Event('page-load-success',{bubbles:true});page_elem.dispatchEvent(event);}
 catch(e){this.displayError(0,'Failed on initialisation: '+e);}}
-redirected(to_route){let href=this.extractRouteName(window.location.href);this.current_route=to_route;this.syncQuery(href.args);history.pushState(null,null,this.joinUrlArgs(to_route,href.args,href.fancy));}
+redirected(to_route){let href=this.extractRouteName(window.location.href);this.current_route=to_route;this.syncQuery(href.args);history.pushState(null,null,this.joinUrlArgs(to_route,href.args,href.fancy,href.hash));}
 navigationOccured(event){let parts=this.extractRouteName(window.location.pathname);let href=parts.route;let args=parts.args;this.syncQuery(args);this.loadPage(href);}
 routerLinkClicked(event){if(event.which!=1||event.ctrlKey||event.shiftKey||event.metaKey){return;}
 event.preventDefault();let href=null;if(!event.target.hasAttribute('href')){let link_lookup=event.target.closest('a[href]');if(link_lookup==null){throw'cannot determine route for '+this._link_class+' element '+event.target;}
 href=link_lookup.getAttribute('href');}
 else{href=event.target.getAttribute('href');}
 let parts=this.extractRouteName(href);if(parts.route==this.current_route){return;}
-let new_url=this.joinUrlArgs(parts.route,parts.args,parts.fancy);this.syncQuery(parts.args);history.pushState(null,null,new_url);this.loadPage(parts.route);}
-dispatchQuery(href){let arg=this.contentWrapperElement().getAttribute('data-router-arg');let parts=href.split('&');let route=null;let url_args={};for(var i in parts){let part=parts[i].split('=');let key=part[0];if(key==arg&&part[1]!=undefined){route=part[1];}
+let new_url=this.joinUrlArgs(parts.route,parts.args,parts.fancy,parts.hash);this.syncQuery(parts.args);history.pushState(null,null,new_url);this.loadPage(parts.route);}
+dispatchQuery(href,hash){let arg=this.contentWrapperElement().getAttribute('data-router-arg');let parts=href.split('&');let route=null;let url_args={};for(var i in parts){let part=parts[i].split('=');let key=part[0];if(key==arg&&part[1]!=undefined){route=part[1];}
 else{url_args[key]=part[1];}}
-return{fancy:false,'route':route,'args':url_args};}
-extractRouteName(href){if(href==''){return{fancy:false,route:null,args:null};}
+return{fancy:false,'route':route,'args':url_args,'hash':hash};}
+extractRouteName(href){let hash_pos=href.indexOf('#');let hash='';if(hash_pos>-1){let parts=href.split('#');href=parts[0];hash=parts[1];}
+if(href==''){return{fancy:false,route:null,args:null,'hash':hash};}
 let router_default=this.contentWrapperElement().getAttribute('data-router-default');if(href.substr(0,4)=='http'){href=href.substr(8);let qmark_i=href.indexOf('?');let slash_i=href.indexOf('/');if(qmark_i==-1&&slash_i==-1){href=router_default;}
 else if(qmark_i==-1||slash_i<qmark_i){href=href.substr(slash_i);}
 else if(slash_i==-1||qmark_i<slash_i){href=href.substr(qmark_i);}
 else{href=router_default;}}
-if(href.substr(0,1)=='?'){href=href.substr(1);return this.dispatchQuery(href);}
+if(href.substr(0,1)=='?'){href=href.substr(1);return this.dispatchQuery(href,hash);}
 if(href.substr(0,1)=='/'){href=href.substr(1);}
-href=href.split('?');let url_args=href[1];if(url_args!=undefined){url_args=this.dispatchQuery(url_args).args;}
+href=href.split('?');let url_args=href[1];if(url_args!=undefined){url_args=this.dispatchQuery(url_args,hash).args;}
 else{url_args={};}
 let route_parts=href[0].split('/');let route=route_parts[0];if(route==''){route=router_default;}
-return{fancy:true,'route':route,'args':url_args};}
-joinUrlArgs(route,args,fancy){let out='?';if(!fancy){let arg=this.contentWrapperElement().getAttribute('data-router-arg');out+=arg+'='+route+'&';}
+return{fancy:true,'route':route,'args':url_args,'hash':hash};}
+joinUrlArgs(route,args,fancy,hash){let out='?';if(!fancy){let arg=this.contentWrapperElement().getAttribute('data-router-arg');out+=arg+'='+route+'&';}
 Object.keys(args).forEach((a)=>{out+=a+'='+args[a]+'&';});if(fancy){out=route+out;}
-return out.slice(0,-1);}}";
+out=out.slice(0,-1);if(hash&&hash!=''){out+='#'+hash.replace('#','');}
+return out;}}";
         return $js;
     }
     # END ASSEMBLY FRAME CONTROLLER.JS

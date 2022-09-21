@@ -305,7 +305,7 @@ class extends hcf.web.Component
 			this.removeAttribute('query');
 		}
 
-		this.setAttribute('query', this.joinUrlArgs('', new_args, false));
+		this.setAttribute('query', this.joinUrlArgs('', new_args, false, ''));
 	}
 
 	reload()
@@ -393,10 +393,10 @@ class extends hcf.web.Component
 			arguments:[route_name, hcf.web.PageLoader._map, initial_args],
 			timeout: 0,
 			onBefore: (xhr) => { this.current_request = xhr },
-			onUpload: (e) => this.setTopLoaderProgress( (e.loaded / e.total * 100) * .25 ), // first 25% are for uploads 
-				/* Beginning on 25% until 50% = download-progress - last 50% used for component-resources (styles, controller, templates).
+			onUpload: (e) => this.setTopLoaderProgress( (e.loaded / e.total * 100) * .5 ), // first 5% are for uploads 
+				/* Beginning on 50% until 75% = download-progress - last 25% used for component-resources (styles, controller, templates).
 					If Content != json -> e.total is not working, also setting correct content-type headers will be ignored */
-			onProgress: (e) => { this.setTopLoaderProgress( ((e.loaded / (e.lengthComputable ? e.total : e.loaded) * 100) * .25) + 25)}, 
+			onProgress: (e) => { this.setTopLoaderProgress( ((e.loaded / (e.lengthComputable ? e.total : e.loaded) * 100) * .25) + 50)}, 
 			onSuccess: (data) => this.preloadDependencies(route_name, data),
 			onError: (msg, code) => this.displayError(code, msg),
 			onTimeout: (code, msg) => this.displayError(code, msg)
@@ -559,7 +559,7 @@ class extends hcf.web.Component
 
 			if (preload_promises.length > 0)
 			{
-				let part = 48 / preload_promises.length; // every part of the preload-resources (controller, templates, styles) share a part of the loaders last 48% (except the 2% for rendering)
+				let part = 23 / preload_promises.length; // every part of the preload-resources (controller, templates, styles) share a part of the loaders last 23% (except the 2% for rendering)
 		
 				for (var i in preload_promises)
 				{
@@ -715,7 +715,7 @@ class extends hcf.web.Component
 		this.current_route = to_route;
 
 		this.syncQuery(href.args);
-		history.pushState(null, null, this.joinUrlArgs(to_route, href.args, href.fancy));
+		history.pushState(null, null, this.joinUrlArgs(to_route, href.args, href.fancy, href.hash));
 	}
 
 	navigationOccured(event)
@@ -761,7 +761,7 @@ class extends hcf.web.Component
 			return; // no reload if same page should be load
 		}
 
-		let new_url = this.joinUrlArgs(parts.route, parts.args, parts.fancy);
+		let new_url = this.joinUrlArgs(parts.route, parts.args, parts.fancy, parts.hash);
 
 		this.syncQuery(parts.args);
 		history.pushState(null, null, new_url);
@@ -770,7 +770,7 @@ class extends hcf.web.Component
 
 	// URL STUFF
 	
-	dispatchQuery(href)
+	dispatchQuery(href, hash)
 	{
 		let arg = this.contentWrapperElement().getAttribute('data-router-arg');
 		let parts = href.split('&');
@@ -795,18 +795,31 @@ class extends hcf.web.Component
 		return {
 			fancy: false,
 			'route': route,
-			'args': url_args
+			'args': url_args,
+			'hash': hash
 		};
 	}
 
 	extractRouteName(href)
 	{
+		let hash_pos = href.indexOf('#');
+		let hash = '';
+
+		if (hash_pos > -1)
+		{
+			let parts = href.split('#');
+
+			href = parts[0];
+			hash = parts[1];
+		}
+
 		if (href == '')
 		{
 			return {
 				fancy: false,
 				route: null,
-				args: null
+				args: null,
+				'hash': hash
 			};
 		}
 
@@ -842,7 +855,7 @@ class extends hcf.web.Component
 		{
 			href = href.substr(1);
 
-			return this.dispatchQuery(href);
+			return this.dispatchQuery(href, hash);
 		}
 
 		// fancy-urls where route-name is path-part of url: /route?path-is-route=true&foo=bar or route?arg=1&arg=false without leading /
@@ -856,7 +869,7 @@ class extends hcf.web.Component
 		let url_args = href[1];
 		if (url_args != undefined)
 		{
-			url_args = this.dispatchQuery(url_args).args;
+			url_args = this.dispatchQuery(url_args, hash).args;
 		}
 		else 
 		{
@@ -874,11 +887,12 @@ class extends hcf.web.Component
 		return {
 			fancy: true,
 			'route': route,
-			'args': url_args
+			'args': url_args,
+			'hash': hash
 		};
 	}
 
-	joinUrlArgs(route, args, fancy)
+	joinUrlArgs(route, args, fancy, hash)
 	{
 		let out = '?';
 
@@ -898,6 +912,13 @@ class extends hcf.web.Component
 			out = route + out;
 		}
 
-		return out.slice(0, -1);
+		out = out.slice(0, -1);// cutoff trailing &
+
+		if (hash && hash != '')
+		{
+			out += '#' + hash.replace('#', '');
+		}
+
+		return out;
 	}
 }
