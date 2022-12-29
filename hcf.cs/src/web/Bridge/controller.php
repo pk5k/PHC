@@ -251,9 +251,32 @@ trait Controller
 			}
 		}
 
+		$args = $this->filterArgs($args);
 		$invoker = new RemoteInvoker($target, $args);
 
 		return $invoker->invoke($method, $args);
 	}
+
+    private function filterArgs($args)
+    {
+        if (!is_array($args))
+        {
+            return [];
+        }
+
+        $ret = [];
+
+        foreach ($args as $key => $arg)
+        {
+            if (!is_numeric($key))
+            {
+                continue;
+            }
+
+            $ret[$key] = $arg;
+        }
+
+        return $ret;
+    }
 }
 ?>

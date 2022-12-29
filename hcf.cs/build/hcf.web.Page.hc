@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.web.Page - BUILD 22.03.28#70
+<?php #HYPERCELL hcf.web.Page - BUILD 22.03.28#71
 namespace hcf\web;
 class Page extends \hcf\web\Component {
     use \hcf\core\dryver\Base, \hcf\core\dryver\Controller, \hcf\core\dryver\Controller\Js, Page\__EO__\Controller, Page\__EO__\Model, \hcf\core\dryver\View, \hcf\core\dryver\View\Html, \hcf\core\dryver\Internal;
@@ -41,7 +41,7 @@ render(view_data){this.clear();this.style.visibility='hidden';let nodes=[];let f
 else{let wrapper=document.createElement('div');wrapper.innerHTML=view_data;for(var i in wrapper.children){nodes.push(wrapper.children[i]);}}
 nodes.forEach((node)=>{if(node instanceof HTMLElement){if(first==null){first=node;}
 this.shadowRoot.appendChild(node);}});if(wrapper!=null){wrapper.remove();}
-this.page_root=first;let me=this;setTimeout(function(){me.style.visibility=null;let e=new Event('page-rendered',{bubbles:true});me.dispatchEvent(e);},0);}
+this.page_root=first;let me=this;setTimeout(function(){me.style.visibility=null;let e=new Event('page-rendered',{bubbles:true,composed:true});me.dispatchEvent(e);},0);}
 getOwnAttributes(){let atts=this.attributes;let out={};let skip=['render-changes','autoload','style','class'];for(var i in atts){if(!isNaN(i)){let att=atts[i];if(skip.indexOf(att.name)!=-1){continue;}
 out[att.name]=att.value;}}
 return out;}

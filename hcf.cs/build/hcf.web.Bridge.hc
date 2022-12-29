@@ -1,4 +1,4 @@
-<?php #HYPERCELL hcf.web.Bridge - BUILD 22.03.04#3331
+<?php #HYPERCELL hcf.web.Bridge - BUILD 22.03.23#3332
 namespace hcf\web;
 class Bridge extends \hcf\web\Controller {
     use \hcf\core\dryver\Base, \hcf\core\dryver\Config, \hcf\core\dryver\Controller, \hcf\core\dryver\Controller\Js, Bridge\__EO__\Controller, \hcf\core\dryver\View, \hcf\core\dryver\Internal;
@@ -302,8 +302,22 @@ return self;}";
                         RemoteInvoker::implicitConstructor(false);
                 }
             }
+            $args = $this->filterArgs($args);
             $invoker = new RemoteInvoker($target, $args);
             return $invoker->invoke($method, $args);
+        }
+        private function filterArgs($args) {
+            if (!is_array($args)) {
+                return [];
+            }
+            $ret = [];
+            foreach ($args as $key => $arg) {
+                if (!is_numeric($key)) {
+                    continue;
+                }
+                $ret[$key] = $arg;
+            }
+            return $ret;
         }
     }
     # END EXECUTABLE FRAME OF CONTROLLER.PHP

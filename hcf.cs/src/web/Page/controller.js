@@ -229,7 +229,7 @@ class extends hcf.web.Component
       	setTimeout(function(){
 	      	me.style.visibility = null;
 			
-			let e = new Event('page-rendered', {bubbles:true});
+			let e = new Event('page-rendered', {bubbles:true, composed: true});
 	      	me.dispatchEvent(e);
       	}, 0);// let browser render first
 	}
